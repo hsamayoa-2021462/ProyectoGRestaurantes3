@@ -1,5 +1,5 @@
 'use strict';
-
+ 
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -17,10 +17,13 @@ import {
 } from '../middlewares/server-genericError-handler.js';
 import authRoutes from '../src/auth/auth.routes.js';
 import userRoutes from '../src/users/user.routes.js';
-
-
+ 
+// ========== IMPORTACIONES DE LAS ENTIDADES DEL RESTAURANTE ==========
+import restauranteRoutes from '../src/restaurante/restaurante.routes.js';
+ 
+ 
 const BASE_PATH = '/api/v1';
-
+ 
 const middlewares = (app) => {
   app.use(express.urlencoded({ extended: false, limit: '10mb' }));
   app.use(express.json({ limit: '10mb' }));
@@ -29,49 +32,66 @@ const middlewares = (app) => {
   app.use(requestLimit);
   app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'combined'));
 };
-
+ 
 const routes = (app) => {
+  // ========== RUTAS EXISTENTES ==========
   app.use(`${BASE_PATH}/auth`, authRoutes);
   app.use(`${BASE_PATH}/users`, userRoutes);
-  
+ 
+  // Entidad Restaurante
+  app.use(`${BASE_PATH}/restaurante`, restauranteRoutes);
+ 
+  // Health check
   app.get(`${BASE_PATH}/health`, (req, res) => {
     res.status(200).json({
       status: 'Healthy',
       timestamp: new Date().toISOString(),
-      service: 'Proyecto Bancario Authentication Service',
+      service: 'Proyecto Restaurante Authentication Service',
     });
   });
+ 
   // 404 handler (standardized)
   app.use(notFound);
 };
-
+ 
 export const initServer = async () => {
   const app = express();
   const PORT = process.env.PORT;
   app.set('trust proxy', 1);
-
+ 
   try {
     await dbConnection();
-    
+   
     // Seed essential data (roles)
     const { seedRoles } = await import('../helpers/role-seed.js');
     await seedRoles();
-    
+   
     // Asegurar que el usuario admin tenga rol ADMIN_ROLE
     const { ensureAdminUser } = await import('../helpers/admin-seed.js');
     await ensureAdminUser();
-    
+   
     middlewares(app);
     routes(app);
-
+ 
     app.use(errorHandler);
-
+ 
     app.listen(PORT, () => {
-      console.log(`Proyecto Restaurante Auth Server running on port ${PORT}`);
+      console.log(`Proyecto Restaurante Server running on port ${PORT}`);
       console.log(`Health check: http://localhost:${PORT}${BASE_PATH}/health`);
+      console.log(`\nENDPOINTS DISPONIBLES:`);
+      console.log(`Auth: http://localhost:${PORT}${BASE_PATH}/auth`);
+      console.log(`Users: http://localhost:${PORT}${BASE_PATH}/users`);
+      console.log(`Clientes: http://localhost:${PORT}${BASE_PATH}/clientes`);
+      console.log(`Restaurante: http://localhost:${PORT}${BASE_PATH}/restaurante`);
+      console.log(`Menú: http://localhost:${PORT}${BASE_PATH}/menu`);
+      console.log(`Pedidos: http://localhost:${PORT}${BASE_PATH}/pedidos`);
+      console.log(`Reservaciones: http://localhost:${PORT}${BASE_PATH}/reservaciones`);
+      console.log(`Eventos: http://localhost:${PORT}${BASE_PATH}/eventos`);
+      console.log(`Experiencia: http://localhost:${PORT}${BASE_PATH}/experiencia`);
+      console.log(`Reportes: http://localhost:${PORT}${BASE_PATH}/reportes`);
     });
   } catch (err) {
-    console.error(`Error starting Proyecto Restaurante Auth Server: ${err.message}`);
+    console.error(`❌ Error starting Proyecto Restaurante Server: ${err.message}`);
     process.exit(1);
   }
 };
