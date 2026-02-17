@@ -1,0 +1,1775 @@
+{
+  "info": {
+    "_postman_id": "48056402-3c71-4793-8687-4eaeafecef5c",
+    "name": "ProyectoGrestaurante",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48332558",
+    "_collection_link": "https://go.postman.co/collection/48332558-48056402-3c71-4793-8687-4eaeafecef5c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Autentificación",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Alejandro",
+                  "type": "text",
+                  "uuid": "abd4919a-12c1-42f8-9b5a-58e08777b1e6"
+                },
+                {
+                  "key": "surname",
+                  "value": "Arocha",
+                  "type": "text",
+                  "uuid": "77403613-e2e1-47a3-8744-71a40b0581f5"
+                },
+                {
+                  "key": "username",
+                  "value": "Alejoap365",
+                  "type": "text",
+                  "uuid": "2d80689a-f74c-4508-9e34-5cb449cfe378"
+                },
+                {
+                  "key": "email",
+                  "value": "alejandroarochavirula@gmail.com",
+                  "type": "text",
+                  "uuid": "9a49a1de-8480-43e7-9d0a-ce07a305e2df"
+                },
+                {
+                  "key": "password",
+                  "value": "Lolita151223",
+                  "type": "text",
+                  "uuid": "1642bca5-d0fc-44f2-94c6-98e955eab3ac"
+                },
+                {
+                  "key": "phone",
+                  "value": "42653798",
+                  "type": "text",
+                  "uuid": "d979400e-608e-421b-9e77-2418390d384b"
+                },
+                {
+                  "key": "profilePicture",
+                  "type": "file",
+                  "uuid": "1b06eab3-532c-409a-a743-959b7a2574f1",
+                  "src": "/C:/Users/estua/Downloads/moni.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3005/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3005",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "resend-verification",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"alejandroarochavirula@gmail.com\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3005/api/v1/auth/resend-verification",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3005",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "resend-verification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify-email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"token\": \"TOKEN_DEL_CORREO\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3005/api/v1/auth/verify-email",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3005",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"emailOrUsername\": \"alejandroarochavirula@gmail.com\",\r\n  \"password\": \"Lolita151223\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3005/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3005",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forgot-password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"alejandroarochavirula@gmail.com\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3005/api/auth/forgot-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3005",
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reset-password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"token\": \"TOKEN_DEL_CORREO\",\r\n  \"newPassword\": \"NuevaPassword123\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3005/api/v1/auth/reset-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3005",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "users-list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Entidates",
+      "item": [
+        {
+          "name": "Restaurantes",
+          "item": [
+            {
+              "name": "Agregar Restaurante",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"La Cabaña Steakhouse\",\r\n    \"direccion\": \"Zona 10, Ciudad de Guatemala\",\r\n    \"telefono\": \"12345678\",\r\n    \"email\": \"info@lacabana.com\",\r\n    \"horarioApertura\": \"12:00\",\r\n    \"horarioCierre\": \"22:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Restaurante",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Categoria",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "categorias"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Categoria",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"nombre\": \"Italiana\", \"descripcion\": \"Comida italiana auténtica\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "categorias"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar mesa",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar mesa",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"restaurante\": \"ID_RESTAURANTE\", \"numeroMesa\": 1, \"capacidad\": 4, \"ubicacion\": \"INTERIOR\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Entrega",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar entrega",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"restaurante\": \"ID_RESTAURANTE\", \"nombre\": \"Zona 10\", \"costoEntrega\": 15, \"tiempoEstimado\": 30}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Menu",
+          "item": [
+            {
+              "name": "ListarCategoria",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/categorias-plato",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "categorias-plato"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "AgregarCategoria",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"Entradas\", \r\n    \"restaurante\": \"ID_RESTAURANTE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/categorias-plato",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "categorias-plato"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ListarPlatos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/platos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "platos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "AgregarPlatos",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"Pizza Margherita\",\r\n    \"descripcion\": \"Pizza tradicional italiana\",\r\n    \"precio\": 85,\r\n    \"categoria\": \"ID_CATEGORIA\",\r\n    \"restaurante\": \"ID_RESTAURANTE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/platos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "platos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ListarIngredientes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/ingredientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "ingredientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "AgregarIngredientes",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"Harina\", \r\n    \"unidadMedida\": \"KILOS\",\r\n     \"costo\": 10\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/ingredientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "ingredientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ListarInventario",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/inventario",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "inventario"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "AgregarInventario",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"ingrediente\": \"ID_INGREDIENTE\", \r\n    \"cantidadActual\": 50, \r\n    \"cantidadMinima\": 10, \r\n    \"restaurante\": \"ID_RESTAURANTE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/menu/inventario",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "menu",
+                    "inventario"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Pedidos",
+          "item": [
+            {
+              "name": "Agregar Pedidos",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"usuario\": \"6993dde4e0e5dc87251026b5\",\r\n    \"restaurante\": \"6993d40f717e8cabd577f728\",\r\n    \"detalles\": [\r\n        {\"plato\": \"6993d6901d6067910a55808f\", \"cantidad\": 2, \"precioUnitario\": 85, \"subtotal\": 170}\r\n    ],\r\n    \"total\": 170,\r\n    \"tipoEntrega\": \"DOMICILIO\",\r\n    \"zonaEntrega\": \"6993d51b717e8cabd577f72f\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/pedidos/pedidos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "pedidos",
+                    "pedidos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Pedidos",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/pedidos/pedidos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "pedidos",
+                    "pedidos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar MetodoPago",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"Tarjeta Crédito\", \r\n    \"descripcion\": \"Visa/Mastercard\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "pedidos",
+                    "metodos-pago"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar MetodoPago",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "pedidos",
+                    "metodos-pago"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Facturas",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"pedido\": \"ID_PEDIDO\", \r\n    \"numeroFactura\": \"F001-2024\", \r\n    \"nit\": \"123456-7\", \r\n    \"nombre\": \"Juan Pérez\", \r\n    \"total\": 170\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/pedidos/facturas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "pedidos",
+                    "facturas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Facturas",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/pedidos/facturas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "pedidos",
+                    "facturas"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Reservaciones",
+          "item": [
+            {
+              "name": "Agregar Reservaciones",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"usuario\": \"ID_USUARIO\",\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"fecha\": \"2024-12-20\",\r\n    \"hora\": \"20:00\",\r\n    \"numPersonas\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/favoritos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "favoritos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Reservaciones",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/reservaciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "reservaciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar EstadoReservacion",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"PENDIENTE\", \r\n    \"descripcion\": \"Esperando confirmación\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/estados-reservacion",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "estados-reservacion"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar EstadoReservacion",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/estados-reservacion",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "estados-reservacion"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Eventos",
+          "item": [
+            {
+              "name": "Agregar Eventos",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"Noche de Tapas\",\r\n    \"descripcion\": \"Evento especial de degustación de tapas españolas\",\r\n    \"restaurante\": \"507f1f77bcf86cd799439011\",\r\n    \"fechaInicio\": \"2026-03-15T19:00:00.000Z\",\r\n    \"fechaFin\": \"2026-03-15T23:00:00.000Z\",\r\n    \"capacidad\": 50,\r\n    \"precio\": 25.00,\r\n    \"estado\": \"PROXIMO\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/eventos/eventos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "eventos",
+                    "eventos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Eventos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/eventos/eventos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "eventos",
+                    "eventos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Inscripciones",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"evento\": \"ID_EVENTO\", \"usuario\": \"ID_USUARIO\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/eventos/inscripciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "eventos",
+                    "inscripciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Inscripciones",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/eventos/inscripciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "eventos",
+                    "inscripciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Recursos",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"evento\": \"ID_EVENTO\", \"nombre\": \"Parlantes\", \"tipo\": \"AUDIO\", \"cantidad\": 2}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/eventos/recursos-evento",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "eventos",
+                    "recursos-evento"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Recursos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/eventos/recursos-evento",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "eventos",
+                    "recursos-evento"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Experiencia al Cliente",
+          "item": [
+            {
+              "name": "Agregar ExperienciaReseña",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"usuario\": \"ID_USUARIO\",\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"calificacion\": 5,\r\n    \"comentario\": \"Excelente servicio\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/resenas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "resenas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar ExperienciaReseña",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/resenas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "resenas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar ExperenciaPromo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"2x1 en pizzas\",\r\n    \"tipo\": \"2x1\",\r\n    \"fechaInicio\": \"2024-12-01\",\r\n    \"fechaFin\": \"2024-12-31\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/promociones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "promociones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar ExperienciaPromo",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/promociones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "promociones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar ExperenciaCupones",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"codigo\": \"NAVIDAD2024\",\r\n    \"promocion\": \"ID_PROMOCION\",\r\n    \"descuento\": 20,\r\n    \"tipoDescuento\": \"PORCENTAJE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/cupones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "cupones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar ExperienciaCupones",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/cupones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "cupones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar ExperenciaCuponesUser",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"cupon\": \"ID_CUPON\", \r\n    \"usuario\": \"ID_USUARIO\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "cupones-usuario"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar ExperienciaCuponesUser",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "experiencia",
+                    "cupones-usuario"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Reportes y configuracion",
+          "item": [
+            {
+              "name": "Agregar Reporte y config.",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"clave\": \"nombre_sistema\",\r\n    \"valor\": \"Sistema de Restaurantes\",\r\n    \"descripcion\": \"Nombre del sistema\",\r\n    \"tipo\": \"TEXTO\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/configuraciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "configuraciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Reporte y config.",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/configuraciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "configuraciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Estadisticas",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"totalPedidos\": 50,\r\n    \"totalIngresos\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/estadisticas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "estadisticas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Estadisticas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/estadisticas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "estadisticas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Impuesto",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"nombre\": \"IVA\", \"porcentaje\": 12, \"aplicableA\": \"TODOS\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/impuesto",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "impuesto"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Impuesto",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/impuestos",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "impuestos"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Idiomas",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"codigo\": \"ES\", \"nombre\": \"Español\", \"defecto\": true}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/idiomas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "idiomas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Idiomas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/idiomas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "idiomas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Agregar Traducciones",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"idioma\": \"ID_IDIOMA\", \"clave\": \"welcome_message\", \"valor\": \"Bienvenido\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/traducciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "traducciones"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Traducciones",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reportes/traducciones",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reportes",
+                    "traducciones"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Clientes",
+          "item": [
+            {
+              "name": "Agregar Cliente",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Juan Pérez\",\r\n    \"username\": \"jperez\",\r\n    \"dpi\": \"1234567890101\",\r\n    \"address\": \"Zona 1, Guatemala\",\r\n    \"phone\": \"12345678\",\r\n    \"email\": \"juan@email.com\",\r\n    \"password\": \"password123\",\r\n    \"jobName\": \"Ingeniero\",\r\n    \"monthlyIncome\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Cliente",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
