@@ -17,12 +17,11 @@ import {
 } from '../middlewares/server-genericError-handler.js';
 import authRoutes from '../src/auth/auth.routes.js';
 import userRoutes from '../src/users/user.routes.js';
-import menuRoutes from '../src/menu/menu.routes.js';
- 
- 
+import userRoute from '../src/clientes/clientes.routes.js';
+
 // ========== IMPORTACIONES DE LAS ENTIDADES DEL RESTAURANTE ==========
 import restauranteRoutes from '../src/restaurante/restaurante.routes.js';
- 
+import menuRoutes from '../src/menu/menu.routes.js';
  
 const BASE_PATH = '/api/v1';
  
@@ -39,12 +38,8 @@ const routes = (app) => {
   // ========== RUTAS EXISTENTES ==========
   app.use(`${BASE_PATH}/auth`, authRoutes);
   app.use(`${BASE_PATH}/users`, userRoutes);
-  
- 
-  // Entidad Restaurante
+  app.use(`${BASE_PATH}/clientes`, userRoute);
   app.use(`${BASE_PATH}/restaurante`, restauranteRoutes);
-
-  // Entidad Menu
   app.use(`${BASE_PATH}/menú`, menuRoutes);
  
   // Health check
