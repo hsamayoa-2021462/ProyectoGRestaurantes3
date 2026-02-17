@@ -20,12 +20,14 @@ import userRoutes from '../src/users/user.routes.js';
 import userRoute from '../src/clientes/clientes.routes.js';
 
 // ========== IMPORTACIONES DE LAS ENTIDADES DEL RESTAURANTE ==========
+import userRoute from '../src/clientes/clientes.routes.js';
 import restauranteRoutes from '../src/restaurante/restaurante.routes.js';
 import menuRoutes from '../src/menu/menu.routes.js';
 import pedidoRoutes from '../src/pedidos/pedido.routes.js';
 import reservacionRoutes from '../src/reservaciones/reservacion.routes.js';
 import eventoRoutes from '../src/eventos/evento.routes.js';
 import experienciaRoutes from '../src/experiencia/experiencia.routes.js';
+import reportesRoutes from '../src/reportes/reportes.routes.js';
 
 const BASE_PATH = '/api/v1';
  
@@ -44,11 +46,12 @@ const routes = (app) => {
   app.use(`${BASE_PATH}/users`, userRoutes);
   app.use(`${BASE_PATH}/clientes`, userRoute);
   app.use(`${BASE_PATH}/restaurante`, restauranteRoutes);
-  app.use(`${BASE_PATH}/menú`, menuRoutes);
+  app.use(`${BASE_PATH}/menu`, menuRoutes);
   app.use(`${BASE_PATH}/pedidos`, pedidoRoutes);
   app.use(`${BASE_PATH}/reservaciones`, reservacionRoutes);
   app.use(`${BASE_PATH}/eventos`, eventoRoutes);
   app.use(`${BASE_PATH}/experiencia`, experienciaRoutes);
+  app.use(`${BASE_PATH}/reportes`, reportesRoutes);
   
   // Health check
   app.get(`${BASE_PATH}/health`, (req, res) => {
