@@ -22,6 +22,7 @@ import userRoute from '../src/clientes/clientes.routes.js';
 // ========== IMPORTACIONES DE LAS ENTIDADES DEL RESTAURANTE ==========
 import restauranteRoutes from '../src/restaurante/restaurante.routes.js';
 import menuRoutes from '../src/menu/menu.routes.js';
+import pedidoRoutes from '../src/pedidos/pedido.routes.js';
  
 const BASE_PATH = '/api/v1';
  
@@ -41,6 +42,7 @@ const routes = (app) => {
   app.use(`${BASE_PATH}/clientes`, userRoute);
   app.use(`${BASE_PATH}/restaurante`, restauranteRoutes);
   app.use(`${BASE_PATH}/menú`, menuRoutes);
+  app.use(`${BASE_PATH}/pedidos`, pedidoRoutes);
  
   // Health check
   app.get(`${BASE_PATH}/health`, (req, res) => {
