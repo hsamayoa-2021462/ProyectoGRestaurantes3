@@ -23,7 +23,10 @@ import userRoute from '../src/clientes/clientes.routes.js';
 import restauranteRoutes from '../src/restaurante/restaurante.routes.js';
 import menuRoutes from '../src/menu/menu.routes.js';
 import pedidoRoutes from '../src/pedidos/pedido.routes.js';
- 
+import reservacionRoutes from '../src/reservaciones/reservacion.routes.js';
+import eventoRoutes from '../src/eventos/evento.routes.js';
+import experienciaRoutes from '../src/experiencia/experiencia.routes.js';
+
 const BASE_PATH = '/api/v1';
  
 const middlewares = (app) => {
@@ -43,7 +46,10 @@ const routes = (app) => {
   app.use(`${BASE_PATH}/restaurante`, restauranteRoutes);
   app.use(`${BASE_PATH}/menú`, menuRoutes);
   app.use(`${BASE_PATH}/pedidos`, pedidoRoutes);
- 
+  app.use(`${BASE_PATH}/reservaciones`, reservacionRoutes);
+  app.use(`${BASE_PATH}/eventos`, eventoRoutes);
+  app.use(`${BASE_PATH}/experiencia`, experienciaRoutes);
+  
   // Health check
   app.get(`${BASE_PATH}/health`, (req, res) => {
     res.status(200).json({
