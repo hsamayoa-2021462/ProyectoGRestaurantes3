@@ -20,7 +20,7 @@ import userRoutes from '../src/users/user.routes.js';
 import userRoute from '../src/clientes/clientes.routes.js';
 
 // ========== IMPORTACIONES DE LAS ENTIDADES DEL RESTAURANTE ==========
-import userRoute from '../src/clientes/clientes.routes.js';
+
 import restauranteRoutes from '../src/restaurante/restaurante.routes.js';
 import menuRoutes from '../src/menu/menu.routes.js';
 import pedidoRoutes from '../src/pedidos/pedido.routes.js';
