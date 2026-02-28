@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "48056402-3c71-4793-8687-4eaeafecef5c",
+    "_postman_id": "7afaafe1-4992-4ca9-9451-0d9b194b6c4e",
     "name": "ProyectoGrestaurante",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "48332558",
-    "_collection_link": "https://go.postman.co/collection/48332558-48056402-3c71-4793-8687-4eaeafecef5c?source=collection_link"
+    "_exporter_id": "48332491",
+    "_collection_link": "https://go.postman.co/collection/48332491-7afaafe1-4992-4ca9-9451-0d9b194b6c4e?source=collection_link"
   },
   "item": [
     {
@@ -551,7 +551,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"Pizza Margherita\",\r\n    \"descripcion\": \"Pizza tradicional italiana\",\r\n    \"precio\": 85,\r\n    \"categoria\": \"ID_CATEGORIA\",\r\n    \"restaurante\": \"ID_RESTAURANTE\"\r\n}",
+                  "raw": "{\r\n    \"nombre\": \"Pizza Margherita\",\r\n    \"descripcion\": \"Pizza tradicional italiana\",\r\n    \"precio\": 85,\r\n    \"categoria\": \"69a33816e47e596cae85b481\",\r\n    \"restaurante\": \"69a3380de47e596cae85b47f\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -687,184 +687,376 @@
           "name": "Pedidos",
           "item": [
             {
-              "name": "Agregar Pedidos",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"usuario\": \"6993dde4e0e5dc87251026b5\",\r\n    \"restaurante\": \"6993d40f717e8cabd577f728\",\r\n    \"detalles\": [\r\n        {\"plato\": \"6993d6901d6067910a55808f\", \"cantidad\": 2, \"precioUnitario\": 85, \"subtotal\": 170}\r\n    ],\r\n    \"total\": 170,\r\n    \"tipoEntrega\": \"DOMICILIO\",\r\n    \"zonaEntrega\": \"6993d51b717e8cabd577f72f\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Pedidos",
+              "item": [
+                {
+                  "name": "Agregar Pedidos",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"usuario\": \"69a33869e47e596cae85b488\",\r\n  \"restaurante\": \"69a3380de47e596cae85b47f\",\r\n  \"tipoEntrega\": \"RECOGER\",\r\n  \"direccionEntrega\": {\r\n    \"calle\": \"6a Avenida 12-34 Zona 1\",\r\n    \"colonia\": \"Centro Histórico\",\r\n    \"ciudad\": \"Guatemala\",\r\n    \"departamento\": \"Guatemala\",\r\n    \"referencia\": \"Frente al parque central, portón negro\",\r\n    \"coordenadas\": {\r\n      \"lat\": 14.6407,\r\n      \"lng\": -90.5133\r\n    }\r\n  },\r\n  \"total\": 150.00,\r\n  \"detalles\": [\r\n    {\r\n      \"plato\": \"69a33a26e47e596cae85b492\",\r\n      \"cantidad\": 2,\r\n      \"precioUnitario\": 50.00,\r\n      \"subtotal\": 100.00\r\n    }\r\n  ],\r\n  \"pago\": {\r\n    \"metodoPago\": \"69a337e9e47e596cae85b47c\",\r\n    \"monto\": 150.00,\r\n    \"estado\": \"PENDIENTE\"\r\n  }\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/pedidos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "pedidos"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/pedidos/pedidos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "pedidos",
-                    "pedidos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Pedidos",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/pedidos/pedidos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "pedidos",
-                    "pedidos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar MetodoPago",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"Tarjeta Crédito\", \r\n    \"descripcion\": \"Visa/Mastercard\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Listar Pedidos",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/pedidos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "pedidos"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "pedidos",
-                    "metodos-pago"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar MetodoPago",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "pedidos",
-                    "metodos-pago"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Facturas",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"pedido\": \"ID_PEDIDO\", \r\n    \"numeroFactura\": \"F001-2024\", \r\n    \"nit\": \"123456-7\", \r\n    \"nombre\": \"Juan Pérez\", \r\n    \"total\": 170\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Actualizar Pedidos",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"estado\": \"CONFIRMADO\",\r\n  \"observaciones\": \"Pedido confirmado por el restaurante\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/pedidos/ID_DEL-PEDIDO",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "pedidos",
+                        "ID_DEL-PEDIDO"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/pedidos/facturas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "pedidos",
-                    "facturas"
-                  ]
+                {
+                  "name": "Eliminar Pedidos",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/pedidos/ID_DEL_PEDIDO",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "pedidos",
+                        "ID_DEL_PEDIDO"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Listar Facturas",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
+              "name": "MetodoPago",
+              "item": [
+                {
+                  "name": "Agregar MetodoPago",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Tarjeta Crédito\", \r\n    \"descripcion\": \"Pago con tarjeta Visa/Mastercard\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "metodos-pago"
+                      ]
+                    }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/pedidos/facturas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "pedidos",
-                    "facturas"
-                  ]
+                {
+                  "name": "Listar MetodoPago",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "metodos-pago"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar MetodoPago",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"descripcion\": \"Pago en Efectivo\",\r\n  \"activo\": false\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago/69a337e9e47e596cae85b47c",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "metodos-pago",
+                        "69a337e9e47e596cae85b47c"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar MetodoPago",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/metodos-pago/IID_DEL_PEDIDO",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "metodos-pago",
+                        "IID_DEL_PEDIDO"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "Facturas",
+              "item": [
+                {
+                  "name": "Agregar Facturas",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"pedido\": \"ID_DEL_PEDIDO\", \r\n    \"numeroFactura\": \"F001-2024\", \r\n    \"nit\": \"123456-7\", \r\n    \"nombre\": \"Juan Pérez\", \r\n    \"total\": 170\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/facturas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "facturas"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Facturas",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/facturas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "facturas"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Factura",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"nit\": \"99999999\",\r\n  \"nombre\": \"María García\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/facturas/ID_DE_FACTURA",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "facturas",
+                        "ID_DE_FACTURA"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Factura",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/pedidos/facturas/ID_FACTURA",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "pedidos",
+                        "facturas",
+                        "ID_FACTURA"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -1170,264 +1362,575 @@
           "name": "Experiencia al Cliente",
           "item": [
             {
-              "name": "Agregar ExperienciaReseña",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"usuario\": \"ID_USUARIO\",\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"calificacion\": 5,\r\n    \"comentario\": \"Excelente servicio\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Experiencia Reseña",
+              "item": [
+                {
+                  "name": "Agregar ExperienciaReseña",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"usuario\": \"ID_CLIENTE\",\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"calificacion\": 5,\r\n    \"comentario\": \"Excelente servicio\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/resenas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "resenas"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/resenas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "resenas"
-                  ]
+                {
+                  "name": "Listar ExperienciaReseña",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/resenas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "resenas"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Editar ExperienciaReseña",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"calificacion\": 4,\r\n  \"comentario\": \"Excelente servicio, lo recomiendo\",\r\n  \"respuesta\": \"Gracias por tu comentario, nos alegra que hayas disfrutado\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/resenas/ID_RESEÑA",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "resenas",
+                        "ID_RESEÑA"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar ExperienciaReseña",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"calificacion\": 4,\r\n  \"comentario\": \"Excelente servicio, lo recomiendo\",\r\n  \"respuesta\": \"Gracias por tu comentario, nos alegra que hayas disfrutado\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/resenas/ID_RESEÑA",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "resenas",
+                        "ID_RESEÑA"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Listar ExperienciaReseña",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Experiencia Promocion",
+              "item": [
+                {
+                  "name": "Agregar ExperenciaPromo",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"nombre\": \"Promo Verano\",\r\n  \"descripcion\": \"20% de descuento en todos los pedidos\",\r\n  \"restaurante\": \"ID_RESTAURANTE\",\r\n  \"tipo\": \"DESCUENTO\",\r\n  \"valor\": 20,\r\n  \"fechaInicio\": \"2026-03-01T00:00:00.000Z\",\r\n  \"fechaFin\": \"2026-03-31T23:59:59.000Z\",\r\n  \"activa\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/promociones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "promociones"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/resenas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "resenas"
-                  ]
+                {
+                  "name": "Listar ExperienciaPromo",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/promociones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "promociones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Editar ExperienciaPromo",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"nombre\": \"Promo Verano Actualizada\",\r\n  \"valor\": 25,\r\n  \"fechaFin\": \"2026-04-15T23:59:59.000Z\",\r\n  \"activa\": false\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/promociones/ID_PROMOCION",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "promociones",
+                        "ID_PROMOCION"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar ExperienciaPromo",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/promociones/ID_PROMOCION",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "promociones",
+                        "ID_PROMOCION"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Agregar ExperenciaPromo",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"2x1 en pizzas\",\r\n    \"tipo\": \"2x1\",\r\n    \"fechaInicio\": \"2024-12-01\",\r\n    \"fechaFin\": \"2024-12-31\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Experiencia Cupones",
+              "item": [
+                {
+                  "name": "Agregar ExperenciaCupones",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"codigo\": \"VERANO20\",\r\n  \"promocion\": \"ID_PROMOCION\",\r\n  \"descuento\": 20,\r\n  \"tipoDescuento\": \"PORCENTAJE\",\r\n  \"fechaExpiracion\": \"2026-03-31T23:59:59.000Z\",\r\n  \"usoMaximo\": 100,\r\n  \"activo\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/promociones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "promociones"
-                  ]
+                {
+                  "name": "Listar ExperienciaCupones",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Editar ExperienciaCupones",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"descuento\": 25,\r\n  \"usoMaximo\": 200,\r\n  \"fechaExpiracion\": \"2026-04-30T23:59:59.000Z\",\r\n  \"activo\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones/ID_CUPON",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones",
+                        "ID_CUPON"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar ExperienciaCupones",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones/ID_CUPON",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones",
+                        "ID_CUPON"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Listar ExperienciaPromo",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Experiencia Cupones Cliente",
+              "item": [
+                {
+                  "name": "Agregar ExperenciaCuponesUser",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"cupon\": \"ID_CUPON\",\r\n  \"usuario\": \"ID_USUARIO\",\r\n  \"pedido\": \"ID_PEDIDO\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones-usuario"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/promociones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "promociones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar ExperenciaCupones",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"codigo\": \"NAVIDAD2024\",\r\n    \"promocion\": \"ID_PROMOCION\",\r\n    \"descuento\": 20,\r\n    \"tipoDescuento\": \"PORCENTAJE\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Listar ExperienciaCuponesUser",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones-usuario"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/cupones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "cupones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar ExperienciaCupones",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Listar ExperienciaCuponesUser ID",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario/ID",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones-usuario",
+                        "ID"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/cupones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "cupones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar ExperenciaCuponesUser",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"cupon\": \"ID_CUPON\", \r\n    \"usuario\": \"ID_USUARIO\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Editar ExperienciaCuponer User",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"utilizado\": true,\r\n  \"pedido\": \"ID_PEDIDO\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario/69a3431089b7db6f1663db87",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones-usuario",
+                        "69a3431089b7db6f1663db87"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "cupones-usuario"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar ExperienciaCuponesUser",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Eliminar ExperienciaCuponer User",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario/ID_EXPERIENCIACUPON_USER",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "experiencia",
+                        "cupones-usuario",
+                        "ID_EXPERIENCIACUPON_USER"
+                      ]
                     }
-                  }
-                },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/experiencia/cupones-usuario",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "experiencia",
-                    "cupones-usuario"
-                  ]
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             }
           ]
         },
@@ -1703,7 +2206,10 @@
               "name": "New Request",
               "request": {
                 "method": "GET",
-                "header": []
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
               },
               "response": []
             }
@@ -1719,7 +2225,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "raw": "{\r\n  \"name\": \"Juan Pérezzzzzz\",\r\n  \"username\": \"juanperezzzzz\",\r\n  \"email\": \"juannn14@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890128\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1749,7 +2255,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"abc123\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"abC123125_45\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1779,7 +2285,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"123456798102\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1839,7 +2345,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juancorreo\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "raw": "{\r\n  \"name\": \"Juan Pérezzzz\",\r\n  \"username\": \"juanperezzz\",\r\n  \"email\": \"juancorreooo@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890145\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1869,7 +2375,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 50\r\n}",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 500\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2116,7 +2622,7 @@
                   }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "raw": "http://localhost:3005/api/v1/clientes/69a331f55a7a0a318cebc045",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -2126,7 +2632,7 @@
                     "api",
                     "v1",
                     "clientes",
-                    "PON_ID_REAL"
+                    "69a331f55a7a0a318cebc045"
                   ]
                 }
               },
@@ -2147,7 +2653,7 @@
                   }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "raw": "http://localhost:3005/api/v1/clientes/69a331f55a7a0a318cebc045",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -2157,7 +2663,7 @@
                     "api",
                     "v1",
                     "clientes",
-                    "PON_ID_REAL"
+                    "69a331f55a7a0a318cebc045"
                   ]
                 }
               },
@@ -2209,7 +2715,7 @@
                   }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "raw": "http://localhost:3005/api/v1/clientes/69a331f55a7a0a318cebc045",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -2219,7 +2725,7 @@
                     "api",
                     "v1",
                     "clientes",
-                    "PON_ID_REAL"
+                    "69a331f55a7a0a318cebc045"
                   ]
                 }
               },
