@@ -1698,6 +1698,14 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
             }
           ]
         },
@@ -1711,7 +1719,217 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"name\": \"Juan Pérez\",\r\n    \"username\": \"jperez\",\r\n    \"dpi\": \"1234567890101\",\r\n    \"address\": \"Zona 1, Guatemala\",\r\n    \"phone\": \"12345678\",\r\n    \"email\": \"juan@email.com\",\r\n    \"password\": \"password123\",\r\n    \"jobName\": \"Ingeniero\",\r\n    \"monthlyIncome\": 5000\r\n}",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Contraseña Debil",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"abc123\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DPI Denegado",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Emails Desechables",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@mailinator.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Formato malo del correo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juancorreo\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ingresos Bajos",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"52341234\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 50\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Vacio",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Caracgeres de telefono",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Juan Pérez\",\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Segura123!\",\r\n  \"dpi\": \"1234567890123\",\r\n  \"phone\": \"1234abc8\",\r\n  \"address\": \"Zona 10 Ciudad de Guatemala\",\r\n  \"jobName\": \"Desarrollador\",\r\n  \"monthlyIncome\": 5000\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1762,6 +1980,290 @@
                     "api",
                     "v1",
                     "clientes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar con filtros",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes?page=1&limit=10&role=CLIENT&isActive=true",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "role",
+                      "value": "CLIENT"
+                    },
+                    {
+                      "key": "isActive",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Query Params Inválidos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes?page=0&limit=200&role=JEFE",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "200"
+                    },
+                    {
+                      "key": "role",
+                      "value": "JEFE"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener por Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/abc123",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "abc123"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Id invalido",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/clientes/abc123",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "clientes",
+                    "abc123"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar Exitoso",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": " { \r\n \"name\": \"Juan Carlos Pérez\", \r\n \"phone\": \"55667788\", \r\n \"monthlyIncome\": 8000 \r\n }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cambiar DPI",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n\"dpi\": \"9999999999999\" \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Intentar Cambiar Password",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n\"password\": \"NuevaPass123!\" \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Email Desechable en Update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n\"email\": \"nuevo@yopmail.com\" \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ID Inválido",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/clientes/abc123",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "clientes",
+                    "abc123"
                   ]
                 }
               },
