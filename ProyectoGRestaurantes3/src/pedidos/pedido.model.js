@@ -82,7 +82,17 @@ const pedidoSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ZonaEntrega'
     },
-    direccionEntrega: String,
+    direccionEntrega: {
+        calle: { type: String },
+        colonia: { type: String },
+        ciudad: { type: String },
+        departamento: { type: String },
+        referencia: { type: String },
+        coordenadas: {
+            lat: { type: Number },
+            lng: { type: Number }
+        }
+    },
     pago: pagoSchema,
     observaciones: String
 }, { timestamps: true, versionKey: false });
