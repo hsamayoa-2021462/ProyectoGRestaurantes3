@@ -41,10 +41,11 @@ const eventoUsuarioSchema = mongoose.Schema({
         ref: 'Evento',
         required: true
     },
+    // El usuario viene del sistema SQL (Sequelize), su ID es un STRING(16), no un ObjectId de MongoDB
     usuario: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        type: String,
+        required: true,
+        trim: true
     },
     fechaInscripcion: {
         type: Date,

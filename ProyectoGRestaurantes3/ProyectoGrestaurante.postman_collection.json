@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "371d72e4-bdbe-4b6b-b637-49b590598734",
+    "_postman_id": "aa2c3a65-deb4-497c-8007-2708f81104c3",
     "name": "ProyectoGrestaurante",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "48332558",
-    "_collection_link": "https://go.postman.co/collection/48332558-371d72e4-bdbe-4b6b-b637-49b590598734?source=collection_link"
+    "_exporter_id": "48332520",
+    "_collection_link": "https://go.postman.co/collection/48332520-aa2c3a65-deb4-497c-8007-2708f81104c3?source=collection_link"
   },
   "item": [
     {
@@ -1789,163 +1789,379 @@
           "name": "Eventos",
           "item": [
             {
-              "name": "Agregar Eventos",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"Noche de Tapas\",\r\n    \"descripcion\": \"Evento especial de degustación de tapas españolas\",\r\n    \"restaurante\": \"507f1f77bcf86cd799439011\",\r\n    \"fechaInicio\": \"2026-03-15T19:00:00.000Z\",\r\n    \"fechaFin\": \"2026-03-15T23:00:00.000Z\",\r\n    \"capacidad\": 50,\r\n    \"precio\": 25.00,\r\n    \"estado\": \"PROXIMO\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Eventos",
+              "item": [
+                {
+                  "name": "Agregar Eventos",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Noche de Tapas\",\r\n    \"descripcion\": \"Evento especial de degustación de tapas españolas\",\r\n    \"restaurante\": \"507f1f77bcf86cd799439011\",\r\n    \"fechaInicio\": \"2026-03-15T19:00:00.000Z\",\r\n    \"fechaFin\": \"2026-03-15T23:00:00.000Z\",\r\n    \"capacidad\": 50,\r\n    \"precio\": 25.00,\r\n    \"estado\": \"PROXIMO\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/eventos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "eventos"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/eventos/eventos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "eventos",
-                    "eventos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Eventos",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/eventos/eventos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "eventos",
-                    "eventos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Inscripciones",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\"evento\": \"ID_EVENTO\", \"usuario\": \"ID_USUARIO\"}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Listar Eventos",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/eventos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "eventos"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/eventos/inscripciones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "eventos",
-                    "inscripciones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Inscripciones",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/eventos/inscripciones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "eventos",
-                    "inscripciones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Recursos",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\"evento\": \"ID_EVENTO\", \"nombre\": \"Parlantes\", \"tipo\": \"AUDIO\", \"cantidad\": 2}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Actualizar Evento",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Noche de Luciernagas\",\r\n    \"descripcion\": \"Evento especial cena con el fondo de luciernagas\",\r\n    \"restaurante\": \"id_restaurante\",\r\n    \"fechaInicio\": \"2026-03-15T19:00:00.000Z\",\r\n    \"fechaFin\": \"2026-03-15T23:00:00.000Z\",\r\n    \"capacidad\": 50,\r\n    \"precio\": 25.00,\r\n    \"estado\": \"PROXIMO\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/eventos/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "eventos",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/eventos/recursos-evento",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "eventos",
-                    "recursos-evento"
-                  ]
+                {
+                  "name": "Eliminar Evento",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/eventos/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "eventos",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Listar Recursos",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/eventos/recursos-evento",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "eventos",
-                    "recursos-evento"
-                  ]
+              "name": "Inscripciones",
+              "item": [
+                {
+                  "name": "Agregar Inscripciones",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"evento\": \"ID_EVENTO\", \"usuario\": \"ID_USUARIO\"}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/inscripciones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "inscripciones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Inscripciones",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/inscripciones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "inscripciones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Inscripcion",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{ \"asistio\": true, \r\n\"pagoRealizado\": true \r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/inscripciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "inscripciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Inscripcion",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/inscripciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "inscripciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "Recursos",
+              "item": [
+                {
+                  "name": "Agregar Recursos",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{ \"evento\": \"id\", \r\n\"nombre\": \"Micrófonos\", \r\n\"tipo\": \"AUDIO\", \r\n\"cantidad\": 4, \r\n\"descripcion\": \"Micrófonos para escuchar a los demas en llamada\" \r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/recursos-evento",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "recursos-evento"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Recursos",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/recursos-evento",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "recursos-evento"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Recurso",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{ \"evento\": \"id\", \r\n\"nombre\": \"Micrófonos\", \r\n\"tipo\": \"AUDIO\", \r\n\"cantidad\": 4, \r\n\"descripcion\": \"Micrófonos para escuchar a los demas en llamada\" \r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/recursos-evento/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "recursos-evento",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Recurso",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/eventos/recursos-evento/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "eventos",
+                        "recursos-evento",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -2529,280 +2745,641 @@
           "name": "Reportes y configuracion",
           "item": [
             {
-              "name": "Agregar Reporte y config.",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"clave\": \"nombre_sistema\",\r\n    \"valor\": \"Sistema de Restaurantes\",\r\n    \"descripcion\": \"Nombre del sistema\",\r\n    \"tipo\": \"TEXTO\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Estadisticas",
+              "item": [
+                {
+                  "name": "Agregar Estadisticas",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{ \r\n    \"restaurante\": \"69a471e70e720172d5ad75b3\", \r\n    \"fecha\": \"2026-03-01\", \r\n    \"totalPedidos\": 120, \r\n    \"totalIngresos\": 5400, \r\n    \"totalClientes\": 80, \r\n    \"pedidosCancelados\": 5, \r\n    \"platoMasVendido\": \"69a46ec1a7d4072bf246c269\", \r\n    \"calificacionPromedio\": 4.5 \r\n    }\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/estadisticas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "estadisticas"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/configuraciones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "configuraciones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Reporte y config.",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/configuraciones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "configuraciones"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Estadisticas",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"totalPedidos\": 50,\r\n    \"totalIngresos\": 5000\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Listar Estadisticas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/estadisticas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "estadisticas"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/estadisticas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "estadisticas"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Estadisticas",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/estadisticas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "estadisticas"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Impuesto",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\"nombre\": \"IVA\", \"porcentaje\": 12, \"aplicableA\": \"TODOS\"}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Actualizar Estadistica",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{ \r\n    \"restaurante\": \"69a471e70e720172d5ad75b3\", \r\n    \"fecha\": \"2026-03-01\", \r\n    \"totalPedidos\": 120, \r\n    \"totalIngresos\": 5400, \r\n    \"totalClientes\": 80, \r\n    \"pedidosCancelados\": 5, \r\n    \"platoMasVendido\": \"69a46ec1a7d4072bf246c269\", \r\n    \"calificacionPromedio\": 4.5 \r\n    }\r\n    ",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/estadisticas/69a4757ffcdba1d69012b58b",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "estadisticas",
+                        "69a4757ffcdba1d69012b58b"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/impuesto",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "impuesto"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Impuesto",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/impuestos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "impuestos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Idiomas",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\"codigo\": \"ES\", \"nombre\": \"Español\", \"defecto\": true}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Eliminar Estadistica",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/estadisticas/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "estadisticas",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
                     }
-                  }
-                },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/idiomas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "idiomas"
-                  ]
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Listar Idiomas",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/idiomas",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "idiomas"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Agregar Traducciones",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\"idioma\": \"ID_IDIOMA\", \"clave\": \"welcome_message\", \"valor\": \"Bienvenido\"}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Configuraciones",
+              "item": [
+                {
+                  "name": "Agregar configuraciones",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"clave\": \"nombre_sistema\",\r\n    \"valor\": \"Sistema de Restaurantes\",\r\n    \"descripcion\": \"Nombre del sistema\",\r\n    \"tipo\": \"TEXTO\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/configuraciones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "configuraciones"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/traducciones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "traducciones"
-                  ]
+                {
+                  "name": "Listar Conficuraciones",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/configuraciones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "configuraciones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Configuraciones",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"clave\": \"nombre_sistema\",\r\n    \"valor\": \"Sistema de Restaurantes\",\r\n    \"descripcion\": \"Nombre del sistema\",\r\n    \"tipo\": \"TEXTO\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/configuraciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "configuraciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Configuraciones",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/configuraciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "configuraciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Listar Traducciones",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/reportes/traducciones",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "reportes",
-                    "traducciones"
-                  ]
+              "name": "Impuesto",
+              "item": [
+                {
+                  "name": "Agregar Impuesto",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"nombre\": \"IVA\", \"porcentaje\": 12, \"aplicableA\": \"TODOS\"}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/impuesto",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "impuesto"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Impuesto",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/impuestos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "impuestos"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Impuesto",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"IVA\", \r\n    \"porcentaje\": 12, \r\n    \"aplicableA\": \"TODOS\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/impuestos/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "impuestos",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Impuesto",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/impuestos/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "impuestos",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "New Request",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": ""
+              "name": "Idiomas",
+              "item": [
+                {
+                  "name": "Agregar Idiomas",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"codigo\": \"ES\", \"nombre\": \"Español\", \"defecto\": true}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/idiomas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "idiomas"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Idiomas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/idiomas",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "idiomas"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Idiomas",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"codigo\": \"ES\", \"nombre\": \"Español\", \"defecto\": true}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/idiomas/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "idiomas",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Idiomas",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/idiomas/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "idiomas",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "Traducciones",
+              "item": [
+                {
+                  "name": "Agregar Traducciones",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"idioma\": \"ID_IDIOMA\", \"clave\": \"welcome_message\", \"valor\": \"Bienvenido\"}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/traducciones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "traducciones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Traducciones",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/traducciones",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "traducciones"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Traduccion",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{ \r\n\"idioma\": \"id\", \r\n\"clave\": \"btn.guardar\", \r\n\"valor\": \"Guardar\", \r\n\"modulo\": \"menu\" \r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/traducciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "traducciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Traduccion",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reportes/traducciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reportes",
+                        "traducciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
