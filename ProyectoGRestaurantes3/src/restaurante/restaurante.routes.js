@@ -1,27 +1,55 @@
 import { Router } from 'express';
 import {
-    listarRestaurantes, crearRestaurante,
-    listarCategorias, crearCategoria,
-    listarMesas, crearMesa,
-    listarZonasEntrega, crearZonaEntrega
+    listarRestaurantes,
+    obtenerRestaurantePorId,
+    crearRestaurante,
+    actualizarRestaurante,
+    eliminarRestaurante,
+    listarCategorias,
+    obtenerCategoriaPorId,
+    crearCategoria,
+    actualizarCategoria,
+    eliminarCategoria,
+    listarMesas,
+    obtenerMesaPorId,
+    crearMesa,
+    actualizarMesa,
+    eliminarMesa,
+    listarZonasEntrega,
+    obtenerZonaEntregaPorId,
+    crearZonaEntrega,
+    actualizarZonaEntrega,
+    eliminarZonaEntrega
 } from './restaurante.controller.js';
 
 const router = Router();
 
-// Restaurantes
-router.get('/restaurantes', listarRestaurantes);
-router.post('/restaurantes', crearRestaurante);
+// ==================== RESTAURANTES ====================
+router.get('/restaurantes',          listarRestaurantes);
+router.get('/restaurantes/:id',      obtenerRestaurantePorId);
+router.post('/restaurantes',         crearRestaurante);
+router.put('/restaurantes/:id',      actualizarRestaurante);
+router.delete('/restaurantes/:id',   eliminarRestaurante);
 
-// Categorías
-router.get('/categorias', listarCategorias);
-router.post('/categorias', crearCategoria);
+// ==================== CATEGORÍAS ====================
+router.get('/categorias',            listarCategorias);
+router.get('/categorias/:id',        obtenerCategoriaPorId);
+router.post('/categorias',           crearCategoria);
+router.put('/categorias/:id',        actualizarCategoria);
+router.delete('/categorias/:id',     eliminarCategoria);
 
-// Mesas
-router.get('/mesas', listarMesas);
-router.post('/mesas', crearMesa);
+// ==================== MESAS ====================
+router.get('/mesas',                 listarMesas);
+router.get('/mesas/:id',             obtenerMesaPorId);
+router.post('/mesas',                crearMesa);
+router.put('/mesas/:id',             actualizarMesa);
+router.delete('/mesas/:id',          eliminarMesa);
 
-// Zonas de entrega
-router.get('/zonas-entrega', listarZonasEntrega);
-router.post('/zonas-entrega', crearZonaEntrega);
+// ==================== ZONAS DE ENTREGA ====================
+router.get('/zonas-entrega',         listarZonasEntrega);
+router.get('/zonas-entrega/:id',     obtenerZonaEntregaPorId);
+router.post('/zonas-entrega',        crearZonaEntrega);
+router.put('/zonas-entrega/:id',     actualizarZonaEntrega);
+router.delete('/zonas-entrega/:id',  eliminarZonaEntrega);
 
 export default router;
