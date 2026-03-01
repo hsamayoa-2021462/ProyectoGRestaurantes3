@@ -7,16 +7,19 @@ const estadoReservacionSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        enum: ['PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'COMPLETADA', 'NO_SHOW']
+        enum: ['PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'COMPLETADA', 'NO_SHOW'],
+        uppercase: true,
+        trim: true
     },
     descripcion: String
 }, { timestamps: true, versionKey: false });
 
 const reservacionSchema = mongoose.Schema({
+    // El usuario viene del sistema SQL (Sequelize), su ID es un STRING(16), no un ObjectId de MongoDB
     usuario: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        type: String,
+        required: true,
+        trim: true
     },
     restaurante: {
         type: mongoose.Schema.Types.ObjectId,
@@ -40,13 +43,14 @@ const reservacionSchema = mongoose.Schema({
         required: true,
         min: 1
     },
+    // estado ahora referencia a la colección EstadoReservacion
     estado: {
-        type: String,
-        enum: ['PENDIENTE', 'CONFIRMADA', 'CANCELADA', 'COMPLETADA', 'NO_SHOW'],
-        default: 'PENDIENTE'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'EstadoReservacion',
+        required: true
     },
     observaciones: String,
-    fechaExpiracion: Date // Para liberar la mesa si no se confirma
+    fechaExpiracion: Date
 }, { timestamps: true, versionKey: false });
 
 export const EstadoReservacion = mongoose.model('EstadoReservacion', estadoReservacionSchema);
