@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "7afaafe1-4992-4ca9-9451-0d9b194b6c4e",
+    "_postman_id": "371d72e4-bdbe-4b6b-b637-49b590598734",
     "name": "ProyectoGrestaurante",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "48332491",
-    "_collection_link": "https://go.postman.co/collection/48332491-7afaafe1-4992-4ca9-9451-0d9b194b6c4e?source=collection_link"
+    "_exporter_id": "48332558",
+    "_collection_link": "https://go.postman.co/collection/48332558-371d72e4-bdbe-4b6b-b637-49b590598734?source=collection_link"
   },
   "item": [
     {
@@ -253,6 +253,51 @@
           "name": "Restaurantes",
           "item": [
             {
+              "name": "Listar Restaurante",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Restaurante por id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Agregar Restaurante",
               "request": {
                 "method": "POST",
@@ -278,50 +323,6 @@
                     "v1",
                     "restaurante",
                     "restaurantes"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Restaurante",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "restaurante",
-                    "restaurantes"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Listar Categoria",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/restaurante/categorias",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "restaurante",
-                    "categorias"
                   ]
                 }
               },
@@ -359,12 +360,21 @@
               "response": []
             },
             {
-              "name": "Listar mesa",
+              "name": "Nombre con Numeros Categoria",
               "request": {
-                "method": "GET",
+                "method": "POST",
                 "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"Comida123\",\r\n  \"descripcion\": \"Categoría inválida\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/restaurante/mesas",
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -374,7 +384,194 @@
                     "api",
                     "v1",
                     "restaurante",
-                    "mesas"
+                    "categorias"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualiza Restaurante",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"La Antigua Cocina Renovada\",\r\n  \"horarioApertura\": \"09:00\",\r\n  \"horarioCierre\": \"23:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Horarios invalidos de restaurante",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"horarioApertura\": \"25:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar restaurante",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/restaurantes/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "restaurantes",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Categoria",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "categorias"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Categoria por Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "categorias",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar categoria",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"Comida Típica\",\r\n  \"descripcion\": \"Platos tradicionales guatemaltecos\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "categorias",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar Categoria",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/categorias/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "categorias",
+                    "PON_ID_REAL"
                   ]
                 }
               },
@@ -412,12 +609,21 @@
               "response": []
             },
             {
-              "name": "Listar Entrega",
+              "name": "Capacidad Excedida Mesa",
               "request": {
-                "method": "GET",
+                "method": "POST",
                 "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"restaurante\": \"PON_ID_RESTAURANTE\",\r\n  \"numeroMesa\": 2,\r\n  \"capacidad\": 100,\r\n  \"ubicacion\": \"TERRAZA\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega",
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -427,7 +633,198 @@
                     "api",
                     "v1",
                     "restaurante",
-                    "zonas-entrega"
+                    "mesas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ubicacion Invalida Mesa",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"restaurante\": \"PON_ID_RESTAURANTE\",\r\n  \"numeroMesa\": 3,\r\n  \"capacidad\": 4,\r\n  \"ubicacion\": \"JARDIN\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar mesa",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener Mesa por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filtrar mesa por estado",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas?estado=DISPONIBLE",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas"
+                  ],
+                  "query": [
+                    {
+                      "key": "estado",
+                      "value": "DISPONIBLE"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar mesa",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"capacidad\": 6,\r\n  \"estado\": \"MANTENIMIENTO\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cambiar Restaurante Mesa",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"restaurante\": \"507f1f77bcf86cd799439011\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar mesa",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/mesas/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "mesas",
+                    "PON_ID_REAL"
                   ]
                 }
               },
@@ -459,6 +856,200 @@
                     "v1",
                     "restaurante",
                     "zonas-entrega"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Costo Negativo Zona",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"restaurante\": \"PON_ID_RESTAURANTE\",\r\n  \"nombre\": \"Zona 1\",\r\n  \"costoEntrega\": -10,\r\n  \"tiempoEstimado\": 30\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Tiempo Estimado Excedido Zona",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"restaurante\": \"PON_ID_RESTAURANTE\",\r\n  \"nombre\": \"Zona 2\",\r\n  \"costoEntrega\": 25,\r\n  \"tiempoEstimado\": 500\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Entrega",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Obtener Zona por ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar Zona Entrega",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"nombre\": \"Zona 10 Ampliada\",\r\n  \"costoEntrega\": 30,\r\n  \"tiempoEstimado\": 45\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Cambiar Restaurante Zona",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"restaurante\": \"507f1f77bcf86cd799439011\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega",
+                    "PON_ID_REAL"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar Zona Entrega",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/restaurante/zonas-entrega/PON_ID_REAL",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "restaurante",
+                    "zonas-entrega",
+                    "PON_ID_REAL"
                   ]
                 }
               },
