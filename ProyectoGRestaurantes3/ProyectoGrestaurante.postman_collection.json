@@ -1061,216 +1061,511 @@
           "name": "Menu",
           "item": [
             {
-              "name": "ListarCategoria",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/categorias-plato",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "categorias-plato"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "AgregarCategoria",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"Entradas\", \r\n    \"restaurante\": \"ID_RESTAURANTE\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+              "name": "Categoria del plato",
+              "item": [
+                {
+                  "name": "Agregar Categoria Plato",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Entradas\",\r\n    \"descripcion\": \"Platillos para comenzar\",\r\n    \"restaurante\": \"id_restaurante\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/categorias-plato",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "categorias-plato"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/categorias-plato",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "categorias-plato"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "ListarPlatos",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/platos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "platos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "AgregarPlatos",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"Pizza Margherita\",\r\n    \"descripcion\": \"Pizza tradicional italiana\",\r\n    \"precio\": 85,\r\n    \"categoria\": \"69a33816e47e596cae85b481\",\r\n    \"restaurante\": \"69a3380de47e596cae85b47f\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Listar Categoria del Plato",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/categorias-plato",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "categorias-plato"
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/platos",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "platos"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "ListarIngredientes",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/ingredientes",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "ingredientes"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "AgregarIngredientes",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"Harina\", \r\n    \"unidadMedida\": \"KILOS\",\r\n     \"costo\": 10\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Actualizar Categoria del Plato",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Entradas Frías\",\r\n    \"descripcion\": \"Nueva descripción\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reservaciones/reservaciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reservaciones",
+                        "reservaciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
                     }
-                  }
+                  },
+                  "response": []
                 },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/ingredientes",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "ingredientes"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "ListarInventario",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/inventario",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "inventario"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "AgregarInventario",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"ingrediente\": \"ID_INGREDIENTE\", \r\n    \"cantidadActual\": 50, \r\n    \"cantidadMinima\": 10, \r\n    \"restaurante\": \"ID_RESTAURANTE\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                {
+                  "name": "Eliminar Categoria del Plato",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/reservaciones/reservaciones/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "reservaciones",
+                        "reservaciones",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
                     }
-                  }
-                },
-                "url": {
-                  "raw": "http://localhost:3005/api/v1/menu/inventario",
-                  "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "3005",
-                  "path": [
-                    "api",
-                    "v1",
-                    "menu",
-                    "inventario"
-                  ]
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "Platos",
+              "item": [
+                {
+                  "name": "Agregar Plato",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Ceviche de Camarón\",\r\n    \"descripcion\": \"Camarones frescos con limón y cilantro\",\r\n    \"precio\": 85.00,\r\n    \"categoria\": \"id_categoria\",\r\n    \"restaurante\": \"id_restaurante\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/platos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "platos"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Plato",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Ceviche de Camarón\",\r\n    \"descripcion\": \"Camarones frescos con limón y cilantro\",\r\n    \"precio\": 85.00,\r\n    \"categoria\": \"id_categoria\",\r\n    \"restaurante\": \"id_restaurante\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/platos",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "platos"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Plato",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Ceviche de Camarón\",\r\n    \"descripcion\": \"Camarones frescos con limón y cilantro\",\r\n    \"precio\": 85.00,\r\n    \"categoria\": \"id_categoria\",\r\n    \"restaurante\": \"id_restaurante\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/platos/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "platos",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar plato",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/platos/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "platos",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Ingredientes",
+              "item": [
+                {
+                  "name": "Agregar Ingrediente",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Tomate\",\r\n    \"unidadMedida\": \"GRAMOS\",\r\n    \"costo\": 5.50\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/ingredientes",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "ingredientes"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar ingredientes",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/ingredientes",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "ingredientes"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Ingredientes",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"nombre\": \"Tomate\",\r\n    \"unidadMedida\": \"GRAMOS\",\r\n    \"costo\": 6.70\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/ingredientes/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "ingredientes",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Ingredientes",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/ingredientes/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "ingredientes",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Inventario",
+              "item": [
+                {
+                  "name": "Agregar Inventario",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"ingrediente\": \"id_ingrediente\",\r\n    \"restaurante\": \"id_restaurante\",\r\n    \"cantidadActual\": 150,\r\n    \"cantidadMinima\": 20\r\n}"
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/inventario",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "inventario"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Listar Inventario",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/inventario",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "inventario"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Actualizar Inventario",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"cantidadActual\": 200,\r\n    \"cantidadMinima\": 30\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/inventario/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "inventario",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Eliminar Inventario",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:3005/api/v1/menu/inventario/:id",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "3005",
+                      "path": [
+                        "api",
+                        "v1",
+                        "menu",
+                        "inventario",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -1661,7 +1956,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"usuario\": \"ID_USUARIO\",\r\n    \"restaurante\": \"ID_RESTAURANTE\",\r\n    \"fecha\": \"2024-12-20\",\r\n    \"hora\": \"20:00\",\r\n    \"numPersonas\": 4\r\n}",
+                  "raw": "{\r\n  \"usuario\": \"id_usuario\",\r\n  \"restaurante\": \"id_restaurante\",\r\n  \"mesa\": \"id_mesa\",\r\n  \"fecha\": \"2026-03-15\",\r\n  \"hora\": \"19:30\",\r\n  \"numPersonas\": 4,\r\n  \"estado\": \"id_EstadoReservacion\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1669,7 +1964,7 @@
                   }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/favoritos",
+                  "raw": "http://localhost:3005/api/v1/reservaciones/reservaciones",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -1678,7 +1973,8 @@
                   "path": [
                     "api",
                     "v1",
-                    "favoritos"
+                    "reservaciones",
+                    "reservaciones"
                   ]
                 }
               },
@@ -1719,13 +2015,89 @@
               "response": []
             },
             {
+              "name": "Actualizar Reservacion",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n\"mesa\": \"69a4889eac060a67fbb28ddc\", \r\n\"fecha\": \"2026-03-15\", \r\n\"hora\": \"19:30\", \r\n\"numPersonas\": 2, \r\n\"observaciones\": \"La mesa tiene 2 menus y 5 velas\", \r\n\"fechaExpiracion\": \"2026-03-15T18:00:00\" }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/reservaciones/:id",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "reservaciones",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar Reservacion",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/reservaciones/:id",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "reservaciones",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Agregar EstadoReservacion",
               "request": {
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"nombre\": \"PENDIENTE\", \r\n    \"descripcion\": \"Esperando confirmación\"\r\n}",
+                  "raw": "{\r\n    \"nombre\": \"CONFIRMADA\", \r\n    \"descripcion\": \"Reservación confirmada\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1778,6 +2150,82 @@
                     "v1",
                     "reservaciones",
                     "estados-reservacion"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar EstadoReservacion",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"CANCELADA\", \r\n    \"descripcion\": \"Reservación cancelada\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/estados-reservacion/:id",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "estados-reservacion",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar EstadoReservacion",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"nombre\": \"CANCELADA\", \r\n    \"descripcion\": \"Reservación cancelada\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3005/api/v1/reservaciones/estados-reservacion/:id",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3005",
+                  "path": [
+                    "api",
+                    "v1",
+                    "reservaciones",
+                    "estados-reservacion",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
                   ]
                 }
               },
