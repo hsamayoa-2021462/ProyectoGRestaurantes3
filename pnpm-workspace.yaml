@@ -1,0 +1,8 @@
+packages:
+  - ms-auth
+  - ms-shared
+  - ms-restaurante
+  - frontend
+
+onlyBuiltDependencies:
+  - argon2

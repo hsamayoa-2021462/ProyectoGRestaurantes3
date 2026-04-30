@@ -1,0 +1,11 @@
+{
+  "name": "proyectogrestaurantes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:auth": "pnpm --filter ms-auth dev",
+    "dev:restaurante": "pnpm --filter ms-restaurante dev",
+    "dev": "pnpm --parallel --filter \"ms-*\" dev"
+  }
+}
