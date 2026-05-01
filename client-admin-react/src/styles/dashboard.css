@@ -1,0 +1,227 @@
+/* src/styles/dashboard.css */
+/* Reutiliza variables de auth.css y agrega estilos para paneles */
+
+/* Layouts */
+.admin-layout, .client-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--black);
+}
+
+/* Sidebar Admin */
+.admin-sidebar {
+  width: 280px;
+  background: rgba(18, 21, 26, 0.7);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid var(--glass-bd);
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: fixed;
+  height: 100vh;
+  z-index: 20;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--gold);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-bd);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  color: var(--text-mid);
+  transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.nav-item svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+}
+
+.nav-item:hover, .nav-item.active {
+  background: var(--glass-bg);
+  color: var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 24px 32px;
+  background: radial-gradient(circle at 10% 20%, rgba(18,21,26,0.8), var(--deep));
+  min-height: 100vh;
+}
+
+/* TopBar Admin */
+.admin-topbar {
+  background: rgba(18, 21, 26, 0.6);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-bd);
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  border-radius: 16px;
+}
+
+.page-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Cards y tablas */
+.admin-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-bd);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.data-table th, .data-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--glass-bd);
+}
+
+.data-table th {
+  font-weight: 500;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: var(--text-mid);
+  cursor: pointer;
+  margin: 0 4px;
+}
+
+.btn-icon:hover { color: var(--gold); }
+
+/* Cliente Layout */
+.client-layout {
+  flex-direction: column;
+}
+
+.client-navbar {
+  background: rgba(18, 21, 26, 0.85);
+  backdrop-filter: blur(16px);
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass-bd);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.client-nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.client-nav-links a {
+  color: var(--text-mid);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+
+.client-nav-links a:hover, .client-nav-links a.active {
+  color: var(--gold);
+}
+
+.client-content {
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Grid productos */
+.menu-grid, .tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.menu-item-card, .table-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-bd);
+  border-radius: 20px;
+  padding: 16px;
+  transition: transform 0.2s;
+}
+
+.menu-item-card:hover { transform: translateY(-4px); border-color: var(--gold-dim); }
+
+/* Carrito */
+.cart-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 380px;
+  height: 100vh;
+  background: rgba(10, 12, 16, 0.95);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--glass-bd);
+  padding: 24px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-sidebar { width: 80px; padding: 20px 10px; }
+  .sidebar-brand span, .nav-item span { display: none; }
+  .main-content { margin-left: 80px; }
+  .cart-drawer { width: 100%; }
+}
