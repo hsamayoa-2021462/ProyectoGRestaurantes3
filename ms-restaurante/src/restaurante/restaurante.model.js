@@ -40,6 +40,10 @@ const restauranteSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CategoriaGastronomica'
     }],
+    adminUsuario: {
+        type: String,
+        default: null
+    },
     estado: {
         type: Boolean,
         default: true
@@ -123,7 +127,7 @@ const zonaEntregaSchema = mongoose.Schema({
         required: true,
         min: 0
     },
-    tiempoEstimado: Number, // en minutos
+    tiempoEstimado: Number,
     activo: {
         type: Boolean,
         default: true

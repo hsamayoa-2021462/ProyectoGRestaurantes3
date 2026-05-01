@@ -7,6 +7,7 @@ import {
     deleteUser
 } from './clientes.controller.js';
 import { validateJWT } from '../../middlewares/validate-JWT.js';
+import { isAdmin, isClient } from '../../middlewares/checkRole.js';
 
 const router = Router();
 
@@ -21,23 +22,23 @@ const router = Router();
  * @swagger
  * /clientes:
  *   get:
- *     summary: Obtener todos los clientes
+ *     summary: Obtener todos los clientes (Solo ADMIN)
  *     tags: [Clientes]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Lista de clientes
- *       401:
- *         description: No autorizado
+ *       403:
+ *         description: Acceso denegado
  */
-router.get('/', validateJWT, getUsers);
+router.get('/', validateJWT, isAdmin, getUsers);
 
 /**
  * @swagger
  * /clientes/{id}:
  *   get:
- *     summary: Obtener un cliente por ID
+ *     summary: Obtener un cliente por ID (Solo ADMIN)
  *     tags: [Clientes]
  *     security:
  *       - bearerAuth: []
@@ -50,16 +51,18 @@ router.get('/', validateJWT, getUsers);
  *     responses:
  *       200:
  *         description: Cliente encontrado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Cliente no encontrado
  */
-router.get('/:id', validateJWT, getUserById);
+router.get('/:id', validateJWT, isAdmin, getUserById);
 
 /**
  * @swagger
  * /clientes:
  *   post:
- *     summary: Crear un cliente
+ *     summary: Crear un cliente (Cliente)
  *     tags: [Clientes]
  *     security:
  *       - bearerAuth: []
@@ -79,16 +82,16 @@ router.get('/:id', validateJWT, getUserById);
  *     responses:
  *       201:
  *         description: Cliente creado
- *       400:
- *         description: Datos inválidos
+ *       403:
+ *         description: Acceso denegado
  */
-router.post('/', validateJWT, createUser);
+router.post('/', validateJWT, isClient, createUser);
 
 /**
  * @swagger
  * /clientes/{id}:
  *   put:
- *     summary: Actualizar un cliente
+ *     summary: Actualizar un cliente (Solo ADMIN)
  *     tags: [Clientes]
  *     security:
  *       - bearerAuth: []
@@ -114,16 +117,18 @@ router.post('/', validateJWT, createUser);
  *     responses:
  *       200:
  *         description: Cliente actualizado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Cliente no encontrado
  */
-router.put('/:id', validateJWT, updateUser);
+router.put('/:id', validateJWT, isAdmin, updateUser);
 
 /**
  * @swagger
  * /clientes/{id}:
  *   delete:
- *     summary: Eliminar un cliente
+ *     summary: Eliminar un cliente (Solo ADMIN)
  *     tags: [Clientes]
  *     security:
  *       - bearerAuth: []
@@ -136,9 +141,11 @@ router.put('/:id', validateJWT, updateUser);
  *     responses:
  *       200:
  *         description: Cliente eliminado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Cliente no encontrado
  */
-router.delete('/:id', validateJWT, deleteUser);
+router.delete('/:id', validateJWT, isAdmin, deleteUser);
 
 export default router;

@@ -5,6 +5,7 @@ import {
     listarRecursos, obtenerRecurso, crearRecurso, actualizarRecurso, eliminarRecurso
 } from './evento.controller.js';
 import { validateJWT } from '../../middlewares/validate-JWT.js';
+import { isAdmin, isAnyRole, isClient } from '../../middlewares/checkRole.js';
 
 const router = Router();
 
@@ -19,8 +20,6 @@ const router = Router();
  *     description: Gestión de recursos asignados a eventos
  */
 
-// ─── EVENTOS ────────────────────────────────────────────────────────────────
-
 /**
  * @swagger
  * /eventos/eventos:
@@ -32,10 +31,8 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Lista de eventos
- *       401:
- *         description: No autorizado
  */
-router.get('/eventos', validateJWT, listarEventos);
+router.get('/eventos', validateJWT, isAnyRole, listarEventos);
 
 /**
  * @swagger
@@ -57,13 +54,13 @@ router.get('/eventos', validateJWT, listarEventos);
  *       404:
  *         description: Evento no encontrado
  */
-router.get('/eventos/:id', validateJWT, obtenerEvento);
+router.get('/eventos/:id', validateJWT, isAnyRole, obtenerEvento);
 
 /**
  * @swagger
  * /eventos/eventos:
  *   post:
- *     summary: Crear un evento
+ *     summary: Crear un evento (Solo ADMIN)
  *     tags: [Eventos]
  *     security:
  *       - bearerAuth: []
@@ -86,16 +83,16 @@ router.get('/eventos/:id', validateJWT, obtenerEvento);
  *     responses:
  *       201:
  *         description: Evento creado
- *       400:
- *         description: Datos inválidos
+ *       403:
+ *         description: Acceso denegado
  */
-router.post('/eventos', validateJWT, crearEvento);
+router.post('/eventos', validateJWT, isAdmin, crearEvento);
 
 /**
  * @swagger
  * /eventos/eventos/{id}:
  *   put:
- *     summary: Actualizar un evento
+ *     summary: Actualizar un evento (Solo ADMIN)
  *     tags: [Eventos]
  *     security:
  *       - bearerAuth: []
@@ -124,16 +121,18 @@ router.post('/eventos', validateJWT, crearEvento);
  *     responses:
  *       200:
  *         description: Evento actualizado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Evento no encontrado
  */
-router.put('/eventos/:id', validateJWT, actualizarEvento);
+router.put('/eventos/:id', validateJWT, isAdmin, actualizarEvento);
 
 /**
  * @swagger
  * /eventos/eventos/{id}:
  *   delete:
- *     summary: Eliminar un evento
+ *     summary: Eliminar un evento (Solo ADMIN)
  *     tags: [Eventos]
  *     security:
  *       - bearerAuth: []
@@ -146,18 +145,18 @@ router.put('/eventos/:id', validateJWT, actualizarEvento);
  *     responses:
  *       200:
  *         description: Evento eliminado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Evento no encontrado
  */
-router.delete('/eventos/:id', validateJWT, eliminarEvento);
-
-// ─── INSCRIPCIONES ──────────────────────────────────────────────────────────
+router.delete('/eventos/:id', validateJWT, isAdmin, eliminarEvento);
 
 /**
  * @swagger
  * /eventos/inscripciones:
  *   get:
- *     summary: Listar todas las inscripciones
+ *     summary: Listar todas las inscripciones (Solo ADMIN)
  *     tags: [Inscripciones]
  *     security:
  *       - bearerAuth: []
@@ -165,13 +164,13 @@ router.delete('/eventos/:id', validateJWT, eliminarEvento);
  *       200:
  *         description: Lista de inscripciones
  */
-router.get('/inscripciones', validateJWT, listarInscripciones);
+router.get('/inscripciones', validateJWT, isAdmin, listarInscripciones);
 
 /**
  * @swagger
  * /eventos/inscripciones/{id}:
  *   get:
- *     summary: Obtener una inscripción por ID
+ *     summary: Obtener una inscripción por ID (Solo ADMIN)
  *     tags: [Inscripciones]
  *     security:
  *       - bearerAuth: []
@@ -187,13 +186,13 @@ router.get('/inscripciones', validateJWT, listarInscripciones);
  *       404:
  *         description: Inscripción no encontrada
  */
-router.get('/inscripciones/:id', validateJWT, obtenerInscripcion);
+router.get('/inscripciones/:id', validateJWT, isAdmin, obtenerInscripcion);
 
 /**
  * @swagger
  * /eventos/inscripciones:
  *   post:
- *     summary: Crear una inscripción
+ *     summary: Crear una inscripción (Cliente)
  *     tags: [Inscripciones]
  *     security:
  *       - bearerAuth: []
@@ -211,16 +210,16 @@ router.get('/inscripciones/:id', validateJWT, obtenerInscripcion);
  *     responses:
  *       201:
  *         description: Inscripción creada
- *       400:
- *         description: Datos inválidos
+ *       403:
+ *         description: Acceso denegado
  */
-router.post('/inscripciones', validateJWT, crearInscripcion);
+router.post('/inscripciones', validateJWT, isClient, crearInscripcion);
 
 /**
  * @swagger
  * /eventos/inscripciones/{id}:
  *   put:
- *     summary: Actualizar una inscripción
+ *     summary: Actualizar una inscripción (Solo ADMIN)
  *     tags: [Inscripciones]
  *     security:
  *       - bearerAuth: []
@@ -244,16 +243,18 @@ router.post('/inscripciones', validateJWT, crearInscripcion);
  *     responses:
  *       200:
  *         description: Inscripción actualizada
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Inscripción no encontrada
  */
-router.put('/inscripciones/:id', validateJWT, actualizarInscripcion);
+router.put('/inscripciones/:id', validateJWT, isAdmin, actualizarInscripcion);
 
 /**
  * @swagger
  * /eventos/inscripciones/{id}:
  *   delete:
- *     summary: Eliminar una inscripción
+ *     summary: Eliminar una inscripción (Solo ADMIN)
  *     tags: [Inscripciones]
  *     security:
  *       - bearerAuth: []
@@ -266,18 +267,18 @@ router.put('/inscripciones/:id', validateJWT, actualizarInscripcion);
  *     responses:
  *       200:
  *         description: Inscripción eliminada
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Inscripción no encontrada
  */
-router.delete('/inscripciones/:id', validateJWT, eliminarInscripcion);
-
-// ─── RECURSOS DE EVENTO ─────────────────────────────────────────────────────
+router.delete('/inscripciones/:id', validateJWT, isAdmin, eliminarInscripcion);
 
 /**
  * @swagger
  * /eventos/recursos-evento:
  *   get:
- *     summary: Listar todos los recursos de eventos
+ *     summary: Listar todos los recursos (Solo ADMIN)
  *     tags: [Recursos de Evento]
  *     security:
  *       - bearerAuth: []
@@ -285,13 +286,13 @@ router.delete('/inscripciones/:id', validateJWT, eliminarInscripcion);
  *       200:
  *         description: Lista de recursos
  */
-router.get('/recursos-evento', validateJWT, listarRecursos);
+router.get('/recursos-evento', validateJWT, isAdmin, listarRecursos);
 
 /**
  * @swagger
  * /eventos/recursos-evento/{id}:
  *   get:
- *     summary: Obtener un recurso por ID
+ *     summary: Obtener un recurso por ID (Solo ADMIN)
  *     tags: [Recursos de Evento]
  *     security:
  *       - bearerAuth: []
@@ -307,13 +308,13 @@ router.get('/recursos-evento', validateJWT, listarRecursos);
  *       404:
  *         description: Recurso no encontrado
  */
-router.get('/recursos-evento/:id', validateJWT, obtenerRecurso);
+router.get('/recursos-evento/:id', validateJWT, isAdmin, obtenerRecurso);
 
 /**
  * @swagger
  * /eventos/recursos-evento:
  *   post:
- *     summary: Crear un recurso de evento
+ *     summary: Crear un recurso (Solo ADMIN)
  *     tags: [Recursos de Evento]
  *     security:
  *       - bearerAuth: []
@@ -333,16 +334,16 @@ router.get('/recursos-evento/:id', validateJWT, obtenerRecurso);
  *     responses:
  *       201:
  *         description: Recurso creado
- *       400:
- *         description: Datos inválidos
+ *       403:
+ *         description: Acceso denegado
  */
-router.post('/recursos-evento', validateJWT, crearRecurso);
+router.post('/recursos-evento', validateJWT, isAdmin, crearRecurso);
 
 /**
  * @swagger
  * /eventos/recursos-evento/{id}:
  *   put:
- *     summary: Actualizar un recurso de evento
+ *     summary: Actualizar un recurso (Solo ADMIN)
  *     tags: [Recursos de Evento]
  *     security:
  *       - bearerAuth: []
@@ -366,16 +367,18 @@ router.post('/recursos-evento', validateJWT, crearRecurso);
  *     responses:
  *       200:
  *         description: Recurso actualizado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Recurso no encontrado
  */
-router.put('/recursos-evento/:id', validateJWT, actualizarRecurso);
+router.put('/recursos-evento/:id', validateJWT, isAdmin, actualizarRecurso);
 
 /**
  * @swagger
  * /eventos/recursos-evento/{id}:
  *   delete:
- *     summary: Eliminar un recurso de evento
+ *     summary: Eliminar un recurso (Solo ADMIN)
  *     tags: [Recursos de Evento]
  *     security:
  *       - bearerAuth: []
@@ -388,9 +391,11 @@ router.put('/recursos-evento/:id', validateJWT, actualizarRecurso);
  *     responses:
  *       200:
  *         description: Recurso eliminado
+ *       403:
+ *         description: Acceso denegado
  *       404:
  *         description: Recurso no encontrado
  */
-router.delete('/recursos-evento/:id', validateJWT, eliminarRecurso);
+router.delete('/recursos-evento/:id', validateJWT, isAdmin, eliminarRecurso);
 
 export default router;
