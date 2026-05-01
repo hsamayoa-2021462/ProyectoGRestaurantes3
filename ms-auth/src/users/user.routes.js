@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { validateJWT } from '../../middlewares/validate-JWT.js';
+import { isAdmin } from '../../middlewares/validate-admin.js';
 import {
   getAllUsers,
   updateUserRole,
@@ -15,29 +17,30 @@ const router = Router();
 
 /**
  * @swagger
- * tags:
- *   name: Users
- *   description: Gestión de usuarios y roles
- */
-
-/**
- * @swagger
- * /users:
+ * /api/v1/users:
  *   get:
- *     summary: Obtener todos los usuarios
  *     tags: [Users]
+ *     summary: Obtener todos los usuarios
+ *     description: Devuelve la lista completa de usuarios. Solo accesible para administradores.
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de usuarios
+ *         description: Lista de usuarios obtenida exitosamente
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *       403:
+ *         description: Acceso denegado. Se requiere rol de administrador
  */
-router.get('/', getAllUsers);
+router.get('/', validateJWT, isAdmin, getAllUsers);
 
 /**
  * @swagger
- * /users/{userId}/role:
+ * /api/v1/users/{userId}/role:
  *   put:
- *     summary: Actualizar el rol de un usuario
  *     tags: [Users]
+ *     summary: Actualizar el rol de un usuario
+ *     description: Cambia el rol de un usuario específico. Solo accesible para administradores.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -58,23 +61,28 @@ router.get('/', getAllUsers);
  *             properties:
  *               role:
  *                 type: string
- *                 description: Nombre del nuevo rol
+ *                 description: Nombre del nuevo rol (ADMIN_ROLE, USER_ROLE)
  *     responses:
  *       200:
  *         description: Rol actualizado exitosamente
  *       400:
  *         description: Datos inválidos
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *       403:
+ *         description: Acceso denegado. Se requiere rol de administrador
  *       404:
  *         description: Usuario no encontrado
  */
-router.put('/:userId/role', ...updateUserRole, validateUpdateUserRole);
+router.put('/:userId/role', validateJWT, isAdmin, ...updateUserRole, validateUpdateUserRole);
 
 /**
  * @swagger
- * /users/{userId}/roles:
+ * /api/v1/users/{userId}/roles:
  *   get:
- *     summary: Obtener los roles de un usuario
  *     tags: [Users]
+ *     summary: Obtener los roles de un usuario
+ *     description: Devuelve los roles asignados a un usuario específico. Solo accesible para administradores.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -86,18 +94,23 @@ router.put('/:userId/role', ...updateUserRole, validateUpdateUserRole);
  *         description: ID del usuario
  *     responses:
  *       200:
- *         description: Roles del usuario
+ *         description: Roles del usuario obtenidos exitosamente
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *       403:
+ *         description: Acceso denegado. Se requiere rol de administrador
  *       404:
  *         description: Usuario no encontrado
  */
-router.get('/:userId/roles', ...getUserRoles, validateGetUserRoles);
+router.get('/:userId/roles', validateJWT, isAdmin, ...getUserRoles, validateGetUserRoles);
 
 /**
  * @swagger
- * /users/by-role/{roleName}:
+ * /api/v1/users/by-role/{roleName}:
  *   get:
- *     summary: Obtener usuarios por rol
  *     tags: [Users]
+ *     summary: Obtener usuarios por rol
+ *     description: Devuelve todos los usuarios que tienen un rol específico. Solo accesible para administradores.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -106,13 +119,17 @@ router.get('/:userId/roles', ...getUserRoles, validateGetUserRoles);
  *         required: true
  *         schema:
  *           type: string
- *         description: Nombre del rol
+ *         description: Nombre del rol (ADMIN_ROLE, USER_ROLE)
  *     responses:
  *       200:
  *         description: Lista de usuarios con ese rol
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *       403:
+ *         description: Acceso denegado. Se requiere rol de administrador
  *       404:
  *         description: Rol no encontrado
  */
-router.get('/by-role/:roleName', ...getUsersByRole, validateGetUsersByRole);
+router.get('/by-role/:roleName', validateJWT, isAdmin, ...getUsersByRole, validateGetUsersByRole);
 
 export default router;
