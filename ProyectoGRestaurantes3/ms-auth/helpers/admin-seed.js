@@ -5,7 +5,7 @@ import { Role, UserRole } from '../src/roles/role.model.js';
 
 export const ensureAdminUser = async () => {
     try {
-        const adminEmail = 'efootballcambios86@gmail.com';
+        const adminEmail = 'kirsoalejo@gmail.com';
 
         // Buscar el usuario por email usando Email (PascalCase)
         const user = await User.findOne({
