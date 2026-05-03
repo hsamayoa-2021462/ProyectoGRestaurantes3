@@ -6,7 +6,7 @@ import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage'
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage'
 import ProtectedRoute from './ProtectedRoute'
 import { useAuthStore } from '../../features/auth/store/authStore'
-
+  
 // Admin pages
 import AdminDashboard from '../../features/admin/pages/AdminDashboard'
 import AdminMenu from '../../features/admin/pages/AdminMenu'
