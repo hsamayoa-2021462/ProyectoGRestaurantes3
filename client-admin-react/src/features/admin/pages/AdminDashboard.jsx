@@ -287,6 +287,12 @@ export default function AdminDashboard() {
           border: 1px solid var(--glass-bd);
           margin-bottom: 8px;
           overflow: hidden;
+          cursor: pointer;
+          transition: border-color .2s, background .2s;
+        }
+        .user-card:hover {
+          border-color: rgba(201,168,76,.35);
+          background: var(--gold-dim);
         }
         .user-avatar {
           width: 32px; height: 32px;
@@ -656,9 +662,12 @@ export default function AdminDashboard() {
 
           {/* Footer */}
           <div className="sidebar-footer">
-            <div className="user-card">
+            <div className="user-card" onClick={() => navigate('/admin/perfil')} title="Ver mi perfil">
               <div className="user-avatar">
-                {user?.name?.[0]?.toUpperCase() || 'A'}
+                {user?.profilePicture
+                  ? <img src={user.profilePicture} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 7 }} />
+                  : user?.name?.[0]?.toUpperCase() || 'A'
+                }
               </div>
               <div className="user-info">
                 <div className="user-name">{user?.name || 'Admin'}</div>

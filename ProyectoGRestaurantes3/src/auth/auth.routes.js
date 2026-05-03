@@ -262,6 +262,38 @@ router.get('/profile', validateJWT, authController.getProfile);
 
 /**
  * @swagger
+ * /api/v1/auth/profile/picture:
+ *   put:
+ *     tags: [Profile]
+ *     summary: Actualiza la foto de perfil del usuario
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - name: profilePicture
+ *         in: formData
+ *         type: file
+ *         required: true
+ *         description: Nueva imagen de perfil
+ *     responses:
+ *       200:
+ *         description: Foto actualizada exitosamente
+ *       400:
+ *         description: No se proporcionó imagen
+ *       401:
+ *         description: Token inválido
+ */
+router.put(
+  '/profile/picture',
+  validateJWT,
+  upload.single('profilePicture'),
+  handleUploadError,
+  authController.updateProfilePicture
+);
+
+/**
+ * @swagger
  * /api/v1/auth/profile/by-id:
  *   post:
  *     tags: [Profile]

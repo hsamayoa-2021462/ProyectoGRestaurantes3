@@ -14,6 +14,7 @@ import AdminPedidos from '../../features/admin/pages/AdminPedidos'
 import AdminReservaciones from '../../features/admin/pages/AdminReservaciones'
 import AdminRestaurantes from '../../features/admin/pages/AdminRestaurantes'
 import AdminReportes from '../../features/admin/pages/AdminReportes'
+import AdminPerfil from '../../features/admin/pages/AdminPerfil'
 
 // Cliente pages
 import ClienteInicio from '../../features/cliente/pages/ClienteInicio'
@@ -45,6 +46,7 @@ export default function AppRoutes() {
         <Route path="/admin/reservaciones" element={<AdminReservaciones />} />
         <Route path="/admin/restaurantes" element={<AdminRestaurantes />} />
         <Route path="/admin/reportes" element={<AdminReportes />} />
+        <Route path="/admin/perfil" element={<AdminPerfil />} />
       </Route>
 
       {/* Rutas protegidas CLIENTE */}

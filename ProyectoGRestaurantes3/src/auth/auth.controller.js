@@ -8,6 +8,11 @@ import {
 } from '../../helpers/auth-operations.js';
 import { getUserProfileHelper } from '../../helpers/profile-operations.js';
 import { asyncHandler } from '../../middlewares/server-genericError-handler.js';
+import { UserProfile } from '../users/user.model.js';
+import { uploadImage, deleteImage } from '../../helpers/cloudinary-service.js';
+import { findUserById } from '../../helpers/user-db.js';
+import path from 'path';
+import crypto from 'crypto';
 
 export const register = asyncHandler(async (req, res) => {
   try {
@@ -200,5 +205,49 @@ export const getProfileById = asyncHandler(async (req, res) => {
     success: true,
     message: 'Perfil obtenido exitosamente',
     data: user,
+  });
+});
+
+export const updateProfilePicture = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: 'No se proporcionó ninguna imagen',
+    });
+  }
+
+  const user = await findUserById(userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'Usuario no encontrado',
+    });
+  }
+
+  // Borrar foto anterior de Cloudinary si existe
+  const oldPicture = user.UserProfile?.ProfilePicture;
+  if (oldPicture) {
+    await deleteImage(oldPicture).catch(() => {});
+  }
+
+  // Subir nueva imagen a Cloudinary
+  const ext = path.extname(req.file.path);
+  const randomHex = crypto.randomBytes(6).toString('hex');
+  const cloudinaryFileName = `profile-${randomHex}${ext}`;
+
+  const cloudinaryUrl = await uploadImage(req.file.path, cloudinaryFileName);
+
+  // Actualizar en base de datos
+  await UserProfile.update(
+    { ProfilePicture: cloudinaryUrl },
+    { where: { UserId: userId } }
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: 'Foto de perfil actualizada exitosamente',
+    data: { profilePicture: cloudinaryUrl },
   });
 });

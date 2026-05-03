@@ -1,5 +1,6 @@
 // src/features/cliente/pages/ClienteInicio.jsx
 import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'
 
 /* ─── ICONS ─── */
@@ -54,25 +55,20 @@ const IconHamburger = () => (
     <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
   </svg>
 )
-const IconExperience = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </svg>
-)
 
+// Rutas reales del router
 const NAV_LINKS = [
-  { key: 'inicio',      label: 'Inicio',         icon: <IconMenu /> },
-  { key: 'menu',        label: 'Menú',            icon: <IconMenu /> },
-  { key: 'reservar',    label: 'Reservar Mesa',   icon: <IconTable /> },
-  { key: 'pedidos',     label: 'Mis Pedidos',     icon: <IconBag /> },
-  { key: 'experiencia', label: 'Experiencia',     icon: <IconExperience /> },
-  { key: 'perfil',      label: 'Mi Perfil',       icon: <IconUser /> },
+  { key: 'inicio',   label: 'Inicio',        path: '/cliente/inicio' },
+  { key: 'menu',     label: 'Menú',           path: '/cliente/menu' },
+  { key: 'reservar', label: 'Reservar Mesa',  path: '/cliente/reservar' },
+  { key: 'pedidos',  label: 'Mis Pedidos',    path: '/cliente/mis-pedidos' },
+  { key: 'perfil',   label: 'Mi Perfil',      path: '/cliente/perfil' },
 ]
 
 const FEATURED_DISHES = [
-  { name: 'Filete a la Parrilla', desc: 'Corte premium con reducción de vino tinto y papas al romero', price: 'Q 280', tag: 'Chef\'s Pick', emoji: '🥩' },
+  { name: 'Filete a la Parrilla', desc: 'Corte premium con reducción de vino tinto y papas al romero', price: 'Q 280', tag: "Chef's Pick", emoji: '🥩' },
   { name: 'Risotto de Mariscos',  desc: 'Arroz cremoso con camarones, mejillones y azafrán español',   price: 'Q 245', tag: 'Popular',     emoji: '🦐' },
-  { name: 'Pasta Carbonara',       desc: 'Linguini artesanal con panceta, parmesano y yema de huevo',   price: 'Q 180', tag: 'Clásico',    emoji: '🍝' },
+  { name: 'Pasta Carbonara',      desc: 'Linguini artesanal con panceta, parmesano y yema de huevo',   price: 'Q 180', tag: 'Clásico',    emoji: '🍝' },
 ]
 
 const REVIEWS = [
@@ -82,9 +78,16 @@ const REVIEWS = [
 ]
 
 export default function ClienteInicio() {
-  const [activeNav, setActiveNav] = useState('inicio')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user, logout } = useAuthStore()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  // Activo según la ruta real
+  const activeKey = NAV_LINKS.find(l => l.path === location.pathname)?.key || 'inicio'
+
+  const avatarSrc = user?.profilePicture
+  const initials = user?.name?.[0]?.toUpperCase() || 'U'
 
   return (
     <>
@@ -119,7 +122,7 @@ export default function ClienteInicio() {
           position: fixed; top: 0; left: 0; right: 0;
           z-index: 100;
           height: 70px;
-          background: rgba(7,8,10,.85);
+          background: rgba(7,8,10,.88);
           backdrop-filter: blur(24px) saturate(180%);
           border-bottom: 1px solid var(--glass-bd);
           display: flex; align-items: center; justify-content: space-between;
@@ -128,11 +131,10 @@ export default function ClienteInicio() {
 
         .nav-brand {
           display: flex; align-items: center; gap: 12px;
-          text-decoration: none;
+          cursor: pointer;
         }
         .nav-brand-icon {
-          width: 38px; height: 38px;
-          border-radius: 10px;
+          width: 38px; height: 38px; border-radius: 10px;
           background: linear-gradient(135deg, rgba(201,168,76,.2), rgba(201,168,76,.05));
           border: 1px solid rgba(201,168,76,.25);
           display: flex; align-items: center; justify-content: center;
@@ -145,40 +147,42 @@ export default function ClienteInicio() {
           color: var(--text);
         }
 
-        .nav-links {
-          display: flex; align-items: center; gap: 2px;
-        }
+        .nav-links { display: flex; align-items: center; gap: 2px; }
         .nav-link {
-          padding: 7px 14px;
-          border-radius: 8px;
+          padding: 7px 14px; border-radius: 8px;
           font-size: 13px; color: var(--text-mid);
-          cursor: pointer;
-          transition: all .2s;
-          font-weight: 400;
-          letter-spacing: .2px;
+          cursor: pointer; transition: all .2s;
+          font-weight: 400; letter-spacing: .2px;
           border: none; background: none;
           font-family: 'Outfit', sans-serif;
-          display: flex; align-items: center; gap: 7px;
           white-space: nowrap;
         }
         .nav-link:hover { color: var(--text); background: var(--glass-bg); }
         .nav-link.active { color: var(--gold-lt); background: var(--gold-dim); }
 
         .nav-right { display: flex; align-items: center; gap: 10px; }
+
+        /* Avatar con foto o inicial */
         .nav-avatar {
-          width: 36px; height: 36px;
-          border-radius: 10px;
+          width: 36px; height: 36px; border-radius: 10px;
           background: linear-gradient(135deg, rgba(201,168,76,.25), rgba(201,168,76,.08));
-          border: 1px solid rgba(201,168,76,.2);
+          border: 2px solid rgba(201,168,76,.25);
           display: flex; align-items: center; justify-content: center;
           font-family: 'Cormorant Garamond', serif;
           font-size: 16px; font-weight: 500;
           color: var(--gold-lt); cursor: pointer;
+          overflow: hidden;
+          transition: border-color .2s, transform .15s;
         }
+        .nav-avatar:hover {
+          border-color: rgba(201,168,76,.6);
+          transform: scale(1.05);
+        }
+        .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
         .nav-logout-btn {
           display: flex; align-items: center; gap: 6px;
-          padding: 7px 12px;
-          border-radius: 8px;
+          padding: 7px 12px; border-radius: 8px;
           background: none; border: 1px solid rgba(255,255,255,.08);
           color: var(--text-muted); cursor: pointer;
           font-family: 'Outfit', sans-serif; font-size: 12.5px;
@@ -187,25 +191,39 @@ export default function ClienteInicio() {
         .nav-logout-btn:hover { border-color: rgba(224,90,90,.3); color: #e05a5a; background: rgba(224,90,90,.06); }
 
         .nav-mobile-btn {
-          display: none;
-          width: 36px; height: 36px;
-          border-radius: 8px;
+          display: none; width: 36px; height: 36px; border-radius: 8px;
           background: var(--glass-bg); border: 1px solid var(--glass-bd);
           color: var(--text-mid); cursor: pointer;
           align-items: center; justify-content: center;
         }
+
+        /* Mobile dropdown */
+        .mobile-menu {
+          position: fixed; top: 70px; left: 0; right: 0; z-index: 99;
+          background: rgba(7,8,10,.97); backdrop-filter: blur(24px);
+          border-bottom: 1px solid var(--glass-bd);
+          padding: 12px 16px 16px;
+          display: none; flex-direction: column; gap: 4px;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-nav-link {
+          padding: 11px 14px; border-radius: 8px; color: var(--text-mid);
+          cursor: pointer; transition: all .2s; font-size: 14px;
+          border: none; background: none;
+          font-family: 'Outfit', sans-serif; width: 100%; text-align: left;
+        }
+        .mobile-nav-link:hover { color: var(--text); background: var(--glass-bg); }
+        .mobile-nav-link.active { color: var(--gold-lt); background: var(--gold-dim); }
 
         /* ── PAGE ── */
         .cliente-page { padding-top: 70px; min-height: 100vh; }
 
         /* ── HERO ── */
         .hero {
-          position: relative;
-          min-height: 92vh;
+          position: relative; min-height: 92vh;
           display: flex; align-items: center; justify-content: center;
           overflow: hidden;
         }
-
         .hero-bg {
           position: absolute; inset: 0; z-index: 0;
           background:
@@ -213,31 +231,24 @@ export default function ClienteInicio() {
             radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,168,76,.04) 0%, transparent 55%),
             linear-gradient(180deg, var(--deep) 0%, var(--black) 100%);
         }
-
         .hero-grain {
           position: absolute; inset: 0; z-index: 0; opacity: .03;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
           background-size: 180px;
         }
-
-        /* Decorative gold line */
         .hero-line {
           position: absolute; top: 0; left: 50%; transform: translateX(-50%);
           width: 1px; height: 80px;
           background: linear-gradient(180deg, transparent, var(--gold));
           opacity: .4;
         }
-
         .hero-content {
-          position: relative; z-index: 10;
-          text-align: center;
+          position: relative; z-index: 10; text-align: center;
           max-width: 800px; padding: 0 24px;
         }
-
         .hero-eyebrow {
-          font-size: 11px; letter-spacing: 4px;
-          text-transform: uppercase; color: var(--gold);
-          opacity: .8; margin-bottom: 24px;
+          font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+          color: var(--gold); opacity: .8; margin-bottom: 24px;
           display: flex; align-items: center; justify-content: center; gap: 16px;
         }
         .hero-eyebrow::before, .hero-eyebrow::after {
@@ -245,42 +256,31 @@ export default function ClienteInicio() {
           background: linear-gradient(90deg, transparent, var(--gold));
         }
         .hero-eyebrow::after { transform: scaleX(-1); }
-
         .hero-title {
           font-family: 'Cormorant Garamond', serif;
           font-size: clamp(52px, 8vw, 88px);
           font-weight: 400; line-height: .95;
-          color: var(--text); letter-spacing: -1px;
-          margin-bottom: 24px;
+          color: var(--text); letter-spacing: -1px; margin-bottom: 24px;
         }
         .hero-title span { color: var(--gold-lt); font-style: italic; }
-
         .hero-subtitle {
-          font-size: 16px; color: var(--text-mid);
-          line-height: 1.7; font-weight: 300;
-          max-width: 520px; margin: 0 auto 40px;
-          letter-spacing: .3px;
+          font-size: 16px; color: var(--text-mid); line-height: 1.7;
+          font-weight: 300; max-width: 520px; margin: 0 auto 40px; letter-spacing: .3px;
         }
-
         .hero-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
         .btn-primary {
-          position: relative;
-          padding: 14px 32px;
+          position: relative; padding: 14px 32px;
           background: linear-gradient(135deg, rgba(201,168,76,.18) 0%, rgba(201,168,76,.06) 100%);
-          border: 1px solid rgba(201,168,76,.35);
-          border-radius: 11px;
-          font-family: 'Outfit', sans-serif;
-          font-size: 13.5px; font-weight: 500;
+          border: 1px solid rgba(201,168,76,.35); border-radius: 11px;
+          font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 500;
           letter-spacing: 1.5px; text-transform: uppercase;
           color: var(--gold-lt); cursor: pointer;
           display: flex; align-items: center; gap: 8px;
-          overflow: hidden;
-          transition: border-color .25s, transform .15s, box-shadow .25s;
+          overflow: hidden; transition: border-color .25s, transform .15s, box-shadow .25s;
         }
         .btn-primary::before {
-          content: '';
-          position: absolute; top: 0; left: -100%;
+          content: ''; position: absolute; top: 0; left: -100%;
           width: 100%; height: 100%;
           background: linear-gradient(90deg, transparent, rgba(201,168,76,.15), transparent);
           transition: left .55s;
@@ -291,28 +291,18 @@ export default function ClienteInicio() {
           box-shadow: 0 0 24px rgba(201,168,76,.16);
           transform: translateY(-1px);
         }
-
         .btn-ghost {
-          padding: 13px 28px;
-          background: transparent;
-          border: 1px solid rgba(255,255,255,.1);
-          border-radius: 11px;
-          font-family: 'Outfit', sans-serif;
-          font-size: 13px; font-weight: 400;
-          color: var(--text-mid); cursor: pointer;
-          transition: all .2s;
+          padding: 13px 28px; background: transparent;
+          border: 1px solid rgba(255,255,255,.1); border-radius: 11px;
+          font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 400;
+          color: var(--text-mid); cursor: pointer; transition: all .2s;
         }
-        .btn-ghost:hover {
-          border-color: rgba(255,255,255,.2);
-          color: var(--text); background: rgba(255,255,255,.04);
-        }
+        .btn-ghost:hover { border-color: rgba(255,255,255,.2); color: var(--text); background: rgba(255,255,255,.04); }
 
-        /* INFO STRIP */
         .info-strip {
           display: flex; align-items: center; justify-content: center; gap: 32px;
           margin-top: 60px; padding-top: 40px;
-          border-top: 1px solid var(--glass-bd);
-          flex-wrap: wrap;
+          border-top: 1px solid var(--glass-bd); flex-wrap: wrap;
         }
         .info-item { display: flex; align-items: center; gap: 8px; color: var(--text-mid); font-size: 13px; }
         .info-icon { color: var(--gold); }
@@ -326,131 +316,73 @@ export default function ClienteInicio() {
         .section-title {
           font-family: 'Cormorant Garamond', serif;
           font-size: clamp(32px, 5vw, 52px); font-weight: 400;
-          color: var(--text); text-align: center;
-          letter-spacing: -.5px; margin-bottom: 48px;
-          line-height: 1.1;
+          color: var(--text); text-align: center; letter-spacing: -.5px;
+          margin-bottom: 48px; line-height: 1.1;
         }
         .section-title em { color: var(--gold-lt); font-style: italic; }
 
         /* ── FEATURED ── */
         .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
-
         .dish-card {
-          background: var(--glass-bg);
-          border: 1px solid var(--glass-bd);
-          border-radius: var(--radius-card);
-          padding: 28px;
+          background: var(--glass-bg); border: 1px solid var(--glass-bd);
+          border-radius: var(--radius-card); padding: 28px;
           position: relative; overflow: hidden;
-          transition: border-color .25s, transform .2s;
-          cursor: pointer;
+          transition: border-color .25s, transform .2s; cursor: pointer;
         }
-        .dish-card::before {
-          content: '';
-          position: absolute; top: 0; left: 0;
-          width: 80px; height: 1px;
-          background: linear-gradient(90deg, var(--gold), transparent);
-        }
-        .dish-card::after {
-          content: '';
-          position: absolute; top: 0; left: 0;
-          width: 1px; height: 80px;
-          background: linear-gradient(180deg, var(--gold), transparent);
-        }
+        .dish-card::before { content: ''; position: absolute; top: 0; left: 0; width: 80px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+        .dish-card::after  { content: ''; position: absolute; top: 0; left: 0; width: 1px; height: 80px; background: linear-gradient(180deg, var(--gold), transparent); }
         .dish-card:hover { border-color: rgba(201,168,76,.25); transform: translateY(-4px); }
-
         .dish-tag {
-          display: inline-flex;
-          font-size: 10px; letter-spacing: 1.5px;
-          text-transform: uppercase; padding: 4px 10px;
-          border-radius: 20px; margin-bottom: 16px;
-          background: rgba(201,168,76,.1);
-          border: 1px solid rgba(201,168,76,.2);
-          color: var(--gold);
+          display: inline-flex; font-size: 10px; letter-spacing: 1.5px;
+          text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px;
+          background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.2); color: var(--gold);
         }
         .dish-emoji { font-size: 40px; display: block; margin-bottom: 16px; }
-        .dish-name {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 22px; font-weight: 500; color: var(--text);
-          margin-bottom: 8px; letter-spacing: .3px;
-        }
+        .dish-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 8px; letter-spacing: .3px; }
         .dish-desc { font-size: 12.5px; color: var(--text-mid); line-height: 1.6; font-weight: 300; margin-bottom: 20px; }
         .dish-footer { display: flex; align-items: center; justify-content: space-between; }
-        .dish-price {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 24px; font-weight: 500; color: var(--gold-lt);
-        }
+        .dish-price { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; color: var(--gold-lt); }
         .dish-add-btn {
           width: 36px; height: 36px; border-radius: 10px;
           background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.2);
           color: var(--gold); cursor: pointer;
           display: flex; align-items: center; justify-content: center;
-          font-size: 18px; font-weight: 300;
-          transition: all .2s;
+          font-size: 18px; font-weight: 300; transition: all .2s;
         }
         .dish-add-btn:hover { background: rgba(201,168,76,.2); border-color: rgba(201,168,76,.4); }
 
-        /* ── CTA SECTION ── */
+        /* ── CTA ── */
         .cta-section {
           background: var(--glass-bg);
-          border-top: 1px solid var(--glass-bd);
-          border-bottom: 1px solid var(--glass-bd);
+          border-top: 1px solid var(--glass-bd); border-bottom: 1px solid var(--glass-bd);
           padding: 80px 48px;
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 40px; align-items: center;
-          max-width: 100%;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
         }
         .cta-text .section-eyebrow { text-align: left; }
         .cta-text .section-title { text-align: left; font-size: 40px; margin-bottom: 16px; }
         .cta-desc { font-size: 15px; color: var(--text-mid); line-height: 1.7; font-weight: 300; margin-bottom: 28px; }
-
         .reserv-card {
-          background: var(--deep);
-          border: 1px solid var(--glass-bd);
-          border-radius: var(--radius-card);
-          padding: 32px;
+          background: var(--deep); border: 1px solid var(--glass-bd);
+          border-radius: var(--radius-card); padding: 32px;
           position: relative; overflow: hidden;
         }
-        .reserv-card::before {
-          content: '';
-          position: absolute; top: 0; left: 0;
-          width: 120px; height: 1px;
-          background: linear-gradient(90deg, var(--gold), transparent);
-        }
-        .reserv-card::after {
-          content: '';
-          position: absolute; top: 0; left: 0;
-          width: 1px; height: 120px;
-          background: linear-gradient(180deg, var(--gold), transparent);
-        }
-        .reserv-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 22px; color: var(--text); margin-bottom: 20px;
-        }
+        .reserv-card::before { content: ''; position: absolute; top: 0; left: 0; width: 120px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+        .reserv-card::after  { content: ''; position: absolute; top: 0; left: 0; width: 1px; height: 120px; background: linear-gradient(180deg, var(--gold), transparent); }
+        .reserv-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--text); margin-bottom: 20px; }
         .reserv-field { margin-bottom: 14px; }
-        .reserv-label {
-          font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-          color: var(--text-muted); margin-bottom: 6px; display: block;
-        }
+        .reserv-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; display: block; }
         .reserv-input {
           width: 100%; padding: 10px 14px;
-          background: rgba(255,255,255,.03);
-          border: 1px solid rgba(255,255,255,.08);
-          border-radius: 10px;
-          font-family: 'Outfit', sans-serif; font-size: 14px;
-          color: var(--text); outline: none;
-          transition: border-color .25s;
+          background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+          border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 14px;
+          color: var(--text); outline: none; transition: border-color .25s;
         }
         .reserv-input:focus { border-color: rgba(201,168,76,.35); }
         .reserv-input option { background: var(--deep); }
 
         /* ── REVIEWS ── */
         .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
-        .review-card {
-          background: var(--glass-bg);
-          border: 1px solid var(--glass-bd);
-          border-radius: var(--radius-card);
-          padding: 24px;
-        }
+        .review-card { background: var(--glass-bg); border: 1px solid var(--glass-bd); border-radius: var(--radius-card); padding: 24px; }
         .review-stars { display: flex; gap: 3px; color: var(--gold); margin-bottom: 12px; }
         .review-text { font-size: 13.5px; color: var(--text-mid); line-height: 1.7; font-weight: 300; font-style: italic; margin-bottom: 16px; }
         .review-author { display: flex; align-items: center; gap: 10px; }
@@ -459,23 +391,18 @@ export default function ClienteInicio() {
           background: linear-gradient(135deg, rgba(201,168,76,.2), rgba(201,168,76,.05));
           border: 1px solid rgba(201,168,76,.2);
           display: flex; align-items: center; justify-content: center;
-          font-size: 13px; color: var(--gold-lt);
-          font-family: 'Cormorant Garamond', serif;
+          font-size: 13px; color: var(--gold-lt); font-family: 'Cormorant Garamond', serif;
         }
         .review-name { font-size: 13px; color: var(--text); }
         .review-date { font-size: 11px; color: var(--text-muted); }
 
         /* ── FOOTER ── */
         .cliente-footer {
-          border-top: 1px solid var(--glass-bd);
-          padding: 32px 48px;
+          border-top: 1px solid var(--glass-bd); padding: 32px 48px;
           display: flex; align-items: center; justify-content: space-between;
           color: var(--text-muted); font-size: 12px;
         }
-        .footer-brand {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 18px; color: var(--text-mid); letter-spacing: 1.5px;
-        }
+        .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text-mid); letter-spacing: 1.5px; }
         .footer-gold { color: var(--gold); }
 
         @media (max-width: 900px) {
@@ -493,17 +420,17 @@ export default function ClienteInicio() {
       <div className="cliente-page">
         {/* ── NAVBAR ── */}
         <nav className="cliente-nav">
-          <div className="nav-brand">
+          <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
             <div className="nav-brand-icon"><IconMenu /></div>
             <span className="nav-brand-name">Restaurante</span>
           </div>
 
           <div className="nav-links">
-            {NAV_LINKS.filter(n => n.key !== 'perfil').map(link => (
+            {NAV_LINKS.map(link => (
               <button
                 key={link.key}
-                className={`nav-link ${activeNav === link.key ? 'active' : ''}`}
-                onClick={() => setActiveNav(link.key)}
+                className={`nav-link ${activeKey === link.key ? 'active' : ''}`}
+                onClick={() => navigate(link.path)}
               >
                 {link.label}
               </button>
@@ -511,17 +438,48 @@ export default function ClienteInicio() {
           </div>
 
           <div className="nav-right">
-            <div className="nav-avatar" title={user?.name}>
-              {user?.name?.[0]?.toUpperCase() || 'U'}
+            {/* Avatar → navega al perfil */}
+            <div
+              className="nav-avatar"
+              title={`${user?.name || 'Mi perfil'} — ver perfil`}
+              onClick={() => navigate('/cliente/perfil')}
+            >
+              {avatarSrc
+                ? <img src={avatarSrc} alt="avatar" />
+                : initials
+              }
             </div>
             <button className="nav-logout-btn" onClick={logout}>
               <IconLogout /> Salir
             </button>
-            <button className="nav-mobile-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <button
+              className="nav-mobile-btn"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
               <IconHamburger />
             </button>
           </div>
         </nav>
+
+        {/* Mobile dropdown */}
+        <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+          {NAV_LINKS.map(link => (
+            <button
+              key={link.key}
+              className={`mobile-nav-link ${activeKey === link.key ? 'active' : ''}`}
+              onClick={() => { navigate(link.path); setMobileMenuOpen(false) }}
+            >
+              {link.label}
+            </button>
+          ))}
+          <button
+            className="mobile-nav-link"
+            style={{ color: '#e05a5a', marginTop: 8, borderTop: '1px solid rgba(255,255,255,.06)', paddingTop: 12 }}
+            onClick={logout}
+          >
+            Cerrar sesión
+          </button>
+        </div>
 
         {/* ── HERO ── */}
         <div className="hero">
@@ -529,55 +487,33 @@ export default function ClienteInicio() {
           <div className="hero-grain" />
           <div className="hero-line" />
 
-          {/* Floating orbs */}
-          <div style={{
-            position: 'absolute', width: 500, height: 500,
-            top: -180, right: -100, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(201,168,76,.07) 0%, transparent 65%)',
-            pointerEvents: 'none'
-          }} />
-          <div style={{
-            position: 'absolute', width: 300, height: 300,
-            bottom: -100, left: -60, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(201,168,76,.05) 0%, transparent 65%)',
-            pointerEvents: 'none'
-          }} />
+          <div style={{ position: 'absolute', width: 500, height: 500, top: -180, right: -100, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', width: 300, height: 300, bottom: -100, left: -60, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,.05) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
           <div className="hero-content">
-            <div className="hero-eyebrow">
-              Gastronomía de Autor
-            </div>
+            <div className="hero-eyebrow">Gastronomía de Autor</div>
             <h1 className="hero-title">
               Una experiencia<br />
               <span>gastronómica</span><br />
               sin igual
             </h1>
             <p className="hero-subtitle">
-              Bienvenido{user?.name ? `, ${user.name}` : ''}. Descubre nuestra cocina de autor, 
+              Bienvenido{user?.name ? `, ${user.name}` : ''}. Descubre nuestra cocina de autor,
               reserva tu mesa o haz un pedido a domicilio.
             </p>
             <div className="hero-actions">
-              <button className="btn-primary" onClick={() => setActiveNav('menu')}>
+              <button className="btn-primary" onClick={() => navigate('/cliente/menu')}>
                 Ver el Menú <IconArrow />
               </button>
-              <button className="btn-ghost" onClick={() => setActiveNav('reservar')}>
+              <button className="btn-ghost" onClick={() => navigate('/cliente/reservar')}>
                 Reservar Mesa
               </button>
             </div>
 
             <div className="info-strip">
-              <div className="info-item">
-                <span className="info-icon"><IconMapPin /></span>
-                Ciudad de Guatemala, Zona 10
-              </div>
-              <div className="info-item">
-                <span className="info-icon"><IconClock /></span>
-                Lun–Dom · 12:00 – 23:00
-              </div>
-              <div className="info-item">
-                <span className="info-icon"><IconStar /></span>
-                4.9 · Más de 1,200 reseñas
-              </div>
+              <div className="info-item"><span className="info-icon"><IconMapPin /></span>Ciudad de Guatemala, Zona 10</div>
+              <div className="info-item"><span className="info-icon"><IconClock /></span>Lun–Dom · 12:00 – 23:00</div>
+              <div className="info-item"><span className="info-icon"><IconStar /></span>4.9 · Más de 1,200 reseñas</div>
             </div>
           </div>
         </div>
@@ -588,20 +524,20 @@ export default function ClienteInicio() {
           <h2 className="section-title">Lo mejor de<br /><em>nuestra cocina</em></h2>
           <div className="featured-grid">
             {FEATURED_DISHES.map((d, i) => (
-              <div className="dish-card" key={i}>
+              <div className="dish-card" key={i} onClick={() => navigate('/cliente/menu')}>
                 <span className="dish-tag">{d.tag}</span>
                 <span className="dish-emoji">{d.emoji}</span>
                 <div className="dish-name">{d.name}</div>
                 <div className="dish-desc">{d.desc}</div>
                 <div className="dish-footer">
                   <div className="dish-price">{d.price}</div>
-                  <button className="dish-add-btn">+</button>
+                  <button className="dish-add-btn" onClick={e => { e.stopPropagation(); navigate('/cliente/menu') }}>+</button>
                 </div>
               </div>
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: 36 }}>
-            <button className="btn-primary" onClick={() => setActiveNav('menu')}>
+            <button className="btn-primary" onClick={() => navigate('/cliente/menu')}>
               Ver menú completo <IconArrow />
             </button>
           </div>
@@ -613,10 +549,10 @@ export default function ClienteInicio() {
             <div className="section-eyebrow">Reservaciones</div>
             <h2 className="section-title">Reserva tu<br /><em>mesa ahora</em></h2>
             <p className="cta-desc">
-              Garantiza tu espacio en el restaurante. Recibe confirmación inmediata 
+              Garantiza tu espacio en el restaurante. Recibe confirmación inmediata
               y recordatorio por correo electrónico.
             </p>
-            <button className="btn-primary" onClick={() => setActiveNav('reservar')}>
+            <button className="btn-primary" onClick={() => navigate('/cliente/reservar')}>
               Reservar ahora <IconArrow />
             </button>
           </div>
@@ -630,12 +566,9 @@ export default function ClienteInicio() {
             <div className="reserv-field">
               <label className="reserv-label">Hora</label>
               <select className="reserv-input">
-                <option>12:00 PM</option>
-                <option>13:00 PM</option>
-                <option>14:00 PM</option>
-                <option>19:00 PM</option>
-                <option>20:00 PM</option>
-                <option>21:00 PM</option>
+                <option>12:00 PM</option><option>13:00 PM</option>
+                <option>14:00 PM</option><option>19:00 PM</option>
+                <option>20:00 PM</option><option>21:00 PM</option>
               </select>
             </div>
             <div className="reserv-field">
@@ -646,7 +579,11 @@ export default function ClienteInicio() {
                 ))}
               </select>
             </div>
-            <button className="btn-primary" style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}>
+            <button
+              className="btn-primary"
+              style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}
+              onClick={() => navigate('/cliente/reservar')}
+            >
               Confirmar reserva <IconArrow />
             </button>
           </div>
