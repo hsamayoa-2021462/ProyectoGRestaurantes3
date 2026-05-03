@@ -98,7 +98,7 @@ const connectMongoDB = async () => {
 export const dbConnection = async () => {
   try {
     await connectPostgres();
-    await connectMongoDB();
+    // await connectMongoDB();
     console.log('All database connections established successfully');
   } catch (error) {
     console.error('Database connection error:', error.message);
