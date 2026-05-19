@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { subirFotoRestaurante, listarFotosRestaurante, eliminarFotoRestaurante } from './foto.controller.js';
 import {
     listarRestaurantes, obtenerRestaurantePorId, crearRestaurante, actualizarRestaurante, eliminarRestaurante,
     listarCategorias, obtenerCategoriaPorId, crearCategoria, actualizarCategoria, eliminarCategoria,
@@ -58,5 +59,10 @@ router.get('/zonas-entrega/:id', validateJWT, isAnyRole, obtenerZonaEntregaPorId
 router.post('/zonas-entrega', validateJWT, isAdmin, crearZonaEntrega);
 router.put('/zonas-entrega/:id', validateJWT, isAdmin, actualizarZonaEntrega);
 router.delete('/zonas-entrega/:id', validateJWT, isAdmin, eliminarZonaEntrega);
+
+// Rutas para gestionar fotos de los restaurantes
+router.get('/restaurantes/:id/fotos',            validateJWT, isAnyRole, listarFotosRestaurante);
+router.post('/restaurantes/:id/fotos',           validateJWT, isAdmin,   subirFotoRestaurante);
+router.delete('/restaurantes/:id/fotos/:fotoId', validateJWT, isAdmin,   eliminarFotoRestaurante);
 
 export default router;
