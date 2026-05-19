@@ -1,33 +1,26 @@
 'use strict';
 
+import 'dotenv/config';
+
 import { Sequelize } from 'sequelize';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 
-dotenv.config();
+// DEBUG
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_PORT:', process.env.DB_PORT);
+console.log('DB_NAME:', process.env.DB_NAME);
+console.log('DB_USERNAME:', process.env.DB_USERNAME);
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 
 // ==================== PostgreSQL Configuration ====================
 export const sequelize = new Sequelize({
   dialect: 'postgres',
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
+  port: Number(process.env.DB_PORT),
   database: process.env.DB_NAME,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   logging: process.env.DB_SQL_LOGGING === 'true' ? console.log : false,
-  define: {
-    freezeTableName: true,
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-    underscored: true,
-  },
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
 });
 
 // ==================== MongoDB Configuration ====================
