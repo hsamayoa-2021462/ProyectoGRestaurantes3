@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-    listarPedidos, obtenerPedido, crearPedido, actualizarPedido, eliminarPedido,
+    listarPedidos, listarMisPedidos, obtenerPedido, crearPedido, actualizarPedido, eliminarPedido,
     listarMetodosPago, obtenerMetodoPago, crearMetodoPago, actualizarMetodoPago, eliminarMetodoPago,
     listarFacturas, obtenerFactura, crearFactura, actualizarFactura, eliminarFactura
 } from './pedido.controller.js';
@@ -20,6 +20,9 @@ const router = Router();
  *     description: Gestión de facturas
  */
 
+// ⚠️ /mis-pedidos DEBE ir ANTES de /:id o Express lo interpreta como un ID
+// El app monta este router en /api/v1/pedidos, así que aquí solo va el sufijo
+router.get('/mis-pedidos', validateJWT, isClient, listarMisPedidos);
 router.get('/pedidos', validateJWT, isAdmin, listarPedidos);
 router.get('/pedidos/:id', validateJWT, isAdmin, obtenerPedido);
 router.post('/pedidos', validateJWT, isClient, crearPedido);
