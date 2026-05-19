@@ -1,6 +1,7 @@
 'use strict';
 
 import { Reservacion, EstadoReservacion } from './reservacion.model.js';
+import { crearNotificacion } from '../notificaciones/notificaciones.controller.js';
 import mongoose from 'mongoose';
 
 // ==================== HELPERS ====================
@@ -165,6 +166,18 @@ export const crearReservacion = async (req, res) => {
             .populate('estado')
             .populate('restaurante')
             .populate('mesa');
+
+        // Notificar al admin
+        try {
+            await crearNotificacion({
+                para: 'admin',
+                tipo: 'RESERVA_NUEVA',
+                titulo: 'Nueva reservación',
+                mensaje: `${reservacionPopulada.restaurante?.nombre || 'Restaurante'} · ${reservacionPopulada.fecha} a las ${reservacionPopulada.hora} · ${reservacionPopulada.numPersonas} persona(s)`,
+                refId: reservacion._id.toString(),
+                refTipo: 'reservacion',
+            });
+        } catch (ne) { console.warn('No se pudo notificar reservación:', ne.message); }
 
         res.status(201).json({ success: true, message: 'Reservación creada exitosamente', data: reservacionPopulada });
     } catch (error) {
@@ -381,5 +394,111 @@ export const eliminarEstadoReservacion = async (req, res) => {
         res.status(200).json({ success: true, message: 'Estado eliminado exitosamente' });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Error al eliminar estado', error: error.message });
+    }
+};
+
+// ── Mis reservaciones (cliente) ──
+export const listarMisReservaciones = async (req, res) => {
+    try {
+        const usuarioId = req.userId;
+        const reservaciones = await Reservacion.find({ usuario: usuarioId })
+            .populate('estado')
+            .populate('restaurante')
+            .populate('mesa')
+            .sort({ fecha: -1, hora: -1 });
+        res.status(200).json({ success: true, data: reservaciones });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error al listar reservaciones', error: error.message });
+    }
+};
+
+// ── Cancelar reservación (cliente) ──
+export const cancelarReservacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!isValidObjectId(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
+
+        const reservacion = await Reservacion.findById(id).populate('estado').populate('restaurante').populate('mesa');
+        if (!reservacion) return res.status(404).json({ success: false, message: 'Reservación no encontrada' });
+
+        // Solo puede cancelar el propio usuario
+        if (reservacion.usuario !== req.userId) {
+            return res.status(403).json({ success: false, message: 'No tienes permiso para cancelar esta reservación' });
+        }
+
+        // Buscar estado CANCELADA
+        const estadoCancelada = await EstadoReservacion.findOne({ nombre: 'CANCELADA' });
+        if (!estadoCancelada) return res.status(400).json({ success: false, message: 'Estado CANCELADA no configurado' });
+
+        reservacion.estado = estadoCancelada._id;
+        await reservacion.save();
+
+        // Liberar la mesa
+        if (reservacion.mesa) {
+            const mesaId = typeof reservacion.mesa === 'object' ? reservacion.mesa._id : reservacion.mesa;
+            await mongoose.connection.collection('mesas').updateOne(
+                { _id: new mongoose.Types.ObjectId(mesaId.toString()) },
+                { $set: { estado: 'DISPONIBLE' } }
+            );
+        }
+
+        // Notificar al admin
+        try {
+            await crearNotificacion({
+                para: 'admin',
+                tipo: 'RESERVA_CANCELADA',
+                titulo: 'Reservación cancelada por cliente',
+                mensaje: `El cliente canceló su reservación en ${reservacion.restaurante?.nombre || 'restaurante'} del ${reservacion.fecha} a las ${reservacion.hora}`,
+                refId: id,
+                refTipo: 'reservacion',
+            });
+        } catch (ne) { console.warn('No se pudo notificar cancelación:', ne.message); }
+
+        res.status(200).json({ success: true, message: 'Reservación cancelada exitosamente' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error al cancelar reservación', error: error.message });
+    }
+};
+
+// ── Liberar mesa cuando se completa la reservación (admin) ──
+export const completarReservacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!isValidObjectId(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
+
+        const reservacion = await Reservacion.findById(id).populate('mesa');
+        if (!reservacion) return res.status(404).json({ success: false, message: 'Reservación no encontrada' });
+
+        // Buscar estado COMPLETADA
+        const estadoCompletada = await EstadoReservacion.findOne({ nombre: 'COMPLETADA' });
+        if (!estadoCompletada) return res.status(400).json({ success: false, message: 'Estado COMPLETADA no configurado' });
+
+        reservacion.estado = estadoCompletada._id;
+        await reservacion.save();
+
+        // Liberar mesa → DISPONIBLE
+        if (reservacion.mesa) {
+            const mesaId = typeof reservacion.mesa === 'object' ? reservacion.mesa._id : reservacion.mesa;
+            await mongoose.connection.collection('mesas').updateOne(
+                { _id: new mongoose.Types.ObjectId(mesaId.toString()) },
+                { $set: { estado: 'DISPONIBLE' } }
+            );
+        }
+
+        // Notificar al cliente
+        try {
+            await crearNotificacion({
+                para: reservacion.usuario,
+                tipo: 'RESERVA_CONFIRMADA',
+                titulo: 'Tu reservación fue completada ✅',
+                mensaje: 'Gracias por visitarnos. La mesa ha sido liberada.',
+                refId: id,
+                refTipo: 'reservacion',
+            });
+        } catch (ne) { console.warn('No se pudo notificar completado:', ne.message); }
+
+        res.status(200).json({ success: true, message: 'Reservación completada y mesa liberada' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error al completar reservación', error: error.message });
     }
 };
