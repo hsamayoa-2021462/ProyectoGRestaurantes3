@@ -1,6 +1,7 @@
 'use strict';
 
-import { CategoriaPlato, Plato, Ingrediente, Inventario } from './menu.model.js';
+import { CategoriaPlato, Plato, Ingrediente, Inventario, PlatoIngrediente } from './menu.model.js';
+import { uploadImage, deleteImage } from '../../helpers/cloudinary-service.js';
 import { Restaurante } from '../restaurante/restaurante.model.js';
 import {
     validateMongoId,
@@ -87,7 +88,7 @@ export const crearCategoriaPlato = async (req, res) => {
         }
 
         const categoria = new CategoriaPlato({
-            nombre:      body.nombre.trim(),
+            nombre: body.nombre.trim(),
             descripcion: body.descripcion?.trim() ?? '',
             restaurante: body.restaurante
         });
@@ -126,9 +127,9 @@ export const actualizarCategoriaPlato = async (req, res) => {
 
         if (body.nombre) {
             const existe = await CategoriaPlato.findOne({
-                nombre:      body.nombre.trim(),
+                nombre: body.nombre.trim(),
                 restaurante: categoria.restaurante,
-                _id:         { $ne: req.params.id }
+                _id: { $ne: req.params.id }
             });
             if (existe) {
                 return res.status(409).json({ success: false, message: 'Ya existe otra categoría con ese nombre en este restaurante' });
@@ -136,7 +137,7 @@ export const actualizarCategoriaPlato = async (req, res) => {
         }
 
         const sanitized = {};
-        if (body.nombre)      sanitized.nombre      = body.nombre.trim();
+        if (body.nombre) sanitized.nombre = body.nombre.trim();
         if (body.descripcion) sanitized.descripcion = body.descripcion.trim();
 
         const updated = await CategoriaPlato.findByIdAndUpdate(req.params.id, sanitized, { new: true, runValidators: true }).populate('restaurante');
@@ -221,9 +222,9 @@ export const crearIngrediente = async (req, res) => {
         }
 
         const ingrediente = new Ingrediente({
-            nombre:       body.nombre.trim(),
+            nombre: body.nombre.trim(),
             unidadMedida: body.unidadMedida ?? 'UNIDAD',
-            costo:        body.costo ? Number(body.costo) : null
+            costo: body.costo ? Number(body.costo) : null
         });
 
         await ingrediente.save();
@@ -266,9 +267,9 @@ export const actualizarIngrediente = async (req, res) => {
         }
 
         const sanitized = {};
-        if (body.nombre)       sanitized.nombre       = body.nombre.trim();
+        if (body.nombre) sanitized.nombre = body.nombre.trim();
         if (body.unidadMedida) sanitized.unidadMedida = body.unidadMedida;
-        if (body.costo)        sanitized.costo        = Number(body.costo);
+        if (body.costo) sanitized.costo = Number(body.costo);
 
         const updated = await Ingrediente.findByIdAndUpdate(req.params.id, sanitized, { new: true, runValidators: true });
 
@@ -397,13 +398,13 @@ export const crearPlato = async (req, res) => {
         }
 
         const plato = new Plato({
-            nombre:      body.nombre.trim(),
+            nombre: body.nombre.trim(),
             descripcion: body.descripcion?.trim() ?? '',
-            precio:      Number(body.precio),
-            categoria:   body.categoria,
+            precio: Number(body.precio),
+            categoria: body.categoria,
             restaurante: body.restaurante,
-            imagen:      body.imagen ?? null,
-            disponible:  true
+            imagen: body.imagen ?? null,
+            disponible: true
         });
 
         await plato.save();
@@ -447,12 +448,12 @@ export const actualizarPlato = async (req, res) => {
         }
 
         const sanitized = {};
-        if (body.nombre)                                    sanitized.nombre      = body.nombre.trim();
-        if (body.descripcion)                               sanitized.descripcion = body.descripcion.trim();
-        if (!isEmpty(body.precio) || body.precio === 0)    sanitized.precio      = Number(body.precio);
-        if (body.categoria)                                 sanitized.categoria   = body.categoria;
-        if (body.imagen)                                    sanitized.imagen      = body.imagen;
-        if (body.disponible !== undefined)                  sanitized.disponible  = body.disponible;
+        if (body.nombre) sanitized.nombre = body.nombre.trim();
+        if (body.descripcion) sanitized.descripcion = body.descripcion.trim();
+        if (!isEmpty(body.precio) || body.precio === 0) sanitized.precio = Number(body.precio);
+        if (body.categoria) sanitized.categoria = body.categoria;
+        if (body.imagen) sanitized.imagen = body.imagen;
+        if (body.disponible !== undefined) sanitized.disponible = body.disponible;
 
         const updated = await Plato.findByIdAndUpdate(req.params.id, sanitized, { new: true, runValidators: true })
             .populate('categoria')
@@ -560,8 +561,8 @@ export const crearInventario = async (req, res) => {
         }
 
         const inventario = new Inventario({
-            ingrediente:    body.ingrediente,
-            restaurante:    body.restaurante,
+            ingrediente: body.ingrediente,
+            restaurante: body.restaurante,
             cantidadActual: Number(body.cantidadActual),
             cantidadMinima: body.cantidadMinima ? Number(body.cantidadMinima) : 10
         });
@@ -632,4 +633,248 @@ export const eliminarInventario = async (req, res) => {
 // Helper interno
 function isEmpty(value) {
     return value === undefined || value === null || String(value).trim() === '';
+}
+
+// ==================== IMAGEN DE PLATO ====================
+export const subirImagenPlato = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) return res.status(400).json({ success: false, message: 'ID inválido' });
+        if (!req.file) return res.status(400).json({ success: false, message: 'No se proporcionó imagen' });
+
+        const plato = await Plato.findById(id);
+        if (!plato) return res.status(404).json({ success: false, message: 'Plato no encontrado' });
+
+        if (plato.imagen) { try { await deleteImage(plato.imagen); } catch { } }
+
+        const imageUrl = await uploadImage(req.file.path, req.file.filename);
+        plato.imagen = imageUrl;
+        await plato.save();
+
+        return res.status(200).json({ success: true, message: 'Imagen actualizada', data: { imagen: imageUrl } });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Error al subir imagen', error: error.message });
+    }
+};
+
+// ==================== PLATO-INGREDIENTES ====================
+
+export const listarIngredientesPlato = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) return res.status(400).json({ success: false, message: 'ID inválido' });
+        const ingredientes = await PlatoIngrediente.find({ plato: id }).populate('ingrediente');
+        return res.status(200).json({ success: true, data: ingredientes });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Error al listar ingredientes', error: error.message });
+    }
+};
+
+export const agregarIngredientePlato = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ingrediente, cantidad } = req.body;
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) return res.status(400).json({ success: false, message: 'ID de plato inválido' });
+        if (!ingrediente) return res.status(400).json({ success: false, message: 'El campo "ingrediente" es obligatorio' });
+        if (!cantidad || cantidad <= 0) return res.status(400).json({ success: false, message: 'La cantidad debe ser mayor a 0' });
+
+        const plato = await Plato.findById(id);
+        if (!plato) return res.status(404).json({ success: false, message: 'Plato no encontrado' });
+
+        const existe = await PlatoIngrediente.findOne({ plato: id, ingrediente });
+        if (existe) {
+            existe.cantidad = cantidad;
+            await existe.save();
+            const populated = await PlatoIngrediente.findById(existe._id).populate('ingrediente');
+            return res.status(200).json({ success: true, message: 'Cantidad actualizada', data: populated });
+        }
+
+        const nuevo = new PlatoIngrediente({ plato: id, ingrediente, cantidad });
+        await nuevo.save();
+        const populated = await PlatoIngrediente.findById(nuevo._id).populate('ingrediente');
+        return res.status(201).json({ success: true, message: 'Ingrediente agregado al plato', data: populated });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Error al agregar ingrediente', error: error.message });
+    }
+};
+
+export const quitarIngredientePlato = async (req, res) => {
+    try {
+        const { piId } = req.params;
+        await PlatoIngrediente.findByIdAndDelete(piId);
+        return res.status(200).json({ success: true, message: 'Ingrediente eliminado del plato' });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Error al eliminar ingrediente', error: error.message });
+    }
+};
+
+// ==================== DISPONIBILIDAD PARA CLIENTES ====================
+export const verificarDisponibilidadPlatos = async (req, res) => {
+    try {
+        const { restaurante } = req.query;
+        const filter = {};
+
+        if (restaurante) {
+            filter.restaurante = restaurante;
+        }
+
+        // Obtener todos los platos disponibles
+        const platos = await Plato.find({
+            ...filter,
+            disponible: true
+        });
+
+        // Verificar stock ingrediente por ingrediente
+        const resultado = await Promise.all(
+            platos.map(async (plato) => {
+
+                const ingredientesPlato = await PlatoIngrediente.find({
+                    plato: plato._id
+                });
+
+                // Si no tiene ingredientes definidos → disponible
+                if (ingredientesPlato.length === 0) {
+                    return {
+                        platoId: plato._id,
+                        tieneStock: true
+                    };
+                }
+
+                const stockOk = await Promise.all(
+                    ingredientesPlato.map(async (pi) => {
+
+                        const inv = await Inventario.findOne({
+                            ingrediente: pi.ingrediente,
+                            restaurante: plato.restaurante
+                        });
+
+                        if (!inv) return false;
+
+                        return inv.cantidadActual > inv.cantidadMinima;
+                    })
+                );
+
+                let maximoDisponible = Infinity;
+
+                for (const pi of ingredientesPlato) {
+
+                    const inv = await Inventario.findOne({
+                        ingrediente: pi.ingrediente,
+                        restaurante: plato.restaurante
+                    });
+
+                    if (!inv) {
+                        maximoDisponible = 0;
+                        break;
+                    }
+
+                    const posible = Math.floor(
+                        inv.cantidadActual / pi.cantidad
+                    );
+
+                    if (posible < maximoDisponible) {
+                        maximoDisponible = posible;
+                    }
+                }
+
+                return {
+                    platoId: plato._id,
+                    tieneStock: maximoDisponible > 0,
+                    maximoDisponible
+                };
+            })
+        );
+
+        return res.status(200).json({
+            success: true,
+            data: resultado
+        });
+
+    } catch (error) {
+        console.error('Error en verificarDisponibilidadPlatos:', error);
+
+        return res.status(500).json({
+            success: false,
+            message: 'Error al verificar disponibilidad',
+            error: error.message
+        });
+    }
+};
+
+// ==================== HELPER INVENTARIO (uso interno desde pedido.controller) ====================
+export const descontarInventarioPorPedido = async (detalles) => {
+
+    for (const detalle of detalles) {
+
+        // Obtener el plato completo
+        const platoId = detalle.plato._id || detalle.plato;
+
+        const plato = await Plato.findById(platoId);
+
+        if (!plato) continue;
+
+        // Ingredientes que usa el plato
+        const ingredientesPlato = await PlatoIngrediente.find({
+            plato: plato._id
+        });
+
+        for (const ingredientePlato of ingredientesPlato) {
+
+            // Buscar inventario del ingrediente
+            const inventario = await Inventario.findOne({
+                ingrediente: ingredientePlato.ingrediente,
+                restaurante: plato.restaurante
+            });
+
+            if (!inventario) continue;
+
+            // Cantidad a descontar
+            const cantidadDescontar =
+                ingredientePlato.cantidad * detalle.cantidad;
+
+            // Restar inventario
+            inventario.cantidadActual -= cantidadDescontar;
+
+            // Evitar negativos
+            if (inventario.cantidadActual < 0) {
+                inventario.cantidadActual = 0;
+            }
+
+            await inventario.save();
+
+            console.log(
+                `Inventario actualizado: -${cantidadDescontar}`
+            );
+        }
+    }
+};
+
+export const devolverInventarioPorPedido = async (detalles) => {
+
+    for (const item of detalles) {
+
+        const plato = await Plato.findById(item.plato)
+
+        if (!plato) continue
+
+        const ingredientesPlato = await PlatoIngrediente.find({
+            plato: plato._id
+        })
+
+        for (const pi of ingredientesPlato) {
+
+            const inventario = await Inventario.findOne({
+                ingrediente: pi.ingrediente,
+                restaurante: plato.restaurante
+            })
+
+            if (!inventario) continue
+
+            inventario.cantidadActual += (
+                pi.cantidad * item.cantidad
+            )
+
+            await inventario.save()
+        }
+    }
 }
