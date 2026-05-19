@@ -5,8 +5,8 @@ import mongoose from 'mongoose';
 const categoriaPlatoSchema = mongoose.Schema({
     nombre: {
         type: String,
-        required: true,
-        unique: true
+        required: true
+        // unique removido — el unique ahora es por nombre+restaurante (ver índice abajo)
     },
     descripcion: String,
     restaurante: {
@@ -15,6 +15,9 @@ const categoriaPlatoSchema = mongoose.Schema({
         required: true
     }
 }, { timestamps: true, versionKey: false });
+
+// Unique compuesto: mismo nombre puede existir en distintos restaurantes
+categoriaPlatoSchema.index({ nombre: 1, restaurante: 1 }, { unique: true });
 
 const ingredienteSchema = mongoose.Schema({
     nombre: {
