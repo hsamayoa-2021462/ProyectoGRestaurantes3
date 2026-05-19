@@ -40,28 +40,26 @@ export const config = {
     // If CLOUDINARY_DEFAULT_AVATAR contains ${...}, build it from folder + filename
     defaultAvatarPath:
       process.env.CLOUDINARY_DEFAULT_AVATAR &&
-      !process.env.CLOUDINARY_DEFAULT_AVATAR.includes('${')
+        !process.env.CLOUDINARY_DEFAULT_AVATAR.includes('${')
         ? process.env.CLOUDINARY_DEFAULT_AVATAR
         : [
-            process.env.CLOUDINARY_FOLDER,
-            process.env.CLOUDINARY_DEFAULT_AVATAR_FILENAME,
-          ]
-            .filter(Boolean)
-            .join('/'),
+          process.env.CLOUDINARY_FOLDER,
+          process.env.CLOUDINARY_DEFAULT_AVATAR_FILENAME,
+        ]
+          .filter(Boolean)
+          .join('/'),
     folder: process.env.CLOUDINARY_FOLDER,
   },
 
   // Rate Limiting (aligned with .NET AuthPolicy and ApiPolicy)
+
   rateLimit: {
-    // General API rate limiting (aligned with .NET ApiPolicy: 20 tokens per minute)
-    windowMs: 1 * 60 * 1000, // 1 minute
-    maxRequests: 20,
-    // Auth endpoints rate limiting (aligned with .NET AuthPolicy: 5 requests per minute)
-    authWindowMs: 1 * 60 * 1000, // 1 minute
-    authMaxRequests: 5,
-    // Email endpoints rate limiting (more restrictive for security)
-    emailWindowMs: 15 * 60 * 1000, // 15 minutes
-    emailMaxRequests: 3,
+    windowMs: 1 * 60 * 1000,
+    maxRequests: 500,
+    authWindowMs: 1 * 60 * 1000,
+    authMaxRequests: 100,
+    emailWindowMs: 15 * 60 * 1000,
+    emailMaxRequests: 50,
   },
 
   // Security (aligned with .NET Security configuration)
