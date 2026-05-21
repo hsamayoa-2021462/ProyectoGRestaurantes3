@@ -1,4 +1,3 @@
-// src/features/admin/components/AdminSidebar.jsx
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'

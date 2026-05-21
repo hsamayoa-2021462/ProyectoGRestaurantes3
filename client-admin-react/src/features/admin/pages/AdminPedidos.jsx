@@ -1,4 +1,3 @@
-// src/features/admin/pages/AdminPedidos.jsx
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'

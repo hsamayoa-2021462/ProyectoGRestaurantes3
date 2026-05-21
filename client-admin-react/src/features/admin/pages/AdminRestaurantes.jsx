@@ -1,4 +1,3 @@
-// src/features/admin/pages/AdminRestaurantes.jsx
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../../auth/store/authStore'
 import api from '../../../shared/api/api'

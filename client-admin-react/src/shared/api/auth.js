@@ -1,7 +1,6 @@
-import api from './api'
+import { authApi } from './api'
 
 export const authAPI = {
-  // POST /auth/register — form-data (multipart) con profilePicture opcional
   register: ({ name, surname, username, email, password, phone, profilePicture }) => {
     const formData = new FormData()
     formData.append('name', name)
@@ -11,27 +10,24 @@ export const authAPI = {
     formData.append('password', password)
     formData.append('phone', phone)
     if (profilePicture) formData.append('profilePicture', profilePicture)
-    // axios detecta FormData y pone multipart/form-data automáticamente
-    return api.post('/auth/register', formData)
+    return authApi.post('/auth/register', formData)
   },
 
-  // POST /auth/login — acepta email o username en el campo emailOrUsername
   login: ({ emailOrUsername, password }) =>
-    api.post('/auth/login', { emailOrUsername, password }),
+    authApi.post('/auth/login', { emailOrUsername, password }),
 
-  // POST /auth/verify-email
-  verifyEmail: (token) => api.post('/auth/verify-email', { token }),
+  verifyEmail: (token) =>
+    authApi.post('/auth/verify-email', { token }),
 
-  // POST /auth/resend-verification
-  resendVerification: (email) => api.post('/auth/resend-verification', { email }),
+  resendVerification: (email) =>
+    authApi.post('/auth/resend-verification', { email }),
 
-  // POST /auth/forgot-password
-  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  forgotPassword: (email) =>
+    authApi.post('/auth/forgot-password', { email }),
 
-  // POST /auth/reset-password — campo es "newPassword" (no "password")
   resetPassword: ({ token, newPassword }) =>
-    api.post('/auth/reset-password', { token, newPassword }),
+    authApi.post('/auth/reset-password', { token, newPassword }),
 
-  // GET /auth/users-list
-  getUsersList: () => api.get('/auth/users-list'),
+  getUsersList: () =>
+    authApi.get('/auth/users-list'),
 }

@@ -1,793 +1,452 @@
-// src/features/cliente/pages/ClientePedido.jsx
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'
+import api, { authApi } from '../../../shared/api/api'
+import NotificacionesPanel from '../../../shared/components/NotificacionesPanel'
 
 /* ─── ICONS ─── */
-const IconMenu = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7"/>
-  </svg>
-)
-const IconTable = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
-  </svg>
-)
-const IconBag = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-    <path d="M16 10a4 4 0 01-8 0"/>
-  </svg>
-)
-const IconUser = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-  </svg>
-)
-const IconLogout = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-  </svg>
-)
-const IconHamburger = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-  </svg>
-)
-const IconExperience = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </svg>
-)
-const IconArrow = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <path d="M5 12h14M12 5l7 7-7 7"/>
-  </svg>
-)
-const IconChevronDown = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <path d="M6 9l6 6 6-6"/>
-  </svg>
-)
-const IconClock = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-  </svg>
-)
-const IconCheck = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-)
+const IconHome    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+const IconMenu    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7"/></svg>
+const IconOrders  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+const IconTable   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+const IconStar    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+const IconUser    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+const IconLogout  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+const IconRest    = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20"/><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2"/></svg>
+const IconBell    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+const IconArrow   = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+const IconCheck   = () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+const IconPin     = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+const IconTruck   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+const IconStore   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
 
-/* ─── NAV LINKS ─── */
-const NAV_LINKS = [
-  { key: 'inicio',      label: 'Inicio',         icon: <IconMenu /> },
-  { key: 'menu',        label: 'Menú',            icon: <IconMenu /> },
-  { key: 'reservar',    label: 'Reservar Mesa',   icon: <IconTable /> },
-  { key: 'pedidos',     label: 'Mis Pedidos',     icon: <IconBag /> },
-  { key: 'experiencia', label: 'Experiencia',     icon: <IconExperience /> },
-  { key: 'perfil',      label: 'Mi Perfil',       icon: <IconUser /> },
+const NAV_ITEMS = [
+  { key: 'inicio',            label: 'Inicio',      icon: <IconHome />,   path: '/cliente/inicio' },
+  { key: 'menu',              label: 'Menú',         icon: <IconMenu />,   path: '/cliente/menu' },
+  { key: 'mis-pedidos',       label: 'Pedidos',     icon: <IconOrders />, path: '/cliente/mis-pedidos' },
+  { key: 'reservar',          label: 'Reservar',     icon: <IconTable />,  path: '/cliente/reservar' },
+  { key: 'mis-reservaciones', label: 'Reservas',    icon: <IconTable />,  path: '/cliente/mis-reservaciones' },
+  { key: 'resenas',           label: 'Reseñas',      icon: <IconStar />,   path: '/cliente/resenas' },
+  { key: 'perfil',            label: 'Perfil',       icon: <IconUser />,   path: '/cliente/perfil' },
 ]
-
-/* ─── COLORES DE ESTADO ─── */
-const STATUS_COLORS = {
-  'En cocina':  { bg: 'rgba(201,168,76,.12)', border: 'rgba(201,168,76,.35)', color: '#e8c96a' },
-  'Entregado':  { bg: 'rgba(76,175,130,.1)',  border: 'rgba(76,175,130,.3)',  color: '#7dd9ae' },
-  'En camino':  { bg: 'rgba(100,160,220,.1)', border: 'rgba(100,160,220,.3)', color: '#90c0e8' },
-  'Pagado':     { bg: 'rgba(130,100,200,.1)', border: 'rgba(130,100,200,.3)', color: '#c0a0e8' },
-  'Cancelado':  { bg: 'rgba(224,90,90,.1)',   border: 'rgba(224,90,90,.3)',   color: '#e08080' },
-}
-
-/* ─── TRACKING STEPS ─── */
-const TRACKING_STEPS = [
-  { key: 'Recibido',  label: 'Recibido',       emoji: '📋' },
-  { key: 'En cocina', label: 'Preparando',     emoji: '🍳' },
-  { key: 'En camino', label: 'En camino',      emoji: '🛵' },
-  { key: 'Entregado', label: 'Entregado',      emoji: '✅' },
-]
-
-const TRACKING_ORDER = ['Recibido', 'En cocina', 'En camino', 'Entregado']
-
-/* ─── DATOS MOCK ─── */
-const MIS_PEDIDOS = [
-  {
-    id: '#4530',
-    fecha: '02 Mayo, 2026',
-    hora: '20:15',
-    mesa: 'Mesa 7',
-    tipo: 'Presencial',
-    items: [
-      { nombre: 'Risotto de Mariscos', qty: 1, precio: 'Q 245' },
-      { nombre: 'Agua Mineral',        qty: 2, precio: 'Q 30'  },
-    ],
-    estado: 'En cocina',
-    total: 'Q 305',
-  },
-  {
-    id: '#4521',
-    fecha: '02 Mayo, 2026',
-    hora: '14:32',
-    mesa: 'Mesa 4',
-    tipo: 'Presencial',
-    items: [
-      { nombre: 'Filete a la Parrilla', qty: 1, precio: 'Q 280' },
-      { nombre: 'Vino Tinto',           qty: 2, precio: 'Q 100' },
-    ],
-    estado: 'Pagado',
-    total: 'Q 480',
-  },
-  {
-    id: '#4498',
-    fecha: '28 Abril, 2026',
-    hora: '19:45',
-    mesa: 'Delivery',
-    tipo: 'Delivery',
-    items: [
-      { nombre: 'Pizza Margarita', qty: 2, precio: 'Q 145' },
-      { nombre: 'Tiramisú',        qty: 1, precio: 'Q 90'  },
-    ],
-    estado: 'Entregado',
-    total: 'Q 380',
-  },
-  {
-    id: '#4475',
-    fecha: '20 Abril, 2026',
-    hora: '13:10',
-    mesa: 'Mesa 2',
-    tipo: 'Presencial',
-    items: [
-      { nombre: 'Pasta Carbonara', qty: 1, precio: 'Q 180' },
-      { nombre: 'Ensalada César',  qty: 1, precio: 'Q 95'  },
-      { nombre: 'Café Espresso',   qty: 2, precio: 'Q 40'  },
-    ],
-    estado: 'Pagado',
-    total: 'Q 355',
-  },
-  {
-    id: '#4440',
-    fecha: '10 Abril, 2026',
-    hora: '20:30',
-    mesa: 'Para llevar',
-    tipo: 'Para llevar',
-    items: [
-      { nombre: 'Costillas BBQ', qty: 1, precio: 'Q 320' },
-    ],
-    estado: 'Entregado',
-    total: 'Q 320',
-  },
-]
-
-const FILTROS = ['Todos', 'Activos', 'Entregado', 'Pagado']
 
 export default function ClientePedido() {
-  const [activeNav, setActiveNav] = useState('pedidos')
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [expandido, setExpandido] = useState(null)
-  const [filtro, setFiltro] = useState('Todos')
   const { user, logout } = useAuthStore()
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  /* ─── PEDIDO ACTIVO ─── */
-  const pedidoActivo = MIS_PEDIDOS.find(
-    p => p.estado === 'En cocina' || p.estado === 'En camino'
-  )
+  const getActiveKey = () => NAV_ITEMS.find(i => i.path === location.pathname)?.key || ''
+  const [activeNav, setActiveNav] = useState(getActiveKey())
+  useEffect(() => { setActiveNav(getActiveKey()) }, [location.pathname])
 
-  const getTrackingIndex = (estado) => {
-    const idx = TRACKING_ORDER.indexOf(estado)
-    return idx === -1 ? 0 : idx
+  // ── Avatar ──
+  const [avatarSrc, setAvatarSrc] = useState(user?.profilePicture || null)
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await authApi.get('/auth/profile')
+        const url = res.data?.data?.profilePicture
+        if (url) setAvatarSrc(url)
+      } catch { }
+    }
+    fetch()
+  }, [])
+
+  const [menuOpen, setMenuOpen] = useState(false)
+  const initials = (user?.name?.[0] || 'U').toUpperCase()
+
+  // ── Carrito desde sessionStorage ──
+  const [carrito, setCarrito] = useState([])
+  const [restauranteId, setRestauranteId] = useState(null)
+  const [restaurante, setRestaurante] = useState(null)
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem('carrito')
+    const restId = sessionStorage.getItem('restauranteId')
+    if (!raw || !restId) { navigate('/cliente/menu'); return }
+    try {
+      setCarrito(JSON.parse(raw))
+      setRestauranteId(restId)
+    } catch { navigate('/cliente/menu') }
+  }, [])
+
+  // Cargar datos del restaurante
+  useEffect(() => {
+    if (!restauranteId) return
+    const fetchRest = async () => {
+      try {
+        const res = await api.get(`/restaurante/restaurantes/${restauranteId}`)
+        setRestaurante(res.data?.data || res.data)
+      } catch { }
+    }
+    fetchRest()
+  }, [restauranteId])
+
+  // ── Formulario ──
+  const [tipoEntrega, setTipoEntrega] = useState('RECOGER')
+  const [direccion, setDireccion] = useState({ calle: '', colonia: '', ciudad: '', departamento: '' })
+  const [observaciones, setObservaciones] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [error, setError] = useState(null)
+  const [pedidoCreado, setPedidoCreado] = useState(null) // pedido exitoso
+
+  // ── Cálculos ──
+  const subtotal = carrito.reduce((s, i) => s + i.plato.precio * i.cantidad, 0)
+  const total = subtotal
+
+  const sf = (k, v) => setDireccion(d => ({ ...d, [k]: v }))
+
+  // ── Enviar pedido ──
+  const handleSubmit = async () => {
+    setError(null)
+
+    if (tipoEntrega === 'DOMICILIO') {
+      if (!direccion.calle.trim()) return setError('La calle es obligatoria')
+      if (!direccion.ciudad.trim()) return setError('La ciudad es obligatoria')
+    }
+
+    const detalles = carrito.map(i => ({
+      plato: i.plato._id,
+      cantidad: i.cantidad,
+      precioUnitario: i.plato.precio,
+      subtotal: i.plato.precio * i.cantidad,
+    }))
+
+    const payload = {
+      usuario: user.id,
+      restaurante: restauranteId,
+      detalles,
+      tipoEntrega,
+      total,
+      ...(tipoEntrega === 'DOMICILIO' ? { direccionEntrega: direccion } : {}),
+      ...(observaciones.trim() ? { observaciones: observaciones.trim() } : {}),
+    }
+
+    setEnviando(true)
+    try {
+      const res = await api.post('/pedidos/pedidos', payload)
+      const pedido = res.data?.data || res.data
+      setPedidoCreado(pedido)
+      // Limpiar sessionStorage
+      sessionStorage.removeItem('carrito')
+      sessionStorage.removeItem('restauranteId')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error al crear el pedido. Inténtalo de nuevo.')
+    } finally {
+      setEnviando(false)
+    }
   }
 
-  /* ─── FILTRADO ─── */
-  const pedidosFiltrados = MIS_PEDIDOS.filter(p => {
-    if (filtro === 'Todos') return true
-    if (filtro === 'Activos') return p.estado === 'En cocina' || p.estado === 'En camino'
-    return p.estado === filtro
-  })
-
-  /* ─── STATS ─── */
-  const totalGastado = 'Q ' + MIS_PEDIDOS
-    .filter(p => p.estado === 'Pagado' || p.estado === 'Entregado')
-    .reduce((acc) => acc + 1, 0) * 0  // placeholder visual
-  const cantidadPedidos = MIS_PEDIDOS.length
+  // ── Pantalla de éxito ──
+  if (pedidoCreado) {
+    return (
+      <>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap');
+          *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+          :root{--black:#07080a;--deep:#0d0f12;--glass-bg:rgba(255,255,255,.045);--glass-bd:rgba(255,255,255,.09);--gold:#c9a84c;--gold-lt:#e8c96a;--gold-dim:rgba(201,168,76,.08);--text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;--success:#4caf82;--nav-h:64px;}
+          body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+        `}</style>
+        <div style={{ textAlign: 'center', padding: 40, maxWidth: 480 }}>
+          <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(76,175,130,.15)', border: '2px solid rgba(76,175,130,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', color: 'var(--success)' }}>
+            <IconCheck />
+          </div>
+          <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>¡Pedido realizado!</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>
+            Tu pedido #{pedidoCreado._id?.slice(-6).toUpperCase()} ha sido recibido y está siendo procesado.
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 32 }}>
+            Puedes seguir el estado en <strong style={{ color: 'var(--gold-lt)' }}>Mis Pedidos</strong>
+          </div>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+            <button onClick={() => navigate('/cliente/mis-pedidos')}
+              style={{ padding: '11px 24px', borderRadius: 12, background: 'linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1))', border: '1px solid rgba(201,168,76,.35)', color: 'var(--gold-lt)', cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 500 }}>
+              Ver mis pedidos
+            </button>
+            <button onClick={() => navigate('/cliente/menu')}
+              style={{ padding: '11px 24px', borderRadius: 12, background: 'var(--glass-bg)', border: '1px solid var(--glass-bd)', color: 'var(--text-mid)', cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontSize: 13 }}>
+              Volver al menú
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-          --black:      #07080a;
-          --deep:       #0d0f12;
-          --surface:    #12151a;
-          --glass-bg:   rgba(255,255,255,0.045);
-          --glass-bd:   rgba(255,255,255,0.09);
-          --gold:       #c9a84c;
-          --gold-lt:    #e8c96a;
-          --gold-glow:  rgba(201,168,76,.22);
-          --gold-dim:   rgba(201,168,76,.08);
-          --text:       #f0ead8;
-          --text-mid:   #9a9385;
-          --text-muted: #5a554d;
-          --success:    #4caf82;
-          --error:      #e05a5a;
-          --radius-card: 20px;
-          --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+          --black:#07080a;--deep:#0d0f12;
+          --glass-bg:rgba(255,255,255,.045);--glass-bd:rgba(255,255,255,.09);
+          --gold:#c9a84c;--gold-lt:#e8c96a;--gold-dim:rgba(201,168,76,.08);
+          --text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;
+          --success:#4caf82;--error:#e05a5a;
+          --radius-card:20px;--radius-inp:11px;
+          --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+          --nav-h:64px;
         }
-        body { font-family: 'Outfit', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-        /* ── NAVBAR ── */
-        .cliente-nav {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-          height: 70px;
-          background: rgba(7,8,10,.85);
-          backdrop-filter: blur(24px) saturate(180%);
-          border-bottom: 1px solid var(--glass-bd);
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 0 48px;
-        }
-        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .nav-brand-icon {
-          width: 38px; height: 38px; border-radius: 10px;
-          background: linear-gradient(135deg, rgba(201,168,76,.2), rgba(201,168,76,.05));
-          border: 1px solid rgba(201,168,76,.25);
-          display: flex; align-items: center; justify-content: center; color: var(--gold);
-        }
-        .nav-brand-name {
-          font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500;
-          letter-spacing: 2px; text-transform: uppercase; color: var(--text);
-        }
-        .nav-links { display: flex; align-items: center; gap: 2px; }
-        .nav-link {
-          padding: 7px 14px; border-radius: 8px; font-size: 13px; color: var(--text-mid);
-          cursor: pointer; transition: all .2s; font-weight: 400; letter-spacing: .2px;
-          border: none; background: none; font-family: 'Outfit', sans-serif;
-          display: flex; align-items: center; gap: 7px; white-space: nowrap;
-        }
-        .nav-link:hover { color: var(--text); background: var(--glass-bg); }
-        .nav-link.active { color: var(--gold-lt); background: var(--gold-dim); }
-        .nav-right { display: flex; align-items: center; gap: 10px; }
-        .nav-avatar {
-          width: 36px; height: 36px; border-radius: 10px;
-          background: linear-gradient(135deg, rgba(201,168,76,.25), rgba(201,168,76,.08));
-          border: 1px solid rgba(201,168,76,.2);
-          display: flex; align-items: center; justify-content: center;
-          font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 500;
-          color: var(--gold-lt); cursor: pointer;
-        }
-        .nav-logout-btn {
-          display: flex; align-items: center; gap: 6px; padding: 7px 12px;
-          border-radius: 8px; background: none; border: 1px solid rgba(255,255,255,.08);
-          color: var(--text-muted); cursor: pointer;
-          font-family: 'Outfit', sans-serif; font-size: 12.5px; transition: all .2s;
-        }
-        .nav-logout-btn:hover { border-color: rgba(224,90,90,.3); color: #e05a5a; background: rgba(224,90,90,.06); }
-        .nav-mobile-btn {
-          display: none; width: 36px; height: 36px; border-radius: 8px;
-          background: var(--glass-bg); border: 1px solid var(--glass-bd);
-          color: var(--text-mid); cursor: pointer; align-items: center; justify-content: center;
-        }
+        /* NAVBAR */
+        .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100}
+        .navbar::after{content:'';position:absolute;bottom:-1px;left:0;width:200px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+        .nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+        .nav-brand-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;color:var(--gold)}
+        .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--text)}
+        .nav-links{display:flex;align-items:center;gap:4px}
+        .nav-link{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;white-space:nowrap;background:none;border:none;font-family:'Outfit',sans-serif}
+        .nav-link:hover{background:var(--glass-bg);color:var(--text)}
+        .nav-link.active{background:var(--gold-dim);color:var(--gold-lt);border:1px solid rgba(201,168,76,.15)}
+        .nav-right{display:flex;align-items:center;gap:10px}
+        .nav-avatar-wrap{position:relative}
+        .nav-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold-lt);cursor:pointer;overflow:hidden;transition:border-color .2s}
+        .nav-avatar:hover{border-color:rgba(201,168,76,.5)}
+        .nav-avatar img{width:100%;height:100%;object-fit:cover}
+        .nav-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--deep);border:1px solid var(--glass-bd);border-radius:14px;padding:8px;min-width:180px;z-index:200;animation:fadeIn .15s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+        .nd-user{padding:10px 12px;border-bottom:1px solid var(--glass-bd);margin-bottom:6px}
+        .nd-name{font-size:13px;font-weight:500;color:var(--text)}
+        .nd-email{font-size:11px;color:var(--text-muted)}
+        .nd-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s}
+        .nd-item:hover{background:var(--glass-bg);color:var(--text)}
+        .nd-item.danger:hover{background:rgba(224,90,90,.08);color:var(--error)}
+        .nav-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .2s}
+        .nav-btn:hover{color:var(--gold)}
+        .back-btn{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;padding:6px 10px;border-radius:8px;transition:all .2s}
+        .back-btn:hover{color:var(--gold-lt);background:var(--glass-bg)}
 
-        /* ── PAGE ── */
-        .cliente-page { padding-top: 70px; min-height: 100vh; }
+        /* PAGE */
+        .page{padding-top:var(--nav-h);min-height:100vh}
+        .content{max-width:900px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start}
 
-        /* ── HERO PEQUEÑO ── */
-        .page-hero {
-          padding: 52px 48px 40px;
-          background: linear-gradient(180deg, var(--deep) 0%, var(--black) 100%);
-          border-bottom: 1px solid var(--glass-bd);
-          position: relative; overflow: hidden;
-        }
-        .page-hero::before {
-          content: '';
-          position: absolute; top: 0; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, var(--gold), transparent);
-          opacity: .3;
-        }
-        .page-hero-bg {
-          position: absolute; inset: 0; pointer-events: none;
-          background: radial-gradient(ellipse 60% 100% at 80% 50%, rgba(201,168,76,.04) 0%, transparent 60%);
-        }
-        .page-hero-inner { position: relative; z-index: 1; }
-        .page-eyebrow {
-          font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-          color: var(--gold); opacity: .8; margin-bottom: 10px;
-          display: flex; align-items: center; gap: 12px;
-        }
-        .page-eyebrow::before {
-          content: ''; width: 30px; height: 1px;
-          background: linear-gradient(90deg, transparent, var(--gold));
-        }
-        .page-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(32px, 4vw, 48px); font-weight: 400;
-          color: var(--text); letter-spacing: -.5px; line-height: 1.1;
-        }
-        .page-title span { color: var(--gold-lt); font-style: italic; }
-        .page-subtitle {
-          font-size: 14px; color: var(--text-mid); margin-top: 8px;
-          font-weight: 300; letter-spacing: .2px;
-        }
+        /* COLUMNA IZQUIERDA */
+        .col-left{display:flex;flex-direction:column;gap:20px}
 
-        /* ── STATS ── */
-        .stats-strip {
-          display: flex; gap: 16px; margin-top: 28px; flex-wrap: wrap;
-        }
-        .stat-pill {
-          background: var(--glass-bg); border: 1px solid var(--glass-bd);
-          border-radius: 12px; padding: 12px 20px;
-          display: flex; align-items: center; gap: 10px;
-        }
-        .stat-pill-icon { font-size: 18px; }
-        .stat-pill-value {
-          font-family: 'Cormorant Garamond', serif; font-size: 22px;
-          font-weight: 500; color: var(--gold-lt); line-height: 1;
-        }
-        .stat-pill-label { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        /* CARDS */
+        .card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden}
+        .card-header{padding:18px 22px;border-bottom:1px solid var(--glass-bd)}
+        .card-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500}
+        .card-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+        .card-body{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
 
-        /* ── MAIN CONTENT ── */
-        .pedidos-content { padding: 36px 48px; max-width: 900px; margin: 0 auto; }
+        /* TIPO ENTREGA */
+        .tipo-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .tipo-opt{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;border:1px solid var(--glass-bd);cursor:pointer;transition:all .2s;background:var(--glass-bg)}
+        .tipo-opt:hover{border-color:rgba(201,168,76,.3)}
+        .tipo-opt.selected{border-color:rgba(201,168,76,.45);background:var(--gold-dim)}
+        .tipo-opt-icon{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:var(--text-muted);flex-shrink:0}
+        .tipo-opt.selected .tipo-opt-icon{color:var(--gold-lt)}
+        .tipo-opt-label{font-size:13px;font-weight:500;color:var(--text-mid)}
+        .tipo-opt.selected .tipo-opt-label{color:var(--gold-lt)}
+        .tipo-opt-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
 
-        /* ── PEDIDO ACTIVO ── */
-        .activo-card {
-          background: var(--glass-bg); border: 1px solid rgba(201,168,76,.2);
-          border-radius: var(--radius-card); padding: 26px 28px;
-          margin-bottom: 32px; position: relative; overflow: hidden;
-        }
-        .activo-card::before {
-          content: ''; position: absolute; top: 0; left: 0;
-          width: 100%; height: 2px;
-          background: linear-gradient(90deg, var(--gold), rgba(201,168,76,.2), transparent);
-        }
-        .activo-label {
-          font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-          color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
-        }
-        .activo-label::after {
-          content: ''; flex: 1; height: 1px;
-          background: linear-gradient(90deg, rgba(201,168,76,.3), transparent);
-        }
-        .pulse-dot {
-          width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
-          box-shadow: 0 0 0 0 rgba(201,168,76,.4);
-          animation: pulse-ring 1.8s ease-out infinite;
-          flex-shrink: 0;
-        }
-        @keyframes pulse-ring {
-          0%   { box-shadow: 0 0 0 0 rgba(201,168,76,.4); }
-          70%  { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
-          100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
-        }
-        .activo-top {
-          display: flex; align-items: flex-start; justify-content: space-between;
-          margin-bottom: 24px; gap: 12px;
-        }
-        .activo-id {
-          font-family: 'Cormorant Garamond', serif; font-size: 26px;
-          font-weight: 500; color: var(--gold-lt);
-        }
-        .activo-meta { font-size: 12.5px; color: var(--text-mid); margin-top: 2px; }
+        /* FORM */
+        .form-group{display:flex;flex-direction:column;gap:6px}
+        .form-label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
+        .form-input,.form-textarea{background:rgba(255,255,255,.04);border:1px solid var(--glass-bd);border-radius:var(--radius-inp);padding:10px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13.5px;outline:none;transition:border-color .2s;width:100%}
+        .form-input:focus,.form-textarea:focus{border-color:rgba(201,168,76,.4)}
+        .form-input::placeholder,.form-textarea::placeholder{color:var(--text-muted)}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .form-textarea{resize:vertical;min-height:80px}
 
-        /* TRACKING BAR */
-        .tracking-wrap { position: relative; }
-        .tracking-line-bg {
-          position: absolute; top: 16px; left: 16px; right: 16px; height: 2px;
-          background: var(--glass-bd); border-radius: 2px; z-index: 0;
-        }
-        .tracking-line-fill {
-          position: absolute; top: 16px; left: 16px; height: 2px;
-          background: linear-gradient(90deg, var(--gold), var(--gold-lt));
-          border-radius: 2px; z-index: 1; transition: width .6s var(--ease-out-expo);
-        }
-        .tracking-steps {
-          display: flex; justify-content: space-between;
-          position: relative; z-index: 2;
-        }
-        .tracking-step { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
-        .tracking-dot-wrap {
-          width: 32px; height: 32px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          border: 2px solid var(--glass-bd); background: var(--deep);
-          transition: all .4s var(--ease-out-expo); position: relative;
-          font-size: 13px;
-        }
-        .tracking-dot-wrap.done {
-          border-color: var(--gold); background: var(--gold-dim);
-          box-shadow: 0 0 12px rgba(201,168,76,.2);
-        }
-        .tracking-dot-wrap.current {
-          border-color: var(--gold-lt); background: rgba(201,168,76,.15);
-          box-shadow: 0 0 16px rgba(201,168,76,.3);
-        }
-        .tracking-step-label {
-          font-size: 11px; color: var(--text-muted); text-align: center;
-          transition: color .3s; white-space: nowrap;
-        }
-        .tracking-step-label.done { color: var(--text-mid); }
-        .tracking-step-label.current { color: var(--gold-lt); font-weight: 500; }
+        /* ERROR */
+        .error-msg{padding:12px 16px;border-radius:10px;background:rgba(224,90,90,.1);border:1px solid rgba(224,90,90,.25);color:var(--error);font-size:13px}
 
-        /* PEDIDO ITEMS PREVIEW */
-        .activo-items {
-          margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--glass-bd);
-          display: flex; gap: 8px; flex-wrap: wrap;
-        }
-        .activo-item-tag {
-          background: var(--glass-bg); border: 1px solid var(--glass-bd);
-          border-radius: 8px; padding: 4px 10px;
-          font-size: 12px; color: var(--text-mid);
-        }
-        .activo-total {
-          font-family: 'Cormorant Garamond', serif; font-size: 18px;
-          color: var(--gold-lt); font-weight: 500; margin-left: auto;
-        }
+        /* COLUMNA DERECHA — resumen */
+        .col-right{position:sticky;top:calc(var(--nav-h) + 24px)}
+        .resumen-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+        .resumen-item:last-child{border-bottom:none}
+        .resumen-nombre{font-size:13px;color:var(--text)}
+        .resumen-qty{font-size:11px;color:var(--text-muted);margin-top:2px}
+        .resumen-precio{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-lt);white-space:nowrap}
+        .resumen-total{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;background:rgba(201,168,76,.06);border-top:1px solid rgba(201,168,76,.15)}
+        .resumen-total-label{font-size:13px;color:var(--text-mid)}
+        .resumen-total-val{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold-lt)}
+        .rest-info{display:flex;flex-direction:column;gap:4px;padding:14px 22px;border-bottom:1px solid var(--glass-bd)}
+        .rest-nombre{font-size:13px;font-weight:500;color:var(--text)}
+        .rest-sub{font-size:11px;color:var(--text-muted)}
 
-        /* ── HISTORIAL ── */
-        .historial-header {
-          display: flex; align-items: center; justify-content: space-between;
-          margin-bottom: 16px;
-        }
-        .historial-title {
-          font-family: 'Cormorant Garamond', serif; font-size: 22px;
-          font-weight: 500; color: var(--text); letter-spacing: .3px;
-        }
-        .filtros-wrap { display: flex; gap: 6px; }
-        .filtro-btn {
-          padding: 6px 14px; border-radius: 7px;
-          background: var(--glass-bg); border: 1px solid var(--glass-bd);
-          color: var(--text-muted); cursor: pointer; font-size: 12px;
-          font-family: 'Outfit', sans-serif; transition: all .2s;
-        }
-        .filtro-btn:hover { color: var(--text); background: rgba(255,255,255,.06); }
-        .filtro-btn.active {
-          background: var(--gold-dim); border-color: rgba(201,168,76,.3); color: var(--gold-lt);
-        }
+        /* BOTÓN CONFIRMAR */
+        .btn-confirmar{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.12));border:1px solid rgba(201,168,76,.4);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin:20px 22px 22px}
+        .btn-confirmar:hover{border-color:rgba(201,168,76,.65);transform:translateY(-1px)}
+        .btn-confirmar:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-        /* PEDIDO CARD */
-        .pedido-card {
-          background: var(--glass-bg); border: 1px solid var(--glass-bd);
-          border-radius: var(--radius-card); margin-bottom: 12px;
-          overflow: hidden; transition: border-color .2s;
-          cursor: pointer;
-        }
-        .pedido-card:hover { border-color: rgba(201,168,76,.15); }
-        .pedido-card-header {
-          display: flex; align-items: center; gap: 14px;
-          padding: 18px 22px; flex-wrap: wrap;
-        }
-        .pedido-card-id {
-          font-family: 'Cormorant Garamond', serif; font-size: 18px;
-          color: var(--gold-lt); font-weight: 500; min-width: 60px;
-        }
-        .pedido-card-fecha {
-          font-size: 12px; color: var(--text-muted);
-          display: flex; align-items: center; gap: 5px;
-        }
-        .status-badge {
-          display: inline-flex; align-items: center; padding: 3px 10px;
-          border-radius: 20px; font-size: 11px; border: 1px solid; white-space: nowrap;
-        }
-        .pedido-card-mesa { font-size: 12.5px; color: var(--text-mid); }
-        .pedido-card-total {
-          font-family: 'Cormorant Garamond', serif; font-size: 20px;
-          color: var(--gold-lt); font-weight: 500; margin-left: auto;
-        }
-        .pedido-card-chevron {
-          color: var(--text-muted); transition: transform .25s var(--ease-out-expo);
-          flex-shrink: 0;
-        }
-        .pedido-card-chevron.open { transform: rotate(180deg); }
-
-        /* EXPAND */
-        .pedido-card-body {
-          border-top: 1px solid var(--glass-bd);
-          padding: 16px 22px 18px;
-          animation: expand-in .2s ease-out;
-        }
-        @keyframes expand-in {
-          from { opacity: 0; transform: translateY(-6px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .pedido-items-title {
-          font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-          color: var(--text-muted); margin-bottom: 10px;
-        }
-        .pedido-item-row {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.04);
-        }
-        .pedido-item-row:last-child { border-bottom: none; }
-        .pedido-item-name { font-size: 13px; color: var(--text); }
-        .pedido-item-qty {
-          font-size: 11px; color: var(--text-muted);
-          background: var(--glass-bg); border-radius: 4px; padding: 2px 7px; margin-left: 8px;
-        }
-        .pedido-item-price {
-          font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--gold-lt);
-        }
-        .pedido-total-row {
-          display: flex; align-items: center; justify-content: space-between;
-          padding-top: 12px; margin-top: 6px; border-top: 1px solid var(--glass-bd);
-        }
-        .pedido-total-label { font-size: 12px; color: var(--text-muted); letter-spacing: .5px; }
-        .pedido-total-val {
-          font-family: 'Cormorant Garamond', serif; font-size: 22px;
-          font-weight: 500; color: var(--gold-lt);
-        }
-
-        /* EMPTY */
-        .empty-state {
-          text-align: center; padding: 64px 24px; color: var(--text-muted);
-        }
-        .empty-icon { font-size: 44px; margin-bottom: 14px; }
-        .empty-title {
-          font-family: 'Cormorant Garamond', serif; font-size: 24px;
-          color: var(--text-mid); margin-bottom: 8px;
-        }
-        .empty-desc { font-size: 13.5px; font-weight: 300; margin-bottom: 24px; }
-        .btn-primary {
-          position: relative; padding: 12px 28px;
-          background: linear-gradient(135deg, rgba(201,168,76,.18) 0%, rgba(201,168,76,.06) 100%);
-          border: 1px solid rgba(201,168,76,.35); border-radius: 11px;
-          font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500;
-          letter-spacing: 1px; text-transform: uppercase;
-          color: var(--gold-lt); cursor: pointer;
-          display: inline-flex; align-items: center; gap: 8px;
-          transition: border-color .25s, transform .15s;
-        }
-        .btn-primary:hover { border-color: rgba(201,168,76,.6); transform: translateY(-1px); }
-
-        /* FOOTER */
-        .cliente-footer {
-          border-top: 1px solid var(--glass-bd); padding: 28px 48px;
-          display: flex; align-items: center; justify-content: space-between;
-          color: var(--text-muted); font-size: 12px; margin-top: 40px;
-        }
-        .footer-brand {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 17px; color: var(--text-mid); letter-spacing: 1.5px;
-        }
-        .footer-gold { color: var(--gold); }
-
-        @media (max-width: 900px) {
-          .nav-links { display: none; }
-          .nav-mobile-btn { display: flex; }
-          .cliente-nav { padding: 0 24px; }
-          .page-hero { padding: 40px 24px 30px; }
-          .pedidos-content { padding: 24px; }
-          .tracking-step-label { font-size: 10px; }
-          .cliente-footer { padding: 24px; }
-        }
+        @media(max-width:900px){.content{grid-template-columns:1fr}.col-right{position:static}.nav-links{display:none}}
+        @media(max-width:600px){.form-row{grid-template-columns:1fr}.tipo-options{grid-template-columns:1fr}}
       `}</style>
 
-      <div className="cliente-page">
-
-        {/* ── NAVBAR ── */}
-        <nav className="cliente-nav">
-          <div className="nav-brand">
-            <div className="nav-brand-icon"><IconMenu /></div>
-            <span className="nav-brand-name">Restaurante</span>
-          </div>
-
-          <div className="nav-links">
-            {NAV_LINKS.filter(n => n.key !== 'perfil').map(link => (
-              <button
-                key={link.key}
-                className={`nav-link ${activeNav === link.key ? 'active' : ''}`}
-                onClick={() => setActiveNav(link.key)}
-              >
-                {link.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="nav-right">
-            <div className="nav-avatar" title={user?.name}>
-              {user?.name?.[0]?.toUpperCase() || 'U'}
+      {/* NAVBAR */}
+      <nav className="navbar">
+        <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
+          <div className="nav-brand-icon"><IconRest /></div>
+          <span className="nav-brand-name">Gastro</span>
+        </div>
+        <div className="nav-links">
+          {NAV_ITEMS.map(item => (
+            <div key={item.key} className={`nav-link ${activeNav === item.key ? 'active' : ''}`}
+              onClick={() => { setActiveNav(item.key); navigate(item.path) }}>
+              {item.icon}{item.label}
             </div>
-            <button className="nav-logout-btn" onClick={logout}>
-              <IconLogout /> Salir
-            </button>
-            <button className="nav-mobile-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              <IconHamburger />
-            </button>
+          ))}
+        </div>
+        <div className="nav-right">
+          <button className="back-btn" onClick={() => navigate('/cliente/menu')}>
+            <IconArrow /> Volver al menú
+          </button>
+          <NotificacionesPanel isAdmin={false} />
+          <div className="nav-avatar-wrap">
+            <div className="nav-avatar" onClick={() => setMenuOpen(p => !p)}>
+              {avatarSrc
+                ? <img src={avatarSrc} alt="avatar" onError={e => e.target.style.display = 'none'} />
+                : initials}
+            </div>
+            {menuOpen && (
+              <div className="nav-dropdown">
+                <div className="nd-user">
+                  <div className="nd-name">{user?.name || 'Usuario'}</div>
+                  <div className="nd-email">{user?.email || ''}</div>
+                </div>
+                <div className="nd-item" onClick={() => { setMenuOpen(false); navigate('/cliente/perfil') }}><IconUser /> Mi perfil</div>
+                <div className="nd-item danger" onClick={() => { setMenuOpen(false); logout() }}><IconLogout /> Cerrar sesión</div>
+              </div>
+            )}
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        {/* ── PAGE HERO ── */}
-        <div className="page-hero">
-          <div className="page-hero-bg" />
-          <div className="page-hero-inner">
-            <div className="page-eyebrow">Mis Pedidos</div>
-            <h1 className="page-title">
-              Tu historial de<br /><span>sabores</span>
-            </h1>
-            <p className="page-subtitle">
-              Bienvenido{user?.name ? `, ${user.name}` : ''}. Aquí puedes seguir tus pedidos y ver tu historial.
-            </p>
-            <div className="stats-strip">
-              <div className="stat-pill">
-                <div className="stat-pill-icon">🧾</div>
-                <div>
-                  <div className="stat-pill-value">{MIS_PEDIDOS.length}</div>
-                  <div className="stat-pill-label">Pedidos totales</div>
-                </div>
+      <div className="page">
+        <div className="content">
+
+          {/* COL IZQUIERDA */}
+          <div className="col-left">
+
+            {/* Tipo de entrega */}
+            <div className="card">
+              <div className="card-header">
+                <div className="card-title">Tipo de entrega</div>
+                <div className="card-sub">¿Cómo quieres recibir tu pedido?</div>
               </div>
-              <div className="stat-pill">
-                <div className="stat-pill-icon">✅</div>
-                <div>
-                  <div className="stat-pill-value">
-                    {MIS_PEDIDOS.filter(p => p.estado === 'Pagado' || p.estado === 'Entregado').length}
-                  </div>
-                  <div className="stat-pill-label">Completados</div>
-                </div>
-              </div>
-              {pedidoActivo && (
-                <div className="stat-pill" style={{ borderColor: 'rgba(201,168,76,.3)' }}>
-                  <div className="pulse-dot" />
-                  <div>
-                    <div className="stat-pill-value" style={{ color: 'var(--gold-lt)', fontSize: '14px', marginTop: '2px' }}>
-                      1 pedido activo
+              <div className="card-body">
+                <div className="tipo-options">
+                  <div className={`tipo-opt ${tipoEntrega === 'RECOGER' ? 'selected' : ''}`}
+                    onClick={() => setTipoEntrega('RECOGER')}>
+                    <div className="tipo-opt-icon"><IconStore /></div>
+                    <div>
+                      <div className="tipo-opt-label">Para recoger</div>
+                      <div className="tipo-opt-sub">Retiras en el local</div>
                     </div>
-                    <div className="stat-pill-label">En este momento</div>
+                  </div>
+                  <div className={`tipo-opt ${tipoEntrega === 'DOMICILIO' ? 'selected' : ''}`}
+                    onClick={() => setTipoEntrega('DOMICILIO')}>
+                    <div className="tipo-opt-icon"><IconTruck /></div>
+                    <div>
+                      <div className="tipo-opt-label">A domicilio</div>
+                      <div className="tipo-opt-sub">Te lo llevamos</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Dirección (solo si domicilio) */}
+            {tipoEntrega === 'DOMICILIO' && (
+              <div className="card">
+                <div className="card-header">
+                  <div className="card-title">Dirección de entrega</div>
+                </div>
+                <div className="card-body">
+                  <div className="form-group">
+                    <label className="form-label">Calle *</label>
+                    <input className="form-input" placeholder="Ej: 6a Av. 10-20 Zona 1"
+                      value={direccion.calle} onChange={e => sf('calle', e.target.value)} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Colonia / Zona</label>
+                    <input className="form-input" placeholder="Ej: Zona 10"
+                      value={direccion.colonia} onChange={e => sf('colonia', e.target.value)} />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">Ciudad *</label>
+                      <input className="form-input" placeholder="Guatemala"
+                        value={direccion.ciudad} onChange={e => sf('ciudad', e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Departamento</label>
+                      <input className="form-input" placeholder="Guatemala"
+                        value={direccion.departamento} onChange={e => sf('departamento', e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Observaciones */}
+            <div className="card">
+              <div className="card-header">
+                <div className="card-title">Observaciones</div>
+                <div className="card-sub">Opcional — alergias, instrucciones especiales, etc.</div>
+              </div>
+              <div className="card-body">
+                <textarea className="form-textarea"
+                  placeholder="Ej: Sin cebolla, extra salsa..."
+                  value={observaciones}
+                  onChange={e => setObservaciones(e.target.value)} />
+              </div>
+            </div>
+
+            {error && <div className="error-msg">⚠ {error}</div>}
+          </div>
+
+          {/* COL DERECHA — resumen */}
+          <div className="col-right">
+            <div className="card">
+              <div className="card-header">
+                <div className="card-title">Resumen del pedido</div>
+              </div>
+
+              {/* Info restaurante */}
+              {restaurante && (
+                <div className="rest-info">
+                  <div className="rest-nombre">{restaurante.nombre}</div>
+                  <div className="rest-sub" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <IconPin /> {restaurante.direccion}
                   </div>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
 
-        {/* ── CONTENT ── */}
-        <div className="pedidos-content">
-
-          {/* PEDIDO ACTIVO */}
-          {pedidoActivo && (() => {
-            const currentIdx = getTrackingIndex(pedidoActivo.estado)
-            const fillPct = (currentIdx / (TRACKING_ORDER.length - 1)) * 100
-
-            return (
-              <div className="activo-card">
-                <div className="activo-label">
-                  <div className="pulse-dot" />
-                  Pedido en curso
-                </div>
-
-                <div className="activo-top">
-                  <div>
-                    <div className="activo-id">{pedidoActivo.id}</div>
-                    <div className="activo-meta">
-                      {pedidoActivo.mesa} · {pedidoActivo.hora} · {pedidoActivo.tipo}
+              {/* Items */}
+              <div style={{ padding: '8px 22px' }}>
+                {carrito.map((item, i) => (
+                  <div key={i} className="resumen-item">
+                    <div>
+                      <div className="resumen-nombre">{item.plato.nombre}</div>
+                      <div className="resumen-qty">x{item.cantidad} · Q {item.plato.precio.toFixed(2)} c/u</div>
                     </div>
+                    <div className="resumen-precio">Q {(item.plato.precio * item.cantidad).toFixed(2)}</div>
                   </div>
-                  {(() => {
-                    const sc = STATUS_COLORS[pedidoActivo.estado] || {}
-                    return (
-                      <span className="status-badge" style={{ background: sc.bg, borderColor: sc.border, color: sc.color }}>
-                        {pedidoActivo.estado}
-                      </span>
-                    )
-                  })()}
-                </div>
-
-                {/* TRACKING */}
-                <div className="tracking-wrap">
-                  <div className="tracking-line-bg" />
-                  <div
-                    className="tracking-line-fill"
-                    style={{ width: `calc(${fillPct}% * ((100% - 32px) / 100%) + 16px)` }}
-                  />
-                  <div className="tracking-steps">
-                    {TRACKING_STEPS.map((step, i) => {
-                      const isDone = i < currentIdx
-                      const isCurrent = i === currentIdx
-                      return (
-                        <div className="tracking-step" key={step.key}>
-                          <div className={`tracking-dot-wrap ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''}`}>
-                            {isDone ? <IconCheck /> : step.emoji}
-                          </div>
-                          <span className={`tracking-step-label ${isDone ? 'done' : ''} ${isCurrent ? 'current' : ''}`}>
-                            {step.label}
-                          </span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                <div className="activo-items">
-                  {pedidoActivo.items.map((item, i) => (
-                    <span className="activo-item-tag" key={i}>
-                      {item.qty}x {item.nombre}
-                    </span>
-                  ))}
-                  <span className="activo-total">{pedidoActivo.total}</span>
-                </div>
+                ))}
               </div>
-            )
-          })()}
 
-          {/* HISTORIAL */}
-          <div className="historial-header">
-            <div className="historial-title">Historial</div>
-            <div className="filtros-wrap">
-              {FILTROS.map(f => (
-                <button
-                  key={f}
-                  className={`filtro-btn ${filtro === f ? 'active' : ''}`}
-                  onClick={() => setFiltro(f)}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-          </div>
+              {/* Total */}
+              <div className="resumen-total">
+                <span className="resumen-total-label">Total</span>
+                <span className="resumen-total-val">Q {total.toFixed(2)}</span>
+              </div>
 
-          {pedidosFiltrados.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">🍽️</div>
-              <div className="empty-title">Sin pedidos aquí</div>
-              <div className="empty-desc">No tienes pedidos con ese filtro todavía.</div>
-              <button className="btn-primary" onClick={() => setActiveNav('menu')}>
-                Explorar el menú <IconArrow />
+              {/* Botón confirmar */}
+              <button className="btn-confirmar" onClick={handleSubmit} disabled={enviando || carrito.length === 0}>
+                {enviando ? 'Procesando...' : '✓ Confirmar pedido'}
               </button>
             </div>
-          ) : (
-            pedidosFiltrados.map((p, i) => {
-              const sc = STATUS_COLORS[p.estado] || {}
-              const isOpen = expandido === i
-              return (
-                <div className="pedido-card" key={i}>
-                  <div
-                    className="pedido-card-header"
-                    onClick={() => setExpandido(isOpen ? null : i)}
-                  >
-                    <div className="pedido-card-id">{p.id}</div>
-                    <div className="pedido-card-fecha">
-                      <IconClock /> {p.fecha} · {p.hora}
-                    </div>
-                    <div className="pedido-card-mesa">{p.mesa}</div>
-                    <span
-                      className="status-badge"
-                      style={{ background: sc.bg, borderColor: sc.border, color: sc.color }}
-                    >
-                      {p.estado}
-                    </span>
-                    <div className="pedido-card-total">{p.total}</div>
-                    <div className={`pedido-card-chevron ${isOpen ? 'open' : ''}`}>
-                      <IconChevronDown />
-                    </div>
-                  </div>
-
-                  {isOpen && (
-                    <div className="pedido-card-body">
-                      <div className="pedido-items-title">Artículos del pedido</div>
-                      {p.items.map((item, j) => (
-                        <div className="pedido-item-row" key={j}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <span className="pedido-item-name">{item.nombre}</span>
-                            <span className="pedido-item-qty">x{item.qty}</span>
-                          </div>
-                          <span className="pedido-item-price">{item.precio}</span>
-                        </div>
-                      ))}
-                      <div className="pedido-total-row">
-                        <span className="pedido-total-label">Total del pedido</span>
-                        <span className="pedido-total-val">{p.total}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })
-          )}
-        </div>
-
-        {/* ── FOOTER ── */}
-        <footer className="cliente-footer">
-          <div className="footer-brand">
-            Restaurante <span className="footer-gold">·</span> Guatemala
           </div>
-          <div>© {new Date().getFullYear()} · Todos los derechos reservados</div>
-        </footer>
+        </div>
       </div>
+
+      {menuOpen && <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setMenuOpen(false)} />}
     </>
   )
 }
