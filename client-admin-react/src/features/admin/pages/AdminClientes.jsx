@@ -1,3 +1,4 @@
+// src/features/admin/pages/AdminClientes.jsx
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'
@@ -48,7 +49,7 @@ function Toast({ msg, type, onDone }) {
 
 export default function AdminClientes() {
     const [sidebarOpen, setSidebarOpen] = useState(true)
-    const { user, logout } = useAuthStore()
+    const { user, logout, setUser } = useAuthStore()
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -113,6 +114,55 @@ export default function AdminClientes() {
             showToast('Error al actualizar el cliente', 'error')
         } finally {
             setToggling(null)
+        }
+    }
+
+    const cambiarRol = async (cliente) => {
+        const esAdmin = (cliente.role || '').toUpperCase() === 'ADMIN_ROLE'
+        const nuevoRol = esAdmin ? 'USER_ROLE' : 'ADMIN_ROLE'
+
+        if (esAdmin) {
+            if (!window.confirm(`¿Quitar permisos de administrador a ${cliente.name}?`)) return
+        } else {
+            if (!window.confirm(`¿Dar permisos de administrador a ${cliente.name}? El usuario tendrá acceso al panel de administración.`)) return
+        }
+
+        try {
+            const res = await authApi.put(`/users/${cliente.id}/role`, { roleName: nuevoRol })
+            const updatedData = res.data
+
+            setClientes(prev => prev.map(c =>
+                c.id === cliente.id ? { ...c, role: nuevoRol } : c
+            ))
+            if (detalle?.id === cliente.id)
+                setDetalle(prev => ({ ...prev, role: nuevoRol }))
+
+            showToast(`Rol actualizado: ${cliente.name} ahora es ${nuevoRol === 'ADMIN_ROLE' ? 'Administrador' : 'Cliente'}`)
+
+            // Si el usuario cambiado es el propio usuario logueado, actualizar sesión y redirigir
+            if (cliente.id === user?.id) {
+                const updatedUser = {
+                    ...(updatedData || {}),
+                    role: nuevoRol,
+                    id: cliente.id,
+                    name: cliente.name,
+                    email: cliente.email,
+                    username: cliente.username,
+                }
+                if (typeof setUser === 'function') setUser(updatedUser)
+                setTimeout(() => {
+                    window.location.href = nuevoRol === 'ADMIN_ROLE' ? '/admin' : '/cliente/inicio'
+                }, 1200)
+                return
+            }
+
+            // Si se le dio ADMIN_ROLE a otro usuario, notificar que deberá reloguearse
+            if (nuevoRol === 'ADMIN_ROLE') {
+                showToast(`${cliente.name} ahora es administrador. Deberá cerrar sesión y volver a entrar para ver los cambios.`)
+            }
+        } catch (err) {
+            const msg = err.response?.data?.message || 'Error al cambiar el rol'
+            showToast(msg, 'error')
         }
     }
 
@@ -454,6 +504,14 @@ export default function AdminClientes() {
                                                             : { color: 'var(--error)', borderColor: 'rgba(224,90,90,.3)' }}>
                                                         {c.status ? <IconToggleOn /> : <IconToggleOff />}
                                                     </button>
+                                                    <button className="abtn"
+                                                        title={(c.role || '').toUpperCase() === 'ADMIN_ROLE' ? 'Quitar admin' : 'Hacer admin'}
+                                                        onClick={() => cambiarRol(c)}
+                                                        style={(c.role || '').toUpperCase() === 'ADMIN_ROLE'
+                                                            ? { color: '#e8c96a', borderColor: 'rgba(201,168,76,.3)' }
+                                                            : { color: '#9a9385' }}>
+                                                        <IconShield />
+                                                    </button>
                                                     <button className="abtn danger" title="Eliminar" onClick={() => eliminar(c.id)}><IconTrash /></button>
                                                 </div>
                                             </td>
@@ -504,6 +562,23 @@ export default function AdminClientes() {
                         <div className="panel-actions">
                             <button className={detalle.status ? 'btn-off' : 'btn-on'} disabled={toggling === detalle.id} onClick={() => toggleActivo(detalle)}>
                                 {detalle.status ? <><IconToggleOff /> Desactivar</> : <><IconToggleOn /> Activar</>}
+                            </button>
+                            <button
+                                onClick={() => cambiarRol(detalle)}
+                                style={{
+                                    flex: 1, padding: 10, borderRadius: 10, cursor: 'pointer',
+                                    fontFamily: "'Outfit',sans-serif", fontSize: 13,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                    transition: 'all .2s', border: '1px solid',
+                                    background: (detalle.role || '').toUpperCase() === 'ADMIN_ROLE'
+                                        ? 'rgba(201,168,76,.08)' : 'rgba(91,155,213,.08)',
+                                    borderColor: (detalle.role || '').toUpperCase() === 'ADMIN_ROLE'
+                                        ? 'rgba(201,168,76,.3)' : 'rgba(91,155,213,.3)',
+                                    color: (detalle.role || '').toUpperCase() === 'ADMIN_ROLE'
+                                        ? 'var(--gold-lt)' : '#90c0e8',
+                                }}>
+                                <IconShield />
+                                {(detalle.role || '').toUpperCase() === 'ADMIN_ROLE' ? 'Quitar Admin' : 'Hacer Admin'}
                             </button>
                             <button className="btn-del" onClick={() => eliminar(detalle.id)}><IconTrash /> Eliminar</button>
                         </div>

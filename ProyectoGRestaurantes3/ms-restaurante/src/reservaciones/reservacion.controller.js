@@ -125,11 +125,14 @@ export const crearReservacion = async (req, res) => {
             }
         }
 
-        // Verificar capacidad de la mesa si se proporcionó una
+        // Verificar capacidad y disponibilidad de la mesa
         if (mesa && mesa !== '') {
             const mesaDoc = await mongoose.connection.collection('mesas').findOne({ _id: new mongoose.Types.ObjectId(mesa) });
             if (!mesaDoc) {
                 return res.status(404).json({ success: false, message: 'La mesa especificada no existe' });
+            }
+            if (mesaDoc.estado !== 'DISPONIBLE') {
+                return res.status(409).json({ success: false, message: `La mesa #${mesaDoc.numeroMesa} no está disponible (estado: ${mesaDoc.estado}). Por favor elige otra mesa.` });
             }
             if (Number(numPersonas) > mesaDoc.capacidad) {
                 return res.status(400).json({ success: false, message: `La mesa solo tiene capacidad para ${mesaDoc.capacidad} persona(s), pero se indicaron ${numPersonas}` });
@@ -160,6 +163,16 @@ export const crearReservacion = async (req, res) => {
 
         const reservacion = new Reservacion({ ...req.body, usuario: usuario.trim() });
         await reservacion.save();
+
+        // Cambiar estado de la mesa a RESERVADA
+        if (mesa && mesa !== '') {
+            try {
+                await mongoose.connection.collection('mesas').updateOne(
+                    { _id: new mongoose.Types.ObjectId(mesa) },
+                    { $set: { estado: 'RESERVADA' } }
+                );
+            } catch (me) { console.warn('No se pudo actualizar estado de mesa:', me.message); }
+        }
 
         // Retornar con populate para ver el estado completo
         const reservacionPopulada = await Reservacion.findById(reservacion._id)

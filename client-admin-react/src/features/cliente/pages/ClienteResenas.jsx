@@ -270,7 +270,7 @@ export default function ClienteResenas() {
                     {/* FORMULARIO NUEVA RESEÑA */}
                     <div className="card">
                         <div className="card-header">
-                            <div className="card-title">✍️ Escribir una reseña</div>
+                            <div className="card-title">Escribir una reseña</div>
                             <div className="card-sub">Puedes editar tu reseña si ya dejaste una en ese restaurante</div>
                         </div>
                         <div className="card-body">

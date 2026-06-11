@@ -1,54 +1,53 @@
+// src/features/admin/pages/AdminRestaurantes.jsx
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../../auth/store/authStore'
 import api from '../../../shared/api/api'
-import NotificacionesPanel from '../../../shared/components/NotificacionesPanel'
 
 /* ─── ICONS ─── */
-const IconMenu = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7" /></svg>
-const IconOrders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
-const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+const IconMenu    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7"/></svg>
+const IconOrders  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+const IconTable   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+const IconRest    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20"/><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2"/></svg>
 const IconStar   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-const IconRest = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20" /><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2" /></svg>
-const IconReport = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
-const IconDash = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
-const IconUsers = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
-const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
-const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
-const IconPlus = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-const IconEdit = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-const IconTrash = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2" /></svg>
-const IconSearch = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-const IconX = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-const IconClock = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-const IconPin = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
-const IconPhone = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
-const IconChair = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M4 7V4a2 2 0 012-2h12a2 2 0 012 2v3" /><path d="M4 7h16v4H4z" /><path d="M8 11v9M16 11v9M8 20h8" /></svg>
-const IconArrowLeft = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
-const IconImage = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+const IconReport  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+const IconDash    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+const IconUsers   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+const IconLogout  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+const IconPlus    = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+const IconEdit    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+const IconTrash   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+const IconSearch  = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+const IconX       = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+const IconClock   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+const IconPin     = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+const IconPhone   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+const IconBell    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+const IconChair   = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M4 7V4a2 2 0 012-2h12a2 2 0 012 2v3"/><path d="M4 7h16v4H4z"/><path d="M8 11v9M16 11v9M8 20h8"/></svg>
+const IconArrowLeft = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+const IconImage   = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
 
 const NAV_ITEMS = [
-  { key: 'dashboard', label: 'Dashboard', icon: <IconDash />, href: '/admin' },
-  { key: 'menu', label: 'Menú', icon: <IconMenu />, href: '/admin/menu' },
-  { key: 'pedidos', label: 'Pedidos', icon: <IconOrders />, href: '/admin/pedidos' },
-  { key: 'reservaciones', label: 'Reservaciones', icon: <IconTable />, href: '/admin/reservaciones' },
-  { key: 'restaurantes', label: 'Restaurantes', icon: <IconRest />, href: '/admin/restaurantes' },
-  { key: 'clientes', label: 'Clientes', icon: <IconUsers />, href: '/admin/clientes' },
-  { key: 'reportes', label: 'Reportes', icon: <IconReport />, href: '/admin/reportes' },
-  { key: 'resenas',       label: 'Reseñas',        icon: <IconStar />,    path: '/admin/resenas' },
+  { key: 'dashboard',     label: 'Dashboard',     icon: <IconDash />,   href: '/admin' },
+  { key: 'menu',          label: 'Menú',           icon: <IconMenu />,   href: '/admin/menu' },
+  { key: 'pedidos',       label: 'Pedidos',        icon: <IconOrders />, href: '/admin/pedidos' },
+  { key: 'reservaciones', label: 'Reservaciones',  icon: <IconTable />,  href: '/admin/reservaciones' },
+  { key: 'restaurantes',  label: 'Restaurantes',   icon: <IconRest />,   href: '/admin/restaurantes' },
+  { key: 'clientes',      label: 'Clientes',       icon: <IconUsers />,  href: '/admin/clientes' },
+  { key: 'reportes',      label: 'Reportes',       icon: <IconReport />, href: '/admin/reportes' },
 ]
 
-const EMPTY_REST = { nombre: '', direccion: '', telefono: '', email: '', horarioApertura: '', horarioCierre: '' }
-const EMPTY_MESA = { numeroMesa: '', capacidad: '', ubicacion: 'INTERIOR', estado: 'DISPONIBLE' }
+const EMPTY_REST = { nombre:'', direccion:'', telefono:'', email:'', horarioApertura:'', horarioCierre:'' }
+const EMPTY_MESA = { numeroMesa:'', capacidad:'', ubicacion:'INTERIOR', estado:'DISPONIBLE' }
 
-const UBICACIONES = ['INTERIOR', 'TERRAZA', 'VIP']
-const ESTADOS_MESA = ['DISPONIBLE', 'OCUPADA', 'RESERVADA', 'MANTENIMIENTO']
+const UBICACIONES  = ['INTERIOR','TERRAZA','VIP']
+const ESTADOS_MESA = ['DISPONIBLE','OCUPADA','RESERVADA','MANTENIMIENTO']
 
 const ESTADO_MESA_COLOR = {
-  DISPONIBLE: { bg: 'rgba(76,175,130,.12)', bd: 'rgba(76,175,130,.3)', tx: '#7dd9ae' },
-  OCUPADA: { bg: 'rgba(224,90,90,.1)', bd: 'rgba(224,90,90,.3)', tx: '#f09090' },
-  RESERVADA: { bg: 'rgba(201,168,76,.08)', bd: 'rgba(201,168,76,.3)', tx: '#e8c96a' },
-  MANTENIMIENTO: { bg: 'rgba(120,120,140,.12)', bd: 'rgba(120,120,140,.3)', tx: '#aaa' },
+  DISPONIBLE:    { bg:'rgba(76,175,130,.12)',  bd:'rgba(76,175,130,.3)',   tx:'#7dd9ae' },
+  OCUPADA:       { bg:'rgba(224,90,90,.1)',     bd:'rgba(224,90,90,.3)',    tx:'#f09090' },
+  RESERVADA:     { bg:'rgba(201,168,76,.08)',   bd:'rgba(201,168,76,.3)',   tx:'#e8c96a' },
+  MANTENIMIENTO: { bg:'rgba(120,120,140,.12)',  bd:'rgba(120,120,140,.3)',  tx:'#aaa'    },
 }
 
 /* ─── SIDEBAR ─── */
@@ -66,7 +65,7 @@ function Sidebar({ collapsed, onToggle, user, onLogout }) {
       <nav className="sb-nav">
         <div className="sb-nav-label">Navegación</div>
         {NAV_ITEMS.map(n => (
-          <div key={n.key} className={`ni${n.key === 'restaurantes' ? ' active' : ''}`}
+          <div key={n.key} className={`ni${n.key==='restaurantes'?' active':''}`}
             onClick={() => window.location.href = n.href}>
             <span className="ni-icon">{n.icon}</span>
             <span className="ni-text">{n.label}</span>
@@ -74,11 +73,10 @@ function Sidebar({ collapsed, onToggle, user, onLogout }) {
         ))}
       </nav>
       <div className="sb-footer">
-        <div className="sb-user" style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/admin/perfil')}>
-          <div className="sb-av">{(user?.nombre || 'A')[0].toUpperCase()}</div>
+        <div className="sb-user">
+          <div className="sb-av">{(user?.nombre||'A')[0].toUpperCase()}</div>
           <div className="sb-uinfo">
-            <div className="sb-uname">{user?.nombre || 'Administrador'}</div>
+            <div className="sb-uname">{user?.nombre||'Administrador'}</div>
             <div className="sb-urole">Admin</div>
           </div>
         </div>
@@ -93,7 +91,7 @@ function Sidebar({ collapsed, onToggle, user, onLogout }) {
 /* ─── MODAL ─── */
 function Modal({ title, subtitle, onClose, children }) {
   return (
-    <div className="mo" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div className="mo" onClick={e => e.target===e.currentTarget && onClose()}>
       <div className="mc">
         <div className="mh">
           <div>
@@ -113,7 +111,7 @@ function Toast({ toast }) {
   if (!toast) return null
   return (
     <div className="tw">
-      <div className={`tt ${toast.type === 'error' ? 'tt-e' : 'tt-s'}`}>{toast.msg}</div>
+      <div className={`tt ${toast.type==='error'?'tt-e':'tt-s'}`}>{toast.msg}</div>
     </div>
   )
 }
@@ -122,12 +120,12 @@ function Toast({ toast }) {
    VISTA: GESTIÓN DE MESAS (sub-vista)
 ═══════════════════════════════════════════════ */
 function MesasView({ restaurante, onBack, showToast }) {
-  const [mesas, setMesas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [modal, setModal] = useState(null)
+  const [mesas, setMesas]       = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [modal, setModal]       = useState(null)
   const [selected, setSelected] = useState(null)
-  const [form, setForm] = useState(EMPTY_MESA)
-  const [saving, setSaving] = useState(false)
+  const [form, setForm]         = useState(EMPTY_MESA)
+  const [saving, setSaving]     = useState(false)
 
   useEffect(() => {
     const fetch = async () => {
@@ -148,7 +146,7 @@ function MesasView({ restaurante, onBack, showToast }) {
 
   const handleForm = e => setForm({ ...form, [e.target.name]: e.target.value })
   const openCreate = () => { setForm(EMPTY_MESA); setSelected(null); setModal('create') }
-  const openEdit = m => { setSelected(m); setForm({ numeroMesa: m.numeroMesa, capacidad: m.capacidad, ubicacion: m.ubicacion, estado: m.estado }); setModal('edit') }
+  const openEdit   = m => { setSelected(m); setForm({ numeroMesa:m.numeroMesa, capacidad:m.capacidad, ubicacion:m.ubicacion, estado:m.estado }); setModal('edit') }
   const openDelete = m => { setSelected(m); setModal('delete') }
   const closeModal = () => { setModal(null); setSelected(null) }
 
@@ -160,9 +158,9 @@ function MesasView({ restaurante, onBack, showToast }) {
       const res = await api.post('/restaurante/mesas', {
         restaurante: restaurante._id,
         numeroMesa: Number(form.numeroMesa),
-        capacidad: Number(form.capacidad),
-        ubicacion: form.ubicacion,
-        estado: form.estado,
+        capacidad:  Number(form.capacidad),
+        ubicacion:  form.ubicacion,
+        estado:     form.estado,
       })
       const nueva = res.data?.mesa || res.data?.data || res.data
       setMesas(p => [nueva, ...p])
@@ -179,9 +177,9 @@ function MesasView({ restaurante, onBack, showToast }) {
     try {
       const res = await api.put(`/restaurante/mesas/${selected._id}`, {
         numeroMesa: Number(form.numeroMesa),
-        capacidad: Number(form.capacidad),
-        ubicacion: form.ubicacion,
-        estado: form.estado,
+        capacidad:  Number(form.capacidad),
+        ubicacion:  form.ubicacion,
+        estado:     form.estado,
       })
       const actualizada = res.data?.mesa || res.data?.data || { ...selected, ...form }
       setMesas(p => p.map(m => m._id === selected._id ? actualizada : m))
@@ -204,9 +202,9 @@ function MesasView({ restaurante, onBack, showToast }) {
     } finally { setSaving(false) }
   }
 
-  const disponibles = mesas.filter(m => m.estado === 'DISPONIBLE').length
-  const ocupadas = mesas.filter(m => m.estado === 'OCUPADA').length
-  const reservadas = mesas.filter(m => m.estado === 'RESERVADA').length
+  const disponibles = mesas.filter(m => m.estado==='DISPONIBLE').length
+  const ocupadas    = mesas.filter(m => m.estado==='OCUPADA').length
+  const reservadas  = mesas.filter(m => m.estado==='RESERVADA').length
 
   return (
     <>
@@ -216,28 +214,28 @@ function MesasView({ restaurante, onBack, showToast }) {
         </button>
         <div className="mesa-title-row">
           <div>
-            <h2 className="mesa-title">Mesas — <span style={{ color: 'var(--gold)' }}>{restaurante.nombre}</span></h2>
+            <h2 className="mesa-title">Mesas — <span style={{color:'var(--gold)'}}>{restaurante.nombre}</span></h2>
             <p className="mesa-subtitle">{restaurante.direccion}</p>
           </div>
           <button className="btn-p" onClick={openCreate}><IconPlus /> Nueva Mesa</button>
         </div>
       </div>
 
-      <div className="sr" style={{ marginBottom: 24 }}>
+      <div className="sr" style={{marginBottom:24}}>
         <div className="sp"><div><div className="sp-v">{mesas.length}</div><div className="sp-l">Total Mesas</div></div></div>
-        <div className="sp"><div><div className="sp-v" style={{ color: '#7dd9ae' }}>{disponibles}</div><div className="sp-l">Disponibles</div></div></div>
-        <div className="sp"><div><div className="sp-v" style={{ color: '#f09090' }}>{ocupadas}</div><div className="sp-l">Ocupadas</div></div></div>
-        <div className="sp"><div><div className="sp-v" style={{ color: '#e8c96a' }}>{reservadas}</div><div className="sp-l">Reservadas</div></div></div>
+        <div className="sp"><div><div className="sp-v" style={{color:'#7dd9ae'}}>{disponibles}</div><div className="sp-l">Disponibles</div></div></div>
+        <div className="sp"><div><div className="sp-v" style={{color:'#f09090'}}>{ocupadas}</div><div className="sp-l">Ocupadas</div></div></div>
+        <div className="sp"><div><div className="sp-v" style={{color:'#e8c96a'}}>{reservadas}</div><div className="sp-l">Reservadas</div></div></div>
       </div>
 
       {loading ? (
-        <div className="es"><div className="spn" style={{ width: 32, height: 32, borderWidth: 2 }} /><p style={{ marginTop: 16 }}>Cargando mesas...</p></div>
+        <div className="es"><div className="spn" style={{width:32,height:32,borderWidth:2}}/><p style={{marginTop:16}}>Cargando mesas...</p></div>
       ) : mesas.length === 0 ? (
         <div className="es">
           <div className="es-i">🪑</div>
           <div className="es-t">Sin mesas registradas</div>
-          <p style={{ fontSize: 13, marginTop: 6 }}>Crea la primera mesa para este restaurante</p>
-          <button className="btn-p" style={{ margin: '20px auto 0', display: 'flex' }} onClick={openCreate}><IconPlus /> Nueva Mesa</button>
+          <p style={{fontSize:13,marginTop:6}}>Crea la primera mesa para este restaurante</p>
+          <button className="btn-p" style={{margin:'20px auto 0',display:'flex'}} onClick={openCreate}><IconPlus /> Nueva Mesa</button>
         </div>
       ) : (
         <div className="mesa-grid">
@@ -247,7 +245,7 @@ function MesasView({ restaurante, onBack, showToast }) {
               <div key={m._id} className="mesa-card">
                 <div className="mesa-card-top">
                   <div className="mesa-num">#{m.numeroMesa}</div>
-                  <div className="mesa-badge" style={{ background: col.bg, border: `1px solid ${col.bd}`, color: col.tx }}>
+                  <div className="mesa-badge" style={{background:col.bg, border:`1px solid ${col.bd}`, color:col.tx}}>
                     {m.estado}
                   </div>
                 </div>
@@ -255,7 +253,7 @@ function MesasView({ restaurante, onBack, showToast }) {
                   <div className="mesa-info-row"><IconChair /><span>{m.capacidad} personas</span></div>
                   <div className="mesa-info-row"><IconPin /><span>{m.ubicacion}</span></div>
                 </div>
-                <div className="ract" style={{ marginTop: 12 }}>
+                <div className="ract" style={{marginTop:12}}>
                   <button className="ba be" onClick={() => openEdit(m)}><IconEdit /> Editar</button>
                   <button className="ba bd" onClick={() => openDelete(m)}><IconTrash /> Eliminar</button>
                 </div>
@@ -295,7 +293,7 @@ function MesasView({ restaurante, onBack, showToast }) {
             <div className="mf">
               <button type="button" className="btn-g" onClick={closeModal}>Cancelar</button>
               <button type="submit" className="btn-p" disabled={saving}>
-                {saving ? <span className="spn" /> : <IconPlus />} Crear Mesa
+                {saving ? <span className="spn"/> : <IconPlus />} Crear Mesa
               </button>
             </div>
           </form>
@@ -330,7 +328,7 @@ function MesasView({ restaurante, onBack, showToast }) {
             <div className="mf">
               <button type="button" className="btn-g" onClick={closeModal}>Cancelar</button>
               <button type="submit" className="btn-p" disabled={saving}>
-                {saving ? <span className="spn" /> : <IconEdit />} Guardar Cambios
+                {saving ? <span className="spn"/> : <IconEdit />} Guardar Cambios
               </button>
             </div>
           </form>
@@ -339,13 +337,13 @@ function MesasView({ restaurante, onBack, showToast }) {
 
       {modal === 'delete' && selected && (
         <Modal title="Eliminar Mesa" subtitle="Esta acción no se puede deshacer" onClose={closeModal}>
-          <p style={{ fontSize: 14, color: 'var(--text-mid)', lineHeight: 1.6, marginBottom: 20 }}>
-            ¿Eliminar la <strong style={{ color: 'var(--text)' }}>Mesa #{selected.numeroMesa}</strong> ({selected.ubicacion}, {selected.capacidad} personas)?
+          <p style={{fontSize:14,color:'var(--text-mid)',lineHeight:1.6,marginBottom:20}}>
+            ¿Eliminar la <strong style={{color:'var(--text)'}}>Mesa #{selected.numeroMesa}</strong> ({selected.ubicacion}, {selected.capacidad} personas)?
           </p>
           <div className="mf">
             <button className="btn-g" onClick={closeModal}>Cancelar</button>
             <button className="btn-d" onClick={handleDelete} disabled={saving}>
-              {saving ? <span className="spn" /> : null} Eliminar Mesa
+              {saving ? <span className="spn"/> : null} Eliminar Mesa
             </button>
           </div>
         </Modal>
@@ -358,19 +356,19 @@ function MesasView({ restaurante, onBack, showToast }) {
    VISTA PRINCIPAL: RESTAURANTES
 ═══════════════════════════════════════════════ */
 export default function AdminRestaurantes() {
-  const [collapsed, setCollapsed] = useState(false)
-  const [restaurantes, setRestaurantes] = useState([])
-  const [search, setSearch] = useState('')
-  const [modal, setModal] = useState(null)
-  const [selected, setSelected] = useState(null)
-  const [form, setForm] = useState(EMPTY_REST)
-  const [toast, setToast] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [mesaView, setMesaView] = useState(null)
+  const [collapsed, setCollapsed]           = useState(false)
+  const [restaurantes, setRestaurantes]     = useState([])
+  const [search, setSearch]                 = useState('')
+  const [modal, setModal]                   = useState(null)
+  const [selected, setSelected]             = useState(null)
+  const [form, setForm]                     = useState(EMPTY_REST)
+  const [toast, setToast]                   = useState(null)
+  const [loading, setLoading]               = useState(true)
+  const [saving, setSaving]                 = useState(false)
+  const [mesaView, setMesaView]             = useState(null)
   // ── Imagen ──
-  const [pendingFile, setPendingFile] = useState(null)   // archivo a subir
-  const [imgPreview, setImgPreview] = useState(null)   // URL local para preview
+  const [pendingFile, setPendingFile]       = useState(null)   // archivo a subir
+  const [imgPreview, setImgPreview]         = useState(null)   // URL local para preview
   const [fotosPrincipales, setFotosPrincipales] = useState({}) // { [restauranteId]: url }
   const { user, logout } = useAuthStore()
 
@@ -430,12 +428,12 @@ export default function AdminRestaurantes() {
     }
   }
 
-  const filtered = restaurantes.filter(r =>
-    (r.nombre || '').toLowerCase().includes(search.toLowerCase()) ||
-    (r.direccion || '').toLowerCase().includes(search.toLowerCase()) ||
-    (r.email || '').toLowerCase().includes(search.toLowerCase())
+  const filtered  = restaurantes.filter(r =>
+    (r.nombre||'').toLowerCase().includes(search.toLowerCase()) ||
+    (r.direccion||'').toLowerCase().includes(search.toLowerCase()) ||
+    (r.email||'').toLowerCase().includes(search.toLowerCase())
   )
-  const activos = restaurantes.filter(r => r.estado !== false).length
+  const activos   = restaurantes.filter(r => r.estado !== false).length
   const inactivos = restaurantes.filter(r => r.estado === false).length
 
   const openCreate = () => {
@@ -448,7 +446,7 @@ export default function AdminRestaurantes() {
 
   const openEdit = async r => {
     setSelected(r)
-    setForm({ nombre: r.nombre, direccion: r.direccion, telefono: r.telefono, email: r.email, horarioApertura: r.horarioApertura || '', horarioCierre: r.horarioCierre || '' })
+    setForm({ nombre:r.nombre, direccion:r.direccion, telefono:r.telefono, email:r.email, horarioApertura:r.horarioApertura||'', horarioCierre:r.horarioCierre||'' })
     setPendingFile(null)
     // Cargar foto principal existente como preview
     const fotoExistente = fotosPrincipales[r._id] || null
@@ -478,6 +476,15 @@ export default function AdminRestaurantes() {
     e.preventDefault()
     if (!form.nombre || !form.direccion || !form.telefono || !form.email)
       return showToast('Completa todos los campos obligatorios', 'error')
+
+    // Validar: máximo 2 restaurantes por correo
+    const restConMismoEmail = restaurantes.filter(r =>
+      r.email?.toLowerCase() === form.email.toLowerCase() && r.estado !== false
+    )
+    if (restConMismoEmail.length >= 2) {
+      return showToast(`El correo ${form.email} ya está asignado a 2 restaurantes. Usa otro correo.`, 'error')
+    }
+
     setSaving(true)
     try {
       const res = await api.post('/restaurante/restaurantes', form)
@@ -497,6 +504,19 @@ export default function AdminRestaurantes() {
 
   const handleEdit = async e => {
     e.preventDefault()
+
+    // Validar: máximo 2 restaurantes por correo (excluyendo el actual)
+    if (form.email && form.email.toLowerCase() !== selected.email?.toLowerCase()) {
+      const restConMismoEmail = restaurantes.filter(r =>
+        r.email?.toLowerCase() === form.email.toLowerCase() &&
+        r._id !== selected._id &&
+        r.estado !== false
+      )
+      if (restConMismoEmail.length >= 2) {
+        return showToast(`El correo ${form.email} ya está asignado a 2 restaurantes. Usa otro correo.`, 'error')
+      }
+    }
+
     setSaving(true)
     try {
       const res = await api.put(`/restaurante/restaurantes/${selected._id}`, form)
@@ -518,7 +538,7 @@ export default function AdminRestaurantes() {
     setSaving(true)
     try {
       await api.delete(`/restaurante/restaurantes/${selected._id}`)
-      setRestaurantes(p => p.map(r => r._id === selected._id ? { ...r, estado: false } : r))
+      setRestaurantes(p => p.map(r => r._id === selected._id ? { ...r, estado:false } : r))
       showToast('Restaurante desactivado')
       closeModal()
     } catch (err) {
@@ -528,15 +548,15 @@ export default function AdminRestaurantes() {
 
   /* ── Bloque de imagen para los modales ── */
   const ImagenField = () => (
-    <div className="fl ff" style={{ marginTop: 4 }}>
+    <div className="fl ff" style={{marginTop:4}}>
       <label className="flb">Imagen del restaurante</label>
       {imgPreview ? (
-        <div style={{ position: 'relative', marginBottom: 8 }}>
+        <div style={{position:'relative',marginBottom:8}}>
           <img src={imgPreview} alt="preview"
-            style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 10, border: '1px solid var(--glass-bd)', display: 'block' }} />
+            style={{width:'100%',height:140,objectFit:'cover',borderRadius:10,border:'1px solid var(--glass-bd)',display:'block'}}/>
           <button type="button"
             onClick={() => { setPendingFile(null); setImgPreview(null) }}
-            style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(7,8,10,.7)', border: '1px solid var(--glass-bd)', borderRadius: 6, color: 'var(--text-muted)', cursor: 'pointer', padding: '2px 6px', fontSize: 11 }}>
+            style={{position:'absolute',top:8,right:8,background:'rgba(7,8,10,.7)',border:'1px solid var(--glass-bd)',borderRadius:6,color:'var(--text-muted)',cursor:'pointer',padding:'2px 6px',fontSize:11}}>
             ✕ Quitar
           </button>
         </div>
@@ -547,10 +567,10 @@ export default function AdminRestaurantes() {
         </div>
       )}
       <input type="file" accept="image/jpeg,image/png,image/webp" className="fi"
-        style={{ padding: '8px 14px', cursor: 'pointer', marginTop: imgPreview ? 0 : 8 }}
+        style={{padding:'8px 14px',cursor:'pointer',marginTop:imgPreview?0:8}}
         onChange={handleFileChange}
       />
-      <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>JPG, PNG o WEBP · Máx 5MB</p>
+      <p style={{fontSize:11,color:'var(--text-muted)',marginTop:4}}>JPG, PNG o WEBP · Máx 5MB</p>
     </div>
   )
 
@@ -710,16 +730,16 @@ export default function AdminRestaurantes() {
       `}</style>
 
       <div className="a-layout">
-        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(p => !p)} user={user} onLogout={logout} />
+        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(p=>!p)} user={user} onLogout={logout} />
 
-        <main className={`a-main${collapsed ? ' col' : ''}`}>
+        <main className={`a-main${collapsed?' col':''}`}>
           <div className="a-top">
             <div>
               <div className="top-ttl">{mesaView ? `Mesas — ${mesaView.nombre}` : 'Restaurantes'}</div>
               <div className="top-sub">{mesaView ? 'Gestión de mesas por restaurante' : 'Gestión de sucursales y mesas'}</div>
             </div>
             <div className="top-r">
-              <NotificacionesPanel isAdmin={true} />
+              <div className="top-btn"><IconBell /></div>
             </div>
           </div>
 
@@ -730,8 +750,8 @@ export default function AdminRestaurantes() {
               <>
                 <div className="sr">
                   <div className="sp"><div><div className="sp-v">{restaurantes.length}</div><div className="sp-l">Total Restaurantes</div></div></div>
-                  <div className="sp"><div><div className="sp-v" style={{ color: '#7dd9ae' }}>{activos}</div><div className="sp-l">Activos</div></div></div>
-                  <div className="sp"><div><div className="sp-v" style={{ color: '#f09090' }}>{inactivos}</div><div className="sp-l">Inactivos</div></div></div>
+                  <div className="sp"><div><div className="sp-v" style={{color:'#7dd9ae'}}>{activos}</div><div className="sp-l">Activos</div></div></div>
+                  <div className="sp"><div><div className="sp-v" style={{color:'#f09090'}}>{inactivos}</div><div className="sp-l">Inactivos</div></div></div>
                 </div>
 
                 <div className="tb">
@@ -745,29 +765,29 @@ export default function AdminRestaurantes() {
 
                 {loading ? (
                   <div className="es">
-                    <div className="spn" style={{ width: 32, height: 32, borderWidth: 2 }} />
-                    <p style={{ marginTop: 16 }}>Cargando restaurantes...</p>
+                    <div className="spn" style={{width:32,height:32,borderWidth:2}}/>
+                    <p style={{marginTop:16}}>Cargando restaurantes...</p>
                   </div>
                 ) : filtered.length === 0 ? (
                   <div className="es">
                     <div className="es-i">🍽️</div>
                     <div className="es-t">{search ? 'Sin resultados' : 'Sin restaurantes registrados'}</div>
-                    <p style={{ fontSize: 13, marginTop: 6 }}>{search ? 'Intenta con otro término' : 'Crea el primer restaurante'}</p>
-                    {!search && <button className="btn-p" style={{ margin: '20px auto 0', display: 'flex' }} onClick={openCreate}><IconPlus /> Nuevo Restaurante</button>}
+                    <p style={{fontSize:13,marginTop:6}}>{search ? 'Intenta con otro término' : 'Crea el primer restaurante'}</p>
+                    {!search && <button className="btn-p" style={{margin:'20px auto 0',display:'flex'}} onClick={openCreate}><IconPlus /> Nuevo Restaurante</button>}
                   </div>
                 ) : (
                   <div className="rg">
                     {filtered.map(r => (
-                      <div key={r._id} className={`rc${r.estado === false ? ' off' : ''}`}>
+                      <div key={r._id} className={`rc${r.estado===false?' off':''}`}>
                         {/* Imagen real si existe, placeholder si no */}
                         <div className="rbn">
                           {fotosPrincipales[r._id]
                             ? <img src={fotosPrincipales[r._id]} alt={r.nombre} />
                             : <div className="rbn-placeholder">🍽️</div>
                           }
-                          <div className="rbn-ov" />
-                          <div className={`rbadge ${r.estado === false ? 'off' : 'on'}`}>
-                            {r.estado === false ? 'Inactivo' : 'Activo'}
+                          <div className="rbn-ov"/>
+                          <div className={`rbadge ${r.estado===false?'off':'on'}`}>
+                            {r.estado===false ? 'Inactivo' : 'Activo'}
                           </div>
                         </div>
                         <div className="rb">
@@ -775,7 +795,7 @@ export default function AdminRestaurantes() {
                           <div className="rmeta">
                             <div className="rmi"><IconPin />{r.direccion}</div>
                             <div className="rmi"><IconPhone />{r.telefono}</div>
-                            {(r.horarioApertura || r.horarioCierre) && (
+                            {(r.horarioApertura||r.horarioCierre) && (
                               <div className="rmi"><IconClock />{r.horarioApertura} — {r.horarioCierre}</div>
                             )}
                           </div>
@@ -830,7 +850,7 @@ export default function AdminRestaurantes() {
             <div className="mf">
               <button type="button" className="btn-g" onClick={closeModal}>Cancelar</button>
               <button type="submit" className="btn-p" disabled={saving}>
-                {saving ? <span className="spn" /> : <IconPlus />} Crear Restaurante
+                {saving ? <span className="spn"/> : <IconPlus />} Crear Restaurante
               </button>
             </div>
           </form>
@@ -872,7 +892,7 @@ export default function AdminRestaurantes() {
             <div className="mf">
               <button type="button" className="btn-g" onClick={closeModal}>Cancelar</button>
               <button type="submit" className="btn-p" disabled={saving}>
-                {saving ? <span className="spn" /> : <IconEdit />} Guardar Cambios
+                {saving ? <span className="spn"/> : <IconEdit />} Guardar Cambios
               </button>
             </div>
           </form>
@@ -882,13 +902,13 @@ export default function AdminRestaurantes() {
       {/* ── MODAL ELIMINAR ── */}
       {modal === 'delete' && selected && (
         <Modal title="Desactivar Restaurante" subtitle="El restaurante quedará inactivo" onClose={closeModal}>
-          <p style={{ fontSize: 14, color: 'var(--text-mid)', lineHeight: 1.6, marginBottom: 20 }}>
-            ¿Desactivar <strong style={{ color: 'var(--text)' }}>{selected.nombre}</strong>? Sus datos se conservarán y podrás reactivarlo después.
+          <p style={{fontSize:14,color:'var(--text-mid)',lineHeight:1.6,marginBottom:20}}>
+            ¿Desactivar <strong style={{color:'var(--text)'}}>{selected.nombre}</strong>? Sus datos se conservarán y podrás reactivarlo después.
           </p>
           <div className="mf">
             <button className="btn-g" onClick={closeModal}>Cancelar</button>
             <button className="btn-d" onClick={handleDelete} disabled={saving}>
-              {saving ? <span className="spn" /> : null} Desactivar
+              {saving ? <span className="spn"/> : null} Desactivar
             </button>
           </div>
         </Modal>

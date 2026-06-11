@@ -1,4 +1,3 @@
-// src/features/auth/store/authStore.js
 import { create } from 'zustand'
 import { authAPI } from '../../../shared/api/auth'
 
@@ -59,6 +58,14 @@ export const useAuthStore = create((set, get) => ({
       set({ token, user })
       console.log('Auth inicializado:', user)
     }
+  },
+
+  // Actualizar usuario en store y localStorage (usado al cambiar rol)
+  setUser: (updatedUser) => {
+    const transformed = transformUserData(updatedUser)
+    localStorage.setItem('user', JSON.stringify(transformed))
+    set({ user: transformed })
+    return transformed
   },
 
   login: async ({ emailOrUsername, password }) => {

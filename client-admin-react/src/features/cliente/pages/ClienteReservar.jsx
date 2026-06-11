@@ -1,3 +1,4 @@
+// src/features/cliente/pages/ClienteReservar.jsx
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'
@@ -30,10 +31,22 @@ const NAV_ITEMS = [
   { key: 'perfil',            label: 'Perfil',       icon: <IconUser />,   path: '/cliente/perfil' },
 ]
 
-// Horas disponibles
-const HORAS = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
-  '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30',
-  '19:00','19:30','20:00','20:30','21:00','21:30','22:00']
+// Generar horas disponibles según horario del restaurante
+const generarHoras = (apertura, cierre) => {
+  const defaultApertura = '09:00'
+  const defaultCierre   = '22:00'
+  const [hA, mA] = (apertura || defaultApertura).split(':').map(Number)
+  const [hC, mC] = (cierre   || defaultCierre  ).split(':').map(Number)
+  const inicio = hA * 60 + (mA || 0)
+  const fin    = hC * 60 + (mC || 0)
+  const horas  = []
+  for (let min = inicio; min < fin; min += 30) {
+    const h = String(Math.floor(min / 60)).padStart(2, '0')
+    const m = String(min % 60).padStart(2, '0')
+    horas.push(`${h}:${m}`)
+  }
+  return horas
+}
 
 export default function ClienteReservar() {
   const { user, logout } = useAuthStore()
@@ -66,6 +79,9 @@ export default function ClienteReservar() {
   const [estadosRes, setEstadosRes]     = useState([])
   const [loading, setLoading]           = useState(true)
   const loadedRef                       = useRef(false)
+
+  // ── Horas disponibles según restaurante ──
+  const [horasDisponibles, setHorasDisponibles] = useState(generarHoras())
 
   // ── Form ──
   const [paso, setPaso]             = useState(1)  // 1: restaurante, 2: fecha/mesa, 3: confirmación
@@ -112,7 +128,10 @@ export default function ClienteReservar() {
     setRestaurante(r)
     setMesa(null)
     setMesas([])
+    setHora('')
     cargarMesas(r._id)
+    // Generar horas según horario del restaurante
+    setHorasDisponibles(generarHoras(r.horarioApertura, r.horarioCierre))
     setPaso(2)
   }
 
@@ -175,7 +194,7 @@ export default function ClienteReservar() {
             Estado inicial: <strong>PENDIENTE</strong> — el restaurante la confirmará pronto.
           </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => { setReservaCreada(null); setPaso(1); setRestaurante(null); setFecha(''); setHora(''); setMesa(null); setObservaciones('') }}
+            <button onClick={() => { setReservaCreada(null); setPaso(1); setRestaurante(null); setFecha(''); setHora(''); setMesa(null); setObservaciones(''); setMesas([]) }}
               style={{ padding: '11px 24px', borderRadius: 12, background: 'linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1))', border: '1px solid rgba(201,168,76,.35)', color: 'var(--gold-lt)', cursor: 'pointer', fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 500 }}>
               Nueva reservación
             </button>
@@ -442,17 +461,27 @@ export default function ClienteReservar() {
               <div className="card">
                 <div className="card-header">
                   <div className="card-title">Hora</div>
-                  <div className="card-sub">Selecciona el horario</div>
+                  <div className="card-sub">
+                    {restaurante?.horarioApertura && restaurante?.horarioCierre
+                      ? `Horario: ${restaurante.horarioApertura} — ${restaurante.horarioCierre}`
+                      : 'Selecciona el horario'}
+                  </div>
                 </div>
                 <div className="card-body">
-                  <div className="horas-grid">
-                    {HORAS.map(h => (
-                      <button key={h} className={`hora-btn ${hora === h ? 'selected' : ''}`}
-                        onClick={() => setHora(h)}>
-                        {h}
-                      </button>
-                    ))}
-                  </div>
+                  {horasDisponibles.length === 0 ? (
+                    <div style={{ fontSize: 13, color: 'var(--text-muted)', padding: '16px 0' }}>
+                      ⚠ Este restaurante no tiene horario configurado
+                    </div>
+                  ) : (
+                    <div className="horas-grid">
+                      {horasDisponibles.map(h => (
+                        <button key={h} className={`hora-btn ${hora === h ? 'selected' : ''}`}
+                          onClick={() => setHora(h)}>
+                          {h}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 

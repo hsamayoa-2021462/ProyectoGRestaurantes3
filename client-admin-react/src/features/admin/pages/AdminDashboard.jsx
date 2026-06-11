@@ -7,7 +7,7 @@ import NotificacionesPanel from '../../../shared/components/NotificacionesPanel'
 /* ─── ICONS ─── */
 const IconMenu = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7" /></svg>
 const IconOrders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
-const IconStar   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+const IconStar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
 const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
 const IconRestaurant = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20" /><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2" /></svg>
 const IconReport = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
@@ -28,7 +28,7 @@ const NAV_ITEMS = [
   { key: 'restaurantes', label: 'Restaurantes', icon: <IconRestaurant />, path: '/admin/restaurantes' },
   { key: 'clientes', label: 'Clientes', icon: <IconUsers />, path: '/admin/clientes' },
   { key: 'reportes', label: 'Reportes', icon: <IconReport />, path: '/admin/reportes' },
-  { key: 'resenas',       label: 'Reseñas',        icon: <IconStar />,    path: '/admin/resenas' },
+  { key: 'resenas', label: 'Reseñas', icon: <IconStar />, path: '/admin/resenas' },
 ]
 
 const ESTADO_STYLE = {
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
   const ingresosHoy = pedidos.filter(p => p.estado === 'ENTREGADO' && (p.createdAt || '').substring(0, 10) === hoy)
     .reduce((s, p) => s + (p.total || 0), 0)
   const pedidosActivos = pedidos.filter(p => ['PENDIENTE', 'CONFIRMADO', 'PREPARANDO', 'EN_CAMINO'].includes(p.estado)).length
-  const mesasOcupadas = mesas.filter(m => m.estado === 'OCUPADA').length
+  const mesasReservadas = mesas.filter(m => m.estado === 'RESERVADA').length
   const reservasHoy = reservaciones.filter(r => (r.fecha || '').substring(0, 10) === hoy).length
 
   // Últimos 5 pedidos
@@ -147,11 +147,11 @@ export default function AdminDashboard() {
       positive: true,
     },
     {
-      label: 'Mesas Ocupadas',
-      value: loading ? '...' : `${mesasOcupadas}/${mesas.length}`,
+      label: 'Mesas Reservadas',
+      value: loading ? '...' : `${mesasReservadas}/${mesas.length}`,
       icon: '🪑',
-      delta: mesas.length > 0 ? `${Math.round((mesasOcupadas / mesas.length) * 100)}% ocupación` : '—',
-      positive: mesasOcupadas < mesas.length,
+      delta: mesas.length > 0 ? `${Math.round((mesasReservadas / mesas.length) * 100)}% reservadas` : '—',
+      positive: mesasReservadas < mesas.length,
     },
     {
       label: 'Reservas Hoy',
@@ -313,7 +313,7 @@ export default function AdminDashboard() {
               </div>
             ))}
           </nav>
-          
+
           <div className="sidebar-footer">
             <div className="user-card" onClick={() => navigate('/admin/perfil')}>
               <div className="user-avatar">

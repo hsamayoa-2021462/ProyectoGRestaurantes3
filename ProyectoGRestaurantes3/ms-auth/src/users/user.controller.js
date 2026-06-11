@@ -59,6 +59,24 @@ export const updateUserRole = [
         .json({ success: false, message: 'User not found' });
     }
 
+    // ── PROTECCIÓN: el admin principal (seed) no puede ser degradado ──
+    const ADMIN_PRINCIPAL_EMAIL = 'alejandroarochavirula@gmail.com';
+    const targetRoles = await getUserRoleNames(userId);
+
+    if (targetRoles.includes(ADMIN_ROLE)) {
+      // Verificar si el target es el admin principal por email
+      const targetUser = await findUserById(userId);
+      const targetEmail = (targetUser?.Email || targetUser?.email || '').toLowerCase();
+
+      if (targetEmail === ADMIN_PRINCIPAL_EMAIL) {
+        return res.status(403).json({
+          success: false,
+          message: 'No se puede modificar el rol del administrador principal del sistema',
+        });
+      }
+      // Los demás admins sí pueden ser degradados
+    }
+
     const { updatedUser } = await setUserSingleRole(
       user,
       normalized,
