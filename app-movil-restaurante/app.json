@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Gastro",
+    "slug": "app-movil-restaurante",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "gastro",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": false,
+    "ios": { "supportsTablet": false },
+    "android": { 
+      "adaptiveIcon": { "backgroundColor": "#0a0c0f" },
+      "newArchEnabled": false
+    },
+    "web": { "bundler": "metro" }
+  }
+}
