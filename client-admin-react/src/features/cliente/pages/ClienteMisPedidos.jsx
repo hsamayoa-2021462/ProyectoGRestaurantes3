@@ -5,43 +5,43 @@ import api, { authApi } from '../../../shared/api/api'
 import NotificacionesPanel from '../../../shared/components/NotificacionesPanel'
 
 /* ─── ICONS ─── */
-const IconHome    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-const IconMenu    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7"/></svg>
-const IconOrders  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-const IconTable   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-const IconStar    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-const IconUser    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-const IconLogout  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-const IconRest    = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20"/><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2"/></svg>
-const IconBell    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-const IconEye     = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-const IconClose   = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-const IconClock   = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-const IconBag     = () => <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-const IconRefresh = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+const IconHome = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+const IconMenu = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7" /></svg>
+const IconOrders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
+const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+const IconStar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+const IconUser = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
+const IconRest = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20" /><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2" /></svg>
+const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
+const IconEye = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+const IconClose = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+const IconClock = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+const IconBag = () => <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
+const IconRefresh = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>
 
 const NAV_ITEMS = [
-  { key: 'inicio',            label: 'Inicio',      icon: <IconHome />,   path: '/cliente/inicio' },
-  { key: 'menu',              label: 'Menú',         icon: <IconMenu />,   path: '/cliente/menu' },
-  { key: 'mis-pedidos',       label: 'Pedidos',     icon: <IconOrders />, path: '/cliente/mis-pedidos' },
-  { key: 'reservar',          label: 'Reservar',     icon: <IconTable />,  path: '/cliente/reservar' },
-  { key: 'mis-reservaciones', label: 'Reservas',    icon: <IconTable />,  path: '/cliente/mis-reservaciones' },
-  { key: 'resenas',           label: 'Reseñas',      icon: <IconStar />,   path: '/cliente/resenas' },
-  { key: 'perfil',            label: 'Perfil',       icon: <IconUser />,   path: '/cliente/perfil' },
+  { key: 'inicio', label: 'Inicio', icon: <IconHome />, path: '/cliente/inicio' },
+  { key: 'menu', label: 'Menú', icon: <IconMenu />, path: '/cliente/menu' },
+  { key: 'mis-pedidos', label: 'Pedidos', icon: <IconOrders />, path: '/cliente/mis-pedidos' },
+  { key: 'reservar', label: 'Reservar', icon: <IconTable />, path: '/cliente/reservar' },
+  { key: 'mis-reservaciones', label: 'Reservas', icon: <IconTable />, path: '/cliente/mis-reservaciones' },
+  { key: 'resenas', label: 'Reseñas', icon: <IconStar />, path: '/cliente/resenas' },
+  { key: 'perfil', label: 'Perfil', icon: <IconUser />, path: '/cliente/perfil' },
 ]
 
 const ESTADO_STYLE = {
-  PENDIENTE:  { bg: 'rgba(201,168,76,.12)', bd: 'rgba(201,168,76,.35)', tx: '#e8c96a', label: 'Pendiente' },
-  CONFIRMADO: { bg: 'rgba(91,155,213,.1)',  bd: 'rgba(91,155,213,.3)',  tx: '#90c0e8', label: 'Confirmado' },
-  PREPARANDO: { bg: 'rgba(201,120,40,.1)',  bd: 'rgba(201,120,40,.3)',  tx: '#e8a060', label: 'Preparando' },
-  EN_CAMINO:  { bg: 'rgba(100,160,220,.1)', bd: 'rgba(100,160,220,.3)', tx: '#78b8e8', label: 'En camino' },
-  ENTREGADO:  { bg: 'rgba(76,175,130,.1)',  bd: 'rgba(76,175,130,.3)',  tx: '#7dd9ae', label: 'Entregado' },
-  CANCELADO:  { bg: 'rgba(224,90,90,.1)',   bd: 'rgba(224,90,90,.3)',   tx: '#e08080', label: 'Cancelado' },
+  PENDIENTE: { bg: 'rgba(201,168,76,.12)', bd: 'rgba(201,168,76,.35)', tx: '#e8c96a', label: 'Pendiente' },
+  CONFIRMADO: { bg: 'rgba(91,155,213,.1)', bd: 'rgba(91,155,213,.3)', tx: '#90c0e8', label: 'Confirmado' },
+  PREPARANDO: { bg: 'rgba(201,120,40,.1)', bd: 'rgba(201,120,40,.3)', tx: '#e8a060', label: 'Preparando' },
+  EN_CAMINO: { bg: 'rgba(100,160,220,.1)', bd: 'rgba(100,160,220,.3)', tx: '#78b8e8', label: 'En camino' },
+  ENTREGADO: { bg: 'rgba(76,175,130,.1)', bd: 'rgba(76,175,130,.3)', tx: '#7dd9ae', label: 'Entregado' },
+  CANCELADO: { bg: 'rgba(224,90,90,.1)', bd: 'rgba(224,90,90,.3)', tx: '#e08080', label: 'Cancelado' },
 }
 
 const TIPO_STYLE = {
   DOMICILIO: { bg: 'rgba(100,160,220,.08)', tx: '#78aee0' },
-  RECOGER:   { bg: 'rgba(76,175,130,.08)',  tx: '#5caf82' },
+  RECOGER: { bg: 'rgba(76,175,130,.08)', tx: '#5caf82' },
 }
 
 function Toast({ msg, type, onDone }) {
@@ -71,28 +71,29 @@ export default function ClienteMisPedidos() {
     fetch()
   }, [])
 
-  const [menuOpen, setMenuOpen]         = useState(false)
-  const [pedidos, setPedidos]           = useState([])
-  const [loading, setLoading]           = useState(false)
-  const [filtro, setFiltro]             = useState('TODOS')
-  const [detalle, setDetalle]           = useState(null)
-  const [toast, setToast]               = useState(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)   // ← hamburguesa
+  const [pedidos, setPedidos] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [filtro, setFiltro] = useState('TODOS')
+  const [detalle, setDetalle] = useState(null)
+  const [toast, setToast] = useState(null)
   const [ocultas, setOcultas] = useState(() => {
     try { return JSON.parse(localStorage.getItem('pedidos_ocultos') || '[]') } catch { return [] }
   })
+
   const ocultarPedido = (id) => {
     const nuevos = [...ocultas, id]
     setOcultas(nuevos)
     try { localStorage.setItem('pedidos_ocultos', JSON.stringify(nuevos)) } catch { }
   }
-  const loadedRef                       = useRef(false)
+  const loadedRef = useRef(false)
 
   const showToast = (msg, type = 'error') => setToast({ msg, type })
 
   const load = async () => {
     setLoading(true)
     try {
-      // /pedidos/mis-pedidos → montado en /api/v1/pedidos → ruta final /mis-pedidos en el router
       const res = await api.get('/pedidos/mis-pedidos')
       setPedidos(res.data?.data || [])
     } catch {
@@ -133,10 +134,9 @@ export default function ClienteMisPedidos() {
   const es = e => ESTADO_STYLE[e] || { bg: 'rgba(255,255,255,.05)', bd: 'rgba(255,255,255,.1)', tx: '#aaa', label: e }
   const ts = t => TIPO_STYLE[t] || { bg: 'rgba(255,255,255,.05)', tx: '#aaa' }
 
-  // Stats rápidas
-  const activos    = pedidos.filter(p => ['PENDIENTE','CONFIRMADO','PREPARANDO','EN_CAMINO'].includes(p.estado)).length
+  const activos = pedidos.filter(p => ['PENDIENTE', 'CONFIRMADO', 'PREPARANDO', 'EN_CAMINO'].includes(p.estado)).length
   const entregados = pedidos.filter(p => p.estado === 'ENTREGADO').length
-  const gastado    = pedidos.filter(p => p.estado === 'ENTREGADO').reduce((s, p) => s + (p.total || 0), 0)
+  const gastado = pedidos.filter(p => p.estado === 'ENTREGADO').reduce((s, p) => s + (p.total || 0), 0)
 
   const initials = (user?.name?.[0] || 'U').toUpperCase()
 
@@ -156,7 +156,7 @@ export default function ClienteMisPedidos() {
         }
         body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-        /* NAVBAR */
+        /* ── NAVBAR ── */
         .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100}
         .navbar::after{content:'';position:absolute;bottom:-1px;left:0;width:200px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
         .nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -182,16 +182,30 @@ export default function ClienteMisPedidos() {
         .nav-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .2s}
         .nav-btn:hover{color:var(--gold)}
 
-        /* PAGE */
+        /* ── HAMBURGUESA ── */
+        .btn-hamb{display:none;background:none;border:none;color:var(--gold);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:8px;line-height:1;transition:background .2s}
+        .btn-hamb:hover{background:var(--gold-dim)}
+
+        /* ── DRAWER NAV MÓVIL ── */
+        .nav-drawer-ov{display:none;position:fixed;inset:0;z-index:150;background:rgba(7,8,10,.7);backdrop-filter:blur(6px)}
+        .nav-drawer-ov.open{display:block}
+        .nav-drawer{position:fixed;top:var(--nav-h);left:-260px;width:240px;height:calc(100vh - var(--nav-h));background:var(--deep);border-right:1px solid var(--glass-bd);z-index:160;display:flex;flex-direction:column;padding:16px 12px;gap:4px;transition:left .3s var(--ease-out-expo);overflow-y:auto}
+        .nav-drawer.open{left:0}
+        .drawer-link{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;border:1px solid transparent}
+        .drawer-link:hover{background:var(--glass-bg);color:var(--text)}
+        .drawer-link.active{background:var(--gold-dim);color:var(--gold-lt);border-color:rgba(201,168,76,.2)}
+        .drawer-sep{height:1px;background:var(--glass-bd);margin:8px 4px}
+
+        /* ── PAGE ── */
         .page{padding-top:var(--nav-h);min-height:100vh}
         .content{max-width:960px;margin:0 auto;padding:40px 24px}
 
-        /* HEADER */
+        /* ── HEADER ── */
         .page-header{margin-bottom:28px}
         .page-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--text);margin-bottom:4px}
         .page-sub{font-size:13px;color:var(--text-muted)}
 
-        /* STATS */
+        /* ── STATS ── */
         .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
         .sc{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:20px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
         .sc::before{content:'';position:absolute;top:0;left:0;width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
@@ -201,7 +215,7 @@ export default function ClienteMisPedidos() {
         .sc-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1;margin-bottom:3px}
         .sc-lbl{font-size:11px;color:var(--text-muted)}
 
-        /* FILTROS + TABLA */
+        /* ── CARD / FILTROS ── */
         .card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden}
         .card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--glass-bd);gap:12px;flex-wrap:wrap}
         .card-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500}
@@ -214,7 +228,7 @@ export default function ClienteMisPedidos() {
         .refresh-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;background:var(--glass-bg);border:1px solid var(--glass-bd);color:var(--text-muted);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;transition:all .2s}
         .refresh-btn:hover{color:var(--gold-lt);border-color:rgba(201,168,76,.3)}
 
-        /* LISTA DE PEDIDOS */
+        /* ── LISTA ── */
         .pedidos-list{display:flex;flex-direction:column;gap:0}
         .pedido-row{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s}
         .pedido-row:last-child{border-bottom:none}
@@ -229,7 +243,7 @@ export default function ClienteMisPedidos() {
         .ver-btn{width:32px;height:32px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .2s;flex-shrink:0}
         .pedido-row:hover .ver-btn{color:var(--gold-lt);border-color:rgba(201,168,76,.3);background:var(--gold-dim)}
 
-        /* EMPTY */
+        /* ── EMPTY ── */
         .empty{text-align:center;padding:64px 24px;color:var(--text-muted)}
         .empty-icon{font-size:48px;margin-bottom:16px;opacity:.3}
         .empty-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text-mid);margin-bottom:8px}
@@ -237,7 +251,7 @@ export default function ClienteMisPedidos() {
         .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:12px;background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.35);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;transition:all .2s}
         .btn-primary:hover{border-color:rgba(201,168,76,.6);transform:translateY(-1px)}
 
-        /* PANEL DETALLE */
+        /* ── PANEL DETALLE ── */
         .panel-ov{position:fixed;inset:0;background:rgba(7,8,10,.82);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-start;justify-content:flex-end}
         .panel{width:100%;max-width:440px;height:100vh;background:var(--deep);border-left:1px solid var(--glass-bd);overflow-y:auto;display:flex;flex-direction:column;animation:slideIn .3s var(--ease-out-expo)}
         @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
@@ -260,35 +274,89 @@ export default function ClienteMisPedidos() {
         .total-label{font-size:13px;color:var(--text-mid)}
         .total-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold-lt)}
 
-        /* LOADING SKELETON */
+        /* ── SKELETON ── */
         .skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:skel 1.5s infinite;border-radius:8px}
         @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
         .skel-row{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.04)}
 
-        /* TOAST */
+        /* ── TOAST ── */
         .toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:12px;font-size:13px;font-family:'Outfit',sans-serif;z-index:999;animation:slideUp .3s ease;border:1px solid}
         .toast-success{background:rgba(76,175,130,.15);border-color:rgba(76,175,130,.3);color:var(--success)}
         .toast-error{background:rgba(224,90,90,.15);border-color:rgba(224,90,90,.3);color:var(--error)}
         @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-        @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.nav-links{display:none}.content{padding:24px 16px}}
-        @media(max-width:600px){.stats{grid-template-columns:1fr}.pedido-total{display:none}}
+        /* ── RESPONSIVE ── */
+        @media(max-width:900px){
+          .stats{grid-template-columns:1fr 1fr}
+          .nav-links{display:none}
+          .btn-hamb{display:block}
+          .content{padding:24px 16px}
+        }
+        @media(max-width:600px){
+          .stats{grid-template-columns:1fr}
+          .pedido-total{display:none}
+        }
       `}</style>
 
-      {/* NAVBAR */}
+      {/* ── DRAWER OVERLAY (móvil) ── */}
+      <div
+        className={`nav-drawer-ov ${navOpen ? 'open' : ''}`}
+        onClick={() => setNavOpen(false)}
+      />
+
+      {/* ── DRAWER (móvil) ── */}
+      <div className={`nav-drawer ${navOpen ? 'open' : ''}`}>
+        {NAV_ITEMS.map(item => (
+          <div
+            key={item.key}
+            className={`drawer-link ${activeNav === item.key ? 'active' : ''}`}
+            onClick={() => { setNavOpen(false); setActiveNav(item.key); navigate(item.path) }}
+          >
+            {item.icon}{item.label}
+          </div>
+        ))}
+        <div className="drawer-sep" />
+        <div
+          className="drawer-link"
+          onClick={() => { setNavOpen(false); navigate('/cliente/perfil') }}
+        >
+          <IconUser /> Mi perfil
+        </div>
+        <div
+          className="drawer-link"
+          style={{ color: 'var(--error)' }}
+          onClick={() => { setNavOpen(false); logout() }}
+        >
+          <IconLogout /> Cerrar sesión
+        </div>
+      </div>
+
+      {/* ── NAVBAR ── */}
       <nav className="navbar">
         <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
+          <button
+            className="btn-hamb"
+            onClick={e => { e.stopPropagation(); setNavOpen(p => !p) }}
+            aria-label="Abrir menú"
+          >
+            {navOpen ? '✕' : '☰'}
+          </button>
           <div className="nav-brand-icon"><IconRest /></div>
           <span className="nav-brand-name">Gastro</span>
         </div>
+
         <div className="nav-links">
           {NAV_ITEMS.map(item => (
-            <div key={item.key} className={`nav-link ${activeNav === item.key ? 'active' : ''}`}
-              onClick={() => { setActiveNav(item.key); navigate(item.path) }}>
+            <div
+              key={item.key}
+              className={`nav-link ${activeNav === item.key ? 'active' : ''}`}
+              onClick={() => { setActiveNav(item.key); navigate(item.path) }}
+            >
               {item.icon}{item.label}
             </div>
           ))}
         </div>
+
         <div className="nav-right">
           <NotificacionesPanel isAdmin={false} />
           <div className="nav-avatar-wrap">
@@ -311,6 +379,7 @@ export default function ClienteMisPedidos() {
         </div>
       </nav>
 
+      {/* ── PAGE ── */}
       <div className="page">
         <div className="content">
 
@@ -432,7 +501,7 @@ export default function ClienteMisPedidos() {
         </div>
       </div>
 
-      {/* PANEL DETALLE */}
+      {/* ── PANEL DETALLE ── */}
       {detalle && (
         <div className="panel-ov" onClick={e => e.target === e.currentTarget && setDetalle(null)}>
           <div className="panel">
@@ -447,7 +516,6 @@ export default function ClienteMisPedidos() {
             </div>
             <div className="panel-body">
 
-              {/* Estado */}
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 {(() => {
                   const st = es(detalle.estado)
@@ -459,7 +527,6 @@ export default function ClienteMisPedidos() {
                 })()}
               </div>
 
-              {/* Info general */}
               <div className="dsec">
                 <div className="dsec-title">Información general</div>
                 <div className="drow">
@@ -480,7 +547,6 @@ export default function ClienteMisPedidos() {
                 </div>
               </div>
 
-              {/* Dirección si es domicilio */}
               {detalle.tipoEntrega === 'DOMICILIO' && detalle.direccionEntrega && (
                 <div className="dsec">
                   <div className="dsec-title">Dirección de entrega</div>
@@ -490,7 +556,6 @@ export default function ClienteMisPedidos() {
                 </div>
               )}
 
-              {/* Items */}
               <div className="dsec">
                 <div className="dsec-title">Items del pedido</div>
                 {detalle.detalles?.length > 0
@@ -511,7 +576,6 @@ export default function ClienteMisPedidos() {
                 </div>
               </div>
 
-              {/* Notas */}
               {detalle.notas && (
                 <div className="dsec">
                   <div className="dsec-title">Notas</div>

@@ -15,13 +15,13 @@ const IconUsers = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="no
 const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
 const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
 const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
-const IconCamera = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" /></svg>
+const IconCamera = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2 2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" /></svg>
 const IconMail = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
 const IconPhone = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
 const IconShield = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
 const IconUser = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-const IconCheck = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
-const IconArrow = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+const IconBurger = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+const IconCheck = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
 
 const NAV_ITEMS = [
     { key: 'dashboard', label: 'Dashboard', icon: <IconDash />, path: '/admin' },
@@ -36,6 +36,7 @@ const NAV_ITEMS = [
 
 export default function AdminPerfil() {
     const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [mobileOpen, setMobileOpen] = useState(false) // Mismo estado móvil que Dashboard
     const { user, logout, setUser } = useAuthStore()
     const navigate = useNavigate()
     const location = useLocation()
@@ -44,7 +45,12 @@ export default function AdminPerfil() {
     const getActiveKey = () => NAV_ITEMS.find(i => i.path === location.pathname)?.key || ''
     const [activeNav, setActiveNav] = useState(getActiveKey())
     useEffect(() => { setActiveNav(getActiveKey()) }, [location.pathname])
-    const handleNavClick = (path, key) => { setActiveNav(key); navigate(path) }
+    
+    const handleNavClick = (path, key) => { 
+        setActiveNav(key)
+        setMobileOpen(false) // Cierra el menú al navegar
+        navigate(path) 
+    }
 
     const [profileData, setProfileData] = useState(null)
     const [previewUrl, setPreviewUrl] = useState(null)
@@ -52,7 +58,6 @@ export default function AdminPerfil() {
     const [uploadMsg, setUploadMsg] = useState(null)
     const [loadingProfile, setLoadingProfile] = useState(true)
 
-    // ── Cargar perfil desde ms-auth ──
     useEffect(() => {
         const fetchProfile = async () => {
             setLoadingProfile(true)
@@ -61,7 +66,6 @@ export default function AdminPerfil() {
                 const data = res.data?.data || res.data
                 setProfileData(data)
             } catch {
-                // Si falla, usa los datos del store
                 setProfileData(user)
             } finally {
                 setLoadingProfile(false)
@@ -70,12 +74,10 @@ export default function AdminPerfil() {
         fetchProfile()
     }, [])
 
-    // ── Subir foto de perfil ──
     const handleFileSelect = async (e) => {
         const file = e.target.files[0]
         if (!file) return
 
-        // Preview inmediato
         const reader = new FileReader()
         reader.onload = ev => setPreviewUrl(ev.target.result)
         reader.readAsDataURL(file)
@@ -113,7 +115,6 @@ export default function AdminPerfil() {
     const avatarSrc = previewUrl || currentUser?.profilePicture
     const initials = (currentUser?.name?.[0] || 'A').toUpperCase()
 
-    // Formatear fecha
     const fmtDate = (iso) => {
         if (!iso) return '—'
         return new Date(iso).toLocaleDateString('es-GT', {
@@ -136,11 +137,12 @@ export default function AdminPerfil() {
           --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
           --sidebar-w:240px;
         }
-        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
-        .layout{display:flex;min-height:100vh}
+        html{overflow-x:hidden;width:100%}
+        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;width:100%;overflow-x:hidden}
+        .layout{display:flex;min-height:100vh;width:100%;max-width:100vw;overflow-x:hidden;position:relative}
 
-        /* SIDEBAR */
-        .sidebar{width:var(--sidebar-w);background:var(--deep);border-right:1px solid var(--glass-bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:width .3s var(--ease-out-expo);overflow:hidden}
+        /* SIDEBAR COMPLETO CON RESPONSIVIDAD */
+        .sidebar{width:var(--sidebar-w);background:var(--deep);border-right:1px solid var(--glass-bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:width .3s var(--ease-out-expo), transform .3s var(--ease-out-expo);overflow:hidden}
         .sidebar.col{width:64px}
         .sb-brand{padding:24px 20px 20px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;gap:12px;flex-shrink:0;min-height:80px;position:relative}
         .sb-brand::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
@@ -155,294 +157,247 @@ export default function AdminPerfil() {
         .ni:hover{background:var(--glass-bg);color:var(--text)}
         .ni.active{background:var(--gold-dim);color:var(--gold-lt);border:1px solid rgba(201,168,76,.15)}
         .ni.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;border-radius:2px;background:var(--gold)}
-        .ni-icon{flex-shrink:0;display:flex}
-        .ni-text{overflow:hidden;transition:opacity .2s,width .3s}
+        .ni-text{overflow:hidden;transition:opacity .2s, width .3s}
         .sidebar.col .ni-text{opacity:0;width:0}
-        .sb-footer{padding:16px 10px;border-top:1px solid var(--glass-bd)}
-        .sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--glass-bg);border:1px solid rgba(201,168,76,.25);margin-bottom:8px;overflow:hidden}
-        .sb-av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--gold-lt);flex-shrink:0;font-family:'Cormorant Garamond',serif;overflow:hidden}
-        .sb-av img{width:100%;height:100%;object-fit:cover;border-radius:7px}
-        .sb-uinfo{overflow:hidden}
-        .sb-uname{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .sb-urole{font-size:10px;color:var(--gold);letter-spacing:.5px;text-transform:uppercase}
-        .sidebar.col .sb-uinfo{display:none}
-        .sb-out{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;width:100%;transition:all .2s;white-space:nowrap}
-        .sb-out:hover{background:rgba(224,90,90,.08);color:var(--error)}
-        .sidebar.col .sb-out span{display:none}
-        .sb-toggle{position:absolute;top:50%;right:-12px;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--deep);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s;z-index:101}
-        .sb-toggle:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
-        .sb-toggle svg{transition:transform .3s}
-        .sidebar.col .sb-toggle svg{transform:rotate(180deg)}
+        
+        .sb-foot{padding:16px 10px;border-top:1px solid var(--glass-bd)}
+        .u-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);margin-bottom:8px;overflow:hidden}
+        .u-avatar{width:32px;height:32px;border-radius:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold-lt);flex-shrink:0;overflow:hidden}
+        .u-avatar img{width:100%;height:100%;object-fit:cover}
+        .u-info{overflow:hidden}
+        .u-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .u-role{font-size:10px;color:var(--gold)}
+        .sidebar.col .u-info{display:none}
+        
+        .lg-btn{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-family:inherit;font-size:13px;width:100%;transition:all .2s}
+        .lg-btn:hover{background:rgba(224,90,90,.08);color:#e08080}
+        .sidebar.col .lg-text{opacity:0;width:0;overflow:hidden}
 
-        /* MAIN */
-        .main{flex:1;margin-left:var(--sidebar-w);transition:margin-left .3s var(--ease-out-expo);min-height:100vh;display:flex;flex-direction:column}
-        .main.col{margin-left:64px}
-        .topbar{height:64px;background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:50}
-        .topbar-left{display:flex;align-items:center;gap:12px}
-        .back-btn{width:32px;height:32px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s}
-        .back-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
-        .topbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:.5px}
-        .topbar-sub{font-size:11px;color:var(--text-muted)}
-        .topbar-r{display:flex;align-items:center;gap:10px}
-        .topbar-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .2s}
-        .topbar-btn:hover{color:var(--gold)}
-        .content{padding:32px;flex:1;max-width:900px}
+        /* BOTÓN FLOTANTE TRIGGER MÓVIL */
+        .sidebar-toggle{position:absolute;right:-12px;top:28px;width:24px;height:24px;border-radius:5px;background:var(--deep);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:110;transition:transform .3s}
+        .sidebar.col .sidebar-toggle{transform:rotate(180deg)}
 
-        /* AVATAR SECTION */
-        .profile-hero{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:32px;display:flex;align-items:center;gap:32px;margin-bottom:24px;position:relative;overflow:hidden}
-        .profile-hero::before{content:'';position:absolute;top:0;left:0;width:200px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
-        .profile-hero::after{content:'';position:absolute;top:0;left:0;width:1px;height:200px;background:linear-gradient(180deg,var(--gold),transparent)}
-        .avatar-wrap{position:relative;flex-shrink:0}
-        .avatar{width:100px;height:100px;border-radius:20px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:2px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;color:var(--gold-lt);overflow:hidden}
-        .avatar img{width:100%;height:100%;object-fit:cover}
-        .camera-btn{position:absolute;bottom:-6px;right:-6px;width:30px;height:30px;border-radius:50%;background:var(--gold);border:2px solid var(--deep);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--black);transition:transform .2s}
-        .camera-btn:hover{transform:scale(1.1)}
-        .hero-info{flex:1}
-        .hero-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--text);margin-bottom:4px}
-        .hero-username{font-size:13px;color:var(--text-muted);margin-bottom:12px}
-        .hero-badges{display:flex;gap:8px;flex-wrap:wrap}
-        .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;border:1px solid}
-        .badge-admin{background:var(--gold-dim);border-color:rgba(201,168,76,.3);color:var(--gold-lt)}
-        .badge-verified{background:rgba(76,175,130,.1);border-color:rgba(76,175,130,.25);color:var(--success)}
-        .badge-unverified{background:rgba(224,90,90,.1);border-color:rgba(224,90,90,.25);color:var(--error)}
-        .badge-active{background:rgba(76,175,130,.1);border-color:rgba(76,175,130,.25);color:var(--success)}
+        /* CONTENIDO PRINCIPAL */
+        .main-wrapper{flex:1;min-width:0;max-width:100%;padding-left:var(--sidebar-w);transition:padding-left .3s var(--ease-out-expo)}
+        .sidebar.col + .main-wrapper{padding-left:64px}
+        
+        .top-bar{height:80px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 40px;position:sticky;top:0;background:rgba(7,8,10,.7);backdrop-filter:var(--blur);z-index:90}
+        .top-left{display:flex;align-items:center;gap:16px;min-width:0;overflow:hidden}
+        
+        /* HAMBURGUESA MÓVIL DISPLAY */
+        .mobile-burger{display:none;background:none;border:none;color:var(--text-mid);cursor:pointer;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:1px solid var(--glass-bd);flex-shrink:0}
+        .mobile-burger:hover{color:var(--text);background:var(--glass-bg)}
 
-        /* UPLOAD MSG */
-        .upload-msg{padding:10px 14px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:8px;margin-top:12px;border:1px solid}
-        .upload-msg.success{background:rgba(76,175,130,.1);border-color:rgba(76,175,130,.25);color:var(--success)}
-        .upload-msg.error{background:rgba(224,90,90,.1);border-color:rgba(224,90,90,.25);color:var(--error)}
+        .view-title{font-size:20px;font-weight:500;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .content-area{padding:40px;max-width:1200px;margin:0 auto;min-width:0;max-width:100%;overflow-x:hidden}
 
-        /* INFO CARDS */
-        .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-        .info-card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden}
-        .info-card-header{padding:18px 22px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;gap:10px}
-        .info-card-icon{width:32px;height:32px;border-radius:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;color:var(--gold)}
-        .info-card-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500}
-        .info-card-body{padding:18px 22px}
-        .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-        .info-row:last-child{border-bottom:none}
-        .info-key{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
-        .info-val{font-size:13px;color:var(--text);text-align:right;max-width:200px;word-break:break-word}
-        .info-val.gold{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-lt)}
+        /* RESPONSIVIDAD MEDIA QUERIES (Mapeado exacto de AdminDashboard) */
+        @media(max-width:1024px){
+          .sidebar{transform:translateX(-100%)}
+          .sidebar.mobile-active{transform:translateX(0);width:var(--sidebar-w)!important}
+          .sidebar.mobile-active .ni-text, .sidebar.mobile-active .u-info, .sidebar.mobile-active .lg-text{opacity:1!important;width:auto!important}
+          .sidebar.mobile-active .nav-lbl{opacity:1!important}
+          .main-wrapper, .sidebar.col + .main-wrapper{padding-left:0}
+          .sidebar-toggle{display:none}
+          .mobile-burger{display:flex}
+          .top-bar{padding:0 24px}
+          .content-area{padding:24px}
+        }
+        @media(max-width:768px) {
+          .profile-grid{grid-template-columns:1fr!important}
+          .top-bar{height:70px}
+          .card-main{padding:28px}
+          .info-grid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+        }
+        @media(max-width:576px){
+          .top-bar{padding:0 16px;height:64px}
+          .view-title{font-size:17px}
+          .content-area{padding:16px}
+          .card-profile{padding:24px}
+          .card-main{padding:20px}
+          .section-title{font-size:18px;margin-bottom:24px}
+          .info-grid{grid-template-columns:1fr;gap:16px;margin-bottom:28px}
+          .avatar-container{width:96px;height:96px;font-size:34px}
+          .foto-section{padding:18px}
+        }
 
-        /* FOTO BTN */
-        .foto-section{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:22px;margin-top:24px}
-        .foto-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;margin-bottom:6px}
-        .foto-sub{font-size:12px;color:var(--text-muted);margin-bottom:16px}
-        .foto-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-        .btn-foto{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.08));border:1px solid rgba(201,168,76,.35);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;transition:all .2s}
-        .btn-foto:hover{border-color:rgba(201,168,76,.6);transform:translateY(-1px)}
-        .btn-foto:disabled{opacity:.5;cursor:not-allowed;transform:none}
-        .foto-hint{font-size:11px;color:var(--text-muted)}
+        .sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:95;display:none}
+        @media(max-width:1024px){
+          .sidebar-overlay.visible{display:block}
+        }
 
-        /* LOADING */
-        .skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:skel 1.5s infinite;border-radius:8px}
-        @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-        @media(max-width:900px){.cards-grid{grid-template-columns:1fr}.profile-hero{flex-direction:column;text-align:center}.hero-badges{justify-content:center}.content{padding:20px}}
+        /* DETALLES DE VISTA */
+        .profile-grid{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;min-width:0}
+        .card-profile{background:var(--surface);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:32px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;min-width:0}
+        .avatar-container{width:120px;height:120px;border-radius:30px;background:linear-gradient(135deg,rgba(201,168,76,.2),transparent);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:44px;font-family:'Cormorant Garamond',serif;color:var(--gold-lt);margin-bottom:20px;position:relative;cursor:pointer;overflow:hidden;flex-shrink:0}
+        .avatar-container img{width:100%;height:100%;object-fit:cover}
+        .avatar-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff}
+        .avatar-container:hover .avatar-overlay{opacity:1}
+        .p-name{font-size:18px;font-weight:500;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+        .p-role{font-size:11px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+        .p-meta{width:100%;border-top:1px solid var(--glass-bd);padding-top:20px;display:flex;flex-direction:column;gap:12px;text-align:left;min-width:0}
+        .meta-item{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--text-mid);min-width:0}
+        .meta-item svg{color:var(--gold);flex-shrink:0}
+        .meta-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+        .card-main{background:var(--surface);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:40px;min-width:0}
+        .section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;letter-spacing:1px;color:var(--gold-lt);margin-bottom:32px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--glass-bd);padding-bottom:12px}
+        .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-bottom:40px;min-width:0}
+        .info-box{display:flex;flex-direction:column;gap:6px;min-width:0}
+        .info-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+        .info-val{font-size:14px;color:var(--text);background:rgba(255,255,255,.02);padding:12px 16px;border-radius:var(--radius-inp);border:1px solid rgba(255,255,255,.04);min-height:45px;display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .foto-section{background:rgba(201,168,76,.03);border:1px dashed rgba(201,168,76,.2);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center}
+        .foto-title{font-size:14px;font-weight:500;color:var(--gold-lt);margin-bottom:4px}
+        .foto-sub{font-size:12px;color:var(--text-mid);margin-bottom:16px}
+        .btn-foto{display:flex;align-items:center;gap:8px;background:var(--gold);color:var(--black);border:none;padding:10px 20px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+        .btn-foto:hover:not(:disabled){background:var(--gold-lt);transform:translateY(-1px)}
+        .btn-foto:disabled{opacity:.5;cursor:not-allowed}
+        .foto-hint{font-size:11px;color:var(--text-muted);margin-top:8px}
+        .msg-toast{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:24px;width:100%;text-align:left;display:flex;align-items:center;gap:10px}
+        .msg-toast.success{background:rgba(76,175,130,.1);border:1px solid rgba(76,175,130,.2);color:#7dd9ae}
+        .msg-toast.error{background:rgba(224,90,90,.1);border:1px solid rgba(224,90,90,.2);color:#e08080}
       `}</style>
 
             <div className="layout">
+                {/* BACKDROP OVERLAY MÓVIL */}
+                <div className={`sidebar-overlay ${mobileOpen ? 'visible' : ''}`} 
+                     onClick={() => setMobileOpen(false)} />
+
                 {/* SIDEBAR */}
-                <aside className={`sidebar ${sidebarOpen ? '' : 'col'}`}>
-                    <button className="sb-toggle" onClick={() => setSidebarOpen(p => !p)}><IconChevron /></button>
+                <aside className={`sidebar ${!sidebarOpen ? 'col' : ''} ${mobileOpen ? 'mobile-active' : ''}`}>
+                    <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                        <IconChevron />
+                    </button>
+
                     <div className="sb-brand">
-                        <div className="sb-icon"><IconRest /></div>
+                        <div className="sb-icon">R</div>
                         <div className="sb-text">
-                            <span className="sb-name">Gastro</span>
-                            <span className="sb-role">Admin Panel</span>
+                            <span className="sb-name">Restaurante</span>
+                            <span className="sb-role">Panel Admin</span>
                         </div>
                     </div>
+
                     <nav className="sb-nav">
                         <div className="nav-lbl">Navegación</div>
                         {NAV_ITEMS.map(item => (
-                            <div key={item.key} className={`ni ${activeNav === item.key ? 'active' : ''}`}
-                                onClick={() => handleNavClick(item.path, item.key)}>
+                            <div key={item.key} 
+                                 className={`ni ${activeNav === item.key ? 'active' : ''}`}
+                                 onClick={() => handleNavClick(item.path, item.key)}>
                                 <span className="ni-icon">{item.icon}</span>
                                 <span className="ni-text">{item.label}</span>
                             </div>
                         ))}
                     </nav>
-                    <div className="sb-footer">
-                        <div className="sb-user">
-                            <div className="sb-av">
-                                {avatarSrc
-                                    ? <img src={avatarSrc} alt="avatar" />
-                                    : initials}
+
+                    <div className="sb-foot">
+                        <div className="u-card">
+                            <div className="u-avatar">
+                                {avatarSrc ? <img src={avatarSrc} alt="avatar" /> : initials}
                             </div>
-                            <div className="sb-uinfo">
-                                <div className="sb-uname">{currentUser?.name || 'Admin'}</div>
-                                <div className="sb-urole">Mi perfil</div>
+                            <div className="u-info">
+                                <div className="u-name">{currentUser?.name || 'Administrador'}</div>
+                                <div className="u-role">Admin</div>
                             </div>
                         </div>
-                        <button className="sb-out" onClick={logout}><IconLogout /><span>Cerrar sesión</span></button>
+                        <button className="lg-btn" onClick={() => { setMobileOpen(false); logout(); navigate('/login'); }}>
+                            <IconLogout />
+                            <span className="lg-text">Cerrar Sesión</span>
+                        </button>
                     </div>
                 </aside>
 
-                {/* MAIN */}
-                <main className={`main ${sidebarOpen ? '' : 'col'}`}>
-                    <header className="topbar">
-                        <div className="topbar-left">
-                            <button className="back-btn" onClick={() => navigate('/admin')}><IconArrow /></button>
-                            <div>
-                                <div className="topbar-title">Mi Perfil</div>
-                                <div className="topbar-sub">Información de tu cuenta</div>
-                            </div>
-                        </div>
-                        <div className="topbar-r">
-                            <button className="topbar-btn"><IconBell /></button>
+                {/* CONTENIDO PRINCIPAL */}
+                <div className="main-wrapper">
+                    <header className="top-bar">
+                        <div className="top-left">
+                            {/* BOTÓN HAMBURGUESA MÓVIL */}
+                            <button className="mobile-burger" onClick={() => setMobileOpen(!mobileOpen)}>
+                                <IconBurger />
+                            </button>
+                            <h1 className="view-title">Mi Perfil</h1>
                         </div>
                     </header>
 
-                    <div className="content">
-                        {/* HERO */}
-                        {loadingProfile ? (
-                            <div className="profile-hero">
-                                <div className="skel" style={{ width: 100, height: 100, borderRadius: 20, flexShrink: 0 }} />
-                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                    <div className="skel" style={{ height: 28, width: '50%' }} />
-                                    <div className="skel" style={{ height: 16, width: '30%' }} />
-                                    <div className="skel" style={{ height: 24, width: '40%' }} />
-                                </div>
+                    <main className="content-area">
+                        {uploadMsg && (
+                            <div className={`msg-toast ${uploadMsg.type}`}>
+                                {uploadMsg.type === 'success' ? <IconCheck /> : '⚠️'}
+                                {uploadMsg.text}
                             </div>
-                        ) : (
-                            <div className="profile-hero">
-                                <div className="avatar-wrap">
-                                    <div className="avatar">
-                                        {avatarSrc
-                                            ? <img src={avatarSrc} alt="avatar" />
-                                            : initials}
-                                    </div>
-                                    <div className="camera-btn" onClick={() => fileInputRef.current?.click()}
-                                        title="Cambiar foto">
+                        )}
+
+                        <div className="profile-grid">
+                            {/* CARD DE AVATAR */}
+                            <div className="card-profile">
+                                <div className="avatar-container" onClick={() => fileInputRef.current?.click()}>
+                                    {avatarSrc ? <img src={avatarSrc} alt="profile" /> : initials}
+                                    <div className="avatar-overlay">
                                         <IconCamera />
                                     </div>
-                                    <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp"
-                                        style={{ display: 'none' }} onChange={handleFileSelect} />
+                                </div>
+                                <input type="file" ref={fileInputRef} style={{ display: 'none' }}
+                                    accept="image/png, image/jpeg, image/webp" onChange={handleFileSelect} />
+
+                                <h2 className="p-name">{currentUser?.name || '—'}</h2>
+                                <p className="p-role">Administrador del Sistema</p>
+
+                                <div className="p-meta">
+                                    <div className="meta-item">
+                                        <IconMail /> <span>{currentUser?.email || '—'}</span>
+                                    </div>
+                                    <div className="meta-item">
+                                        <IconShield /> <span>ID: {(currentUser?.uid || currentUser?._id || '—').substring(0, 10)}...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* INFORMACIÓN DEL PERFIL */}
+                            <div className="card-main">
+                                <h3 className="section-title">
+                                    <IconUser /> Datos Generales
+                                </h3>
+
+                                <div className="info-grid">
+                                    <div className="info-box">
+                                        <span className="info-lbl">Nombre Completo</span>
+                                        <div className="info-val">{currentUser?.name || '—'}</div>
+                                    </div>
+                                    <div className="info-box">
+                                        <span className="info-lbl">Correo Electrónico</span>
+                                        <div className="info-val">{currentUser?.email || '—'}</div>
+                                    </div>
+                                    <div className="info-box">
+                                        <span className="info-lbl">Rol asignado</span>
+                                        <div className="info-val">ADMIN_ROLE</div>
+                                    </div>
+                                    <div className="info-box">
+                                        <span className="info-lbl">Cuenta Creada</span>
+                                        <div className="info-val">{fmtDate(currentUser?.createdAt)}</div>
+                                    </div>
                                 </div>
 
-                                <div className="hero-info">
-                                    <div className="hero-name">
-                                        {currentUser?.name || '—'} {currentUser?.surname || ''}
-                                    </div>
-                                    <div className="hero-username">@{currentUser?.username || '—'}</div>
-                                    <div className="hero-badges">
-                                        <span className="badge badge-admin">
-                                            <IconShield /> {currentUser?.role || 'ADMIN'}
+                                {/* CAMBIAR FOTO SECCIÓN */}
+                                {!loadingProfile && (
+                                    <div className="foto-section">
+                                        <div className="foto-title">Foto de perfil</div>
+                                        <div className="foto-sub">
+                                            JPG, PNG o WEBP · Máximo 5MB · Se sube automáticamente
+                                        </div>
+                                        <div className="foto-actions">
+                                            <button className="btn-foto" disabled={uploading}
+                                                onClick={() => fileInputRef.current?.click()}>
+                                                <IconCamera />
+                                                {uploading ? 'Subiendo...' : 'Cambiar foto'}
+                                            </button>
+                                        </div>
+                                        <span className="foto-hint">
+                                            También puedes hacer click sobre tu foto para actualizarla
                                         </span>
-                                        {currentUser?.isEmailVerified
-                                            ? <span className="badge badge-verified"><IconCheck /> Email verificado</span>
-                                            : <span className="badge badge-unverified">Email no verificado</span>
-                                        }
-                                        {currentUser?.status !== false && (
-                                            <span className="badge badge-active"><IconCheck /> Cuenta activa</span>
-                                        )}
                                     </div>
-
-                                    {uploadMsg && (
-                                        <div className={`upload-msg ${uploadMsg.type}`}>
-                                            {uploadMsg.type === 'success' ? <IconCheck /> : '⚠'}
-                                            {uploadMsg.text}
-                                        </div>
-                                    )}
-                                </div>
+                                )}
                             </div>
-                        )}
-
-                        {/* INFO CARDS */}
-                        {!loadingProfile && (
-                            <div className="cards-grid">
-                                {/* Información personal */}
-                                <div className="info-card">
-                                    <div className="info-card-header">
-                                        <div className="info-card-icon"><IconUser /></div>
-                                        <div className="info-card-title">Información personal</div>
-                                    </div>
-                                    <div className="info-card-body">
-                                        <div className="info-row">
-                                            <span className="info-key">Nombre completo</span>
-                                            <span className="info-val gold">
-                                                {currentUser?.name || '—'} {currentUser?.surname || ''}
-                                            </span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key">Usuario</span>
-                                            <span className="info-val">@{currentUser?.username || '—'}</span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key"><IconMail /> Email</span>
-                                            <span className="info-val">{currentUser?.email || '—'}</span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key"><IconPhone /> Teléfono</span>
-                                            <span className="info-val">{currentUser?.phone || '—'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Información de cuenta */}
-                                <div className="info-card">
-                                    <div className="info-card-header">
-                                        <div className="info-card-icon"><IconShield /></div>
-                                        <div className="info-card-title">Información de cuenta</div>
-                                    </div>
-                                    <div className="info-card-body">
-                                        <div className="info-row">
-                                            <span className="info-key">ID de usuario</span>
-                                            <span className="info-val" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                                                {currentUser?.id || '—'}
-                                            </span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key">Rol</span>
-                                            <span className="info-val gold">{currentUser?.role || '—'}</span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key">Estado</span>
-                                            <span className="info-val" style={{ color: currentUser?.status ? 'var(--success)' : 'var(--error)' }}>
-                                                {currentUser?.status ? 'Activo' : 'Inactivo'}
-                                            </span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key">Email verificado</span>
-                                            <span className="info-val" style={{ color: currentUser?.isEmailVerified ? 'var(--success)' : 'var(--error)' }}>
-                                                {currentUser?.isEmailVerified ? 'Sí' : 'No'}
-                                            </span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key">Miembro desde</span>
-                                            <span className="info-val">{fmtDate(currentUser?.createdAt)}</span>
-                                        </div>
-                                        <div className="info-row">
-                                            <span className="info-key">Última actualización</span>
-                                            <span className="info-val">{fmtDate(currentUser?.updatedAt)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* CAMBIAR FOTO */}
-                        {!loadingProfile && (
-                            <div className="foto-section">
-                                <div className="foto-title">Foto de perfil</div>
-                                <div className="foto-sub">
-                                    JPG, PNG o WEBP · Máximo 5MB · Se sube a Cloudinary automáticamente
-                                </div>
-                                <div className="foto-actions">
-                                    <button className="btn-foto" disabled={uploading}
-                                        onClick={() => fileInputRef.current?.click()}>
-                                        <IconCamera />
-                                        {uploading ? 'Subiendo...' : 'Cambiar foto'}
-                                    </button>
-                                    <span className="foto-hint">
-                                        También puedes hacer click en el ícono de cámara sobre tu foto
-                                    </span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </main>
+                        </div>
+                    </main>
+                </div>
             </div>
         </>
     )

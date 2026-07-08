@@ -20,6 +20,10 @@ const IconCart = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="non
 const IconMinus = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>
 const IconClose = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
 const IconTag = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg>
+/* ─── ICON HAMBURGUESA ─── */
+const IconHamburger = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+/* ─── ICON FILTRO ─── */
+const IconFilter = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="11" y1="18" x2="13" y2="18" /></svg>
 
 const NAV_ITEMS = [
   { key: 'inicio', label: 'Inicio', icon: <IconHome />, path: '/cliente/inicio' },
@@ -54,6 +58,8 @@ export default function ClienteMenu() {
   }, [])
 
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   // ── Datos ──
   const [restaurantes, setRestaurantes] = useState([])
@@ -75,12 +81,12 @@ export default function ClienteMenu() {
   const [resenas, setResenas] = useState([])
   const [promedioRes, setPromedioRes] = useState(0)
 
+  // ── Cerrar menú móvil al cambiar ruta ──
+  useEffect(() => { setMobileNavOpen(false) }, [location.pathname])
 
   const load = async () => {
     setLoading(true)
-
     try {
-
       const [restRes, catRes, platRes] = await Promise.all([
         api.get('/restaurante/restaurantes'),
         api.get('/menu/categorias-plato'),
@@ -88,38 +94,27 @@ export default function ClienteMenu() {
       ])
 
       const rests = restRes.data?.data || []
-
       setRestaurantes(rests)
       setCategorias(catRes.data?.data || [])
       setPlatos(platRes.data?.data || [])
 
       if (rests.length > 0) {
-
         setRestSelec(rests[0]._id)
-
-        // cargar disponibilidad del primer restaurante
-        const dispRes = await api.get(
-          `/menu/platos/disponibilidad?restaurante=${rests[0]._id}`
-        )
-
+        const dispRes = await api.get(`/menu/platos/disponibilidad?restaurante=${rests[0]._id}`)
         const mapa = {}
         const mapaMax = {}
-
         const datos = dispRes.data?.data || []
 
         datos.forEach(d => {
           mapa[d.platoId] = d.tieneStock
           mapaMax[d.platoId] = d.maximoDisponible
         })
-
         setDisponibilidad(mapa)
         setMaximos(mapaMax)
       }
-
     } catch (error) {
       console.error(error)
-    }
-    finally {
+    } finally {
       setLoading(false)
     }
   }
@@ -155,54 +150,24 @@ export default function ClienteMenu() {
     return rid === restSelec
   })
 
-  const tieneStock = (plato) => {
-    return disponibilidad[plato._id] !== false
-  }
+  const tieneStock = (plato) => disponibilidad[plato._id] !== false
 
   // ── Carrito helpers ──
   const agregarAlCarrito = (plato) => {
+    const itemExistente = carrito.find(i => i.plato._id === plato._id)
+    const cantidadActual = itemExistente ? itemExistente.cantidad : 0
 
-    // Buscar si ya existe en carrito
-    const itemExistente = carrito.find(
-      i => i.plato._id === plato._id
-    )
-
-    const cantidadActual = itemExistente
-      ? itemExistente.cantidad
-      : 0
-
-    // VALIDAR STOCK MÁXIMO
     if (cantidadActual >= (maximos[plato._id] || 0)) {
-
       alert(`Ya no hay suficiente stock de ${plato.nombre}`)
-
       return
     }
 
     setCarrito(prev => {
-
-      const existe = prev.find(
-        i => i.plato._id === plato._id
-      )
-
+      const existe = prev.find(i => i.plato._id === plato._id)
       if (existe) {
-        return prev.map(i =>
-          i.plato._id === plato._id
-            ? {
-              ...i,
-              cantidad: i.cantidad + 1
-            }
-            : i
-        )
+        return prev.map(i => i.plato._id === plato._id ? { ...i, cantidad: i.cantidad + 1 } : i)
       }
-
-      return [
-        ...prev,
-        {
-          plato,
-          cantidad: 1
-        }
-      ]
+      return [...prev, { plato, cantidad: 1 }]
     })
   }
 
@@ -215,7 +180,6 @@ export default function ClienteMenu() {
   }
 
   const eliminarDelCarrito = (platoId) => setCarrito(prev => prev.filter(i => i.plato._id !== platoId))
-
   const cantidadEnCarrito = (platoId) => carrito.find(i => i.plato._id === platoId)?.cantidad || 0
   const totalCarrito = carrito.reduce((s, i) => s + i.plato.precio * i.cantidad, 0)
   const itemsCarrito = carrito.reduce((s, i) => s + i.cantidad, 0)
@@ -228,6 +192,74 @@ export default function ClienteMenu() {
   }
 
   const initials = (user?.name?.[0] || 'U').toUpperCase()
+
+  const SidebarContent = () => (
+    <>
+      <div>
+        <div className="sidebar-section-title">Restaurantes</div>
+        {loading
+          ? [1, 2].map(i => <div key={i} className="skel" style={{ height: 36, marginBottom: 6 }} />)
+          : restaurantes.map(r => (
+            <div key={r._id}
+              className={`rest-item ${restSelec === r._id ? 'active' : ''}`}
+              onClick={() => {
+                setRestSelec(r._id)
+                setCatSelec(null)
+                setMobileSidebarOpen(false)
+                api.get(`/menu/platos/disponibilidad?restaurante=${r._id}`)
+                  .then(res => {
+                    const mapa = {}
+                    const mapaMax = {}
+                    const datos = res.data?.data || []
+                    datos.forEach(d => {
+                      mapa[d.platoId] = d.tieneStock
+                      mapaMax[d.platoId] = d.maximoDisponible
+                    })
+                    setDisponibilidad(mapa)
+                    setMaximos(mapaMax)
+                  }).catch(() => { })
+              }}>
+              <div className="rest-dot" />
+              {r.nombre}
+            </div>
+          ))
+        }
+      </div>
+
+      {restSelec && resenas.length > 0 && (
+        <div>
+          <div className="sidebar-section-title">Reseñas ⭐ {promedioRes}/5</div>
+          {resenas.slice(0, 3).map(r => (
+            <div key={r._id} style={{ padding: '8px 10px', marginBottom: 6, background: 'rgba(255,255,255,.03)', borderRadius: 8, border: '1px solid rgba(255,255,255,.06)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+                <span style={{ fontSize: 11, color: 'var(--text-mid)' }}>{r.nombreUsuario || 'Cliente'}</span>
+                <span style={{ fontSize: 11, color: '#c9a84c' }}>{'★'.repeat(r.estrellas)}{'☆'.repeat(5 - r.estrellas)}</span>
+              </div>
+              {r.comentario && <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>"{r.comentario.substring(0, 60)}{r.comentario.length > 60 ? '…' : ''}"</div>}
+            </div>
+          ))}
+          {resenas.length > 3 && <div style={{ fontSize: 11, color: 'var(--text-muted)', padding: '0 10px' }}>+{resenas.length - 3} reseñas más</div>}
+        </div>
+      )}
+
+      <div>
+        <div className="sidebar-section-title">Categorías</div>
+        <div className={`cat-todos ${!catSelec ? 'active' : ''}`} onClick={() => { setCatSelec(null); setMobileSidebarOpen(false) }}>
+          Todos los platos
+        </div>
+        {loading
+          ? [1, 2, 3].map(i => <div key={i} className="skel" style={{ height: 30, marginBottom: 4 }} />)
+          : catsFiltradas.map(c => (
+            <div key={c._id}
+              className={`cat-item ${catSelec === c._id ? 'active' : ''}`}
+              onClick={() => { setCatSelec(c._id); setMobileSidebarOpen(false) }}>
+              <IconTag /> {c.nombre}
+            </div>
+          ))
+        }
+      </div>
+    </>
+  )
 
   return (
     <>
@@ -273,21 +305,65 @@ export default function ClienteMenu() {
         .nav-btn:hover{color:var(--gold)}
         .cart-badge{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--gold);color:var(--black);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--black)}
 
-        /* PAGE */
+        .hamburger-btn{display:none;width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);align-items:center;justify-content:center;color:var(--text-mid);cursor:pointer;transition:all .2s;flex-shrink:0}
+        .hamburger-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+
+        /* MENÚ MÓVIL OVERLAY */
+        .mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(7,8,10,.85);backdrop-filter:blur(10px);z-index:150;animation:fadeIn .2s ease}
+        .mobile-nav-overlay.open{display:block}
+        .mobile-nav-panel{position:fixed;top:0;left:0;width:280px;height:100vh;height:100dvh;background:var(--deep);border-right:1px solid var(--glass-bd);z-index:160;display:flex;flex-direction:column;animation:slideInLeft .25s var(--ease-out-expo)}
+        @keyframes slideInLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+        .mobile-nav-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--glass-bd)}
+        .mobile-nav-brand{display:flex;align-items:center;gap:8px;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--gold)}
+        .mobile-nav-close{width:32px;height:32px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s}
+        .mobile-nav-close:hover{color:var(--error)}
+        .mobile-nav-user{padding:16px 20px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;gap:12px}
+        .mobile-nav-avatar{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--gold-lt);overflow:hidden;flex-shrink:0}
+        .mobile-nav-avatar img{width:100%;height:100%;object-fit:cover}
+        .mobile-nav-user-info .mobile-nav-uname{font-size:13px;font-weight:500;color:var(--text)}
+        .mobile-nav-user-info .mobile-nav-uemail{font-size:11px;color:var(--text-muted);margin-top:2px}
+        .mobile-nav-links{flex:1;overflow-y:auto;padding:12px;-webkit-overflow-scrolling:touch}
+        .mobile-nav-link{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;color:var(--text-mid);font-size:14px;transition:all .2s;margin-bottom:4px;border:1px solid transparent}
+        .mobile-nav-link:hover{background:var(--glass-bg);color:var(--text)}
+        .mobile-nav-link.active{background:var(--gold-dim);color:var(--gold-lt);border-color:rgba(201,168,76,.2)}
+        .mobile-nav-footer{padding:16px 20px;border-top:1px solid var(--glass-bd)}
+        .mobile-nav-logout{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--error);font-size:13px;transition:all .2s;border:1px solid rgba(224,90,90,.15)}
+        .mobile-nav-logout:hover{background:rgba(224,90,90,.08)}
+
+        /* SIDEBAR FILTROS MÓVIL */
+        .mobile-sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(7,8,10,.8);backdrop-filter:blur(8px);z-index:130;animation:fadeIn .2s ease}
+        .mobile-sidebar-overlay.open{display:block}
+        .mobile-sidebar-panel{position:fixed;top:0;right:0;width:280px;height:100vh;height:100dvh;background:var(--deep);border-left:1px solid var(--glass-bd);z-index:140;display:flex;flex-direction:column;overflow-y:auto;animation:slideInRight .25s var(--ease-out-expo);-webkit-overflow-scrolling:touch}
+        @keyframes slideInRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
+        .mobile-sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--glass-bd);position:sticky;top:0;background:var(--deep);z-index:1}
+        .mobile-sidebar-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--text)}
+        .mobile-sidebar-body{padding:16px;display:flex;flex-direction:column;gap:24px}
+
+        /* BARRA SUPERIOR DE BÚSQUEDA Y FILTROS EN MÓVIL */
+        .mobile-top-bar{display:none;align-items:center;gap:8px;margin-bottom:20px;width:100%;box-sizing:border-box}
+        .mobile-search-wrapper{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:12px;padding:10px 12px}
+        .mobile-search-icon{color:var(--text-muted);display:flex;align-items:center;flex-shrink:0}
+        .mobile-search-input{background:none;border:none;outline:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;width:100%;min-width:0}
+        .mobile-search-input::placeholder{color:var(--text-muted)}
+        .btn-filtros-mobile{display:none;align-items:center;gap:6px;padding:10px 12px;border-radius:12px;background:var(--glass-bg);border:1px solid var(--glass-bd);color:var(--text-mid);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;transition:all .2s;white-space:nowrap;flex-shrink:0}
+        .btn-filtros-mobile:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+        .filtros-badge{background:var(--gold);color:var(--black);border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+        /* PAGE & LAYOUT */
         .page{padding-top:var(--nav-h);min-height:100vh}
         .layout{display:flex;height:calc(100vh - var(--nav-h))}
 
-        /* SIDEBAR */
+        /* SIDEBAR DESKTOP */
         .sidebar{width:220px;flex-shrink:0;background:var(--deep);border-right:1px solid var(--glass-bd);overflow-y:auto;padding:20px 12px;display:flex;flex-direction:column;gap:24px}
         .sidebar::-webkit-scrollbar{width:3px}
         .sidebar::-webkit-scrollbar-thumb{background:var(--glass-bd);border-radius:2px}
         .sidebar-section-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:0 8px;margin-bottom:6px}
-        .rest-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;border:1px solid transparent}
+        .rest-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;border:1px solid transparent;word-break:break-word}
         .rest-item:hover{background:var(--glass-bg);color:var(--text)}
         .rest-item.active{background:var(--gold-dim);color:var(--gold-lt);border-color:rgba(201,168,76,.2)}
         .rest-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.6}
         .rest-item.active .rest-dot{opacity:1}
-        .cat-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--text-mid);font-size:12.5px;transition:all .2s}
+        .cat-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--text-mid);font-size:12.5px;transition:all .2s;word-break:break-word}
         .cat-item:hover{background:var(--glass-bg);color:var(--text)}
         .cat-item.active{background:rgba(201,168,76,.08);color:var(--gold-lt)}
         .cat-todos{font-size:12px;color:var(--text-muted);padding:6px 10px;cursor:pointer;transition:color .2s}
@@ -295,11 +371,11 @@ export default function ClienteMenu() {
         .cat-todos.active{color:var(--gold-lt)}
 
         /* CONTENIDO PRINCIPAL */
-        .main{flex:1;overflow-y:auto;padding:28px 32px}
+        .main{flex:1;overflow-y:auto;padding:28px 32px;-webkit-overflow-scrolling:touch}
         .main::-webkit-scrollbar{width:4px}
         .main::-webkit-scrollbar-thumb{background:var(--glass-bd);border-radius:2px}
 
-        /* SEARCH BAR */
+        /* SEARCH BAR DESKTOP */
         .search-bar{display:flex;align-items:center;gap:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:12px;padding:10px 16px;margin-bottom:24px}
         .search-bar input{background:none;border:none;outline:none;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;flex:1}
         .search-bar input::placeholder{color:var(--text-muted)}
@@ -311,7 +387,7 @@ export default function ClienteMenu() {
         .section-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
 
         /* GRID DE PLATOS */
-        .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+        .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
         .plato-card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden;transition:border-color .2s,transform .2s,opacity .2s;display:flex;flex-direction:column}
         .plato-card:hover{border-color:rgba(201,168,76,.2);transform:translateY(-2px)}
         .plato-card.sin-stock{opacity:.6}
@@ -321,18 +397,18 @@ export default function ClienteMenu() {
         .plato-cat{position:absolute;top:10px;left:10px;background:rgba(7,8,10,.75);border:1px solid var(--glass-bd);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--text-muted);display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px)}
         .sin-stock-overlay{position:absolute;inset:0;background:rgba(7,8,10,.6);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
         .sin-stock-badge{background:rgba(224,90,90,.2);border:1px solid rgba(224,90,90,.4);color:var(--error);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500}
-        .plato-body{padding:16px;flex:1;display:flex;flex-direction:column;gap:8px}
+        .plato-body{padding:16px;flex:1;display:flex;flex-direction:column;gap:12px}
         .plato-nombre{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--text);line-height:1.2}
         .plato-desc{font-size:12px;color:var(--text-muted);line-height:1.5;flex:1}
-        .plato-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
-        .plato-precio{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--gold-lt)}
-        .plato-acciones{display:flex;align-items:center;gap:8px}
-        .btn-cantidad{width:28px;height:28px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s}
+        .plato-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px;gap:8px}
+        .plato-precio{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--gold-lt);white-space:nowrap}
+        .plato-acciones{display:flex;align-items:center;gap:6px}
+        .btn-cantidad{width:28px;height:28px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s;flex-shrink:0}
         .btn-cantidad:hover{color:var(--gold-lt);border-color:rgba(201,168,76,.3);background:var(--gold-dim)}
-        .btn-agregar{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.08));border:1px solid rgba(201,168,76,.3);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;transition:all .2s;white-space:nowrap}
+        .btn-agregar{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.08));border:1px solid rgba(201,168,76,.3);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;transition:all .2s;white-space:nowrap}
         .btn-agregar:hover{border-color:rgba(201,168,76,.55);background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.14))}
-        .cant-badge{width:28px;height:28px;border-radius:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-lt);font-weight:500}
-        .no-disponible{font-size:11px;color:var(--error);padding:7px 10px}
+        .cant-badge{width:28px;height:28px;border-radius:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-lt);font-weight:500;flex-shrink:0}
+        .no-disponible{font-size:11px;color:var(--error);padding:7px 10px;white-space:nowrap}
 
         /* EMPTY */
         .empty{text-align:center;padding:80px 24px;color:var(--text-muted)}
@@ -345,20 +421,20 @@ export default function ClienteMenu() {
 
         /* CARRITO PANEL */
         .carrito-ov{position:fixed;inset:0;background:rgba(7,8,10,.82);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-start;justify-content:flex-end}
-        .carrito-panel{width:100%;max-width:400px;height:100vh;background:var(--deep);border-left:1px solid var(--glass-bd);display:flex;flex-direction:column;animation:slideIn .3s var(--ease-out-expo)}
+        .carrito-panel{width:100%;max-width:400px;height:100vh;height:100dvh;background:var(--deep);border-left:1px solid var(--glass-bd);display:flex;flex-direction:column;animation:slideIn .3s var(--ease-out-expo)}
         @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
         .carrito-head{padding:24px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between}
         .carrito-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500}
         .carrito-close{width:32px;height:32px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s}
         .carrito-close:hover{color:var(--error)}
-        .carrito-body{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:10px}
+        .carrito-body{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
         .carrito-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:12px}
-        .carrito-item-info{flex:1}
-        .carrito-item-nombre{font-size:13px;color:var(--text);margin-bottom:2px}
+        .carrito-item-info{flex:1;min-width:0}
+        .carrito-item-nombre{font-size:13px;color:var(--text);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .carrito-item-precio{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-lt)}
-        .carrito-item-acciones{display:flex;align-items:center;gap:6px}
+        .carrito-item-acciones{display:flex;align-items:center;gap:4px;flex-shrink:0}
         .carrito-empty{text-align:center;padding:40px;color:var(--text-muted);font-size:13px}
-        .carrito-footer{padding:20px 24px;border-top:1px solid var(--glass-bd);display:flex;flex-direction:column;gap:12px}
+        .carrito-footer{padding:20px 24px;border-top:1px solid var(--glass-bd);display:flex;flex-direction:column;gap:12px;background:var(--deep)}
         .carrito-total{display:flex;justify-content:space-between;align-items:center}
         .carrito-total-label{font-size:13px;color:var(--text-mid)}
         .carrito-total-val{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold-lt)}
@@ -368,14 +444,105 @@ export default function ClienteMenu() {
         .btn-vaciar{width:100%;padding:9px;border-radius:10px;background:none;border:1px solid rgba(224,90,90,.2);color:var(--error);cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;transition:all .2s}
         .btn-vaciar:hover{background:rgba(224,90,90,.08)}
 
-        @media(max-width:900px){.sidebar{display:none}.nav-links{display:none}.main{padding:20px 16px}}
+        /* ── RESPONSIVE MEDIA QUERIES ── */
+        @media(max-width:1024px){
+          .platos-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+        }
+
+        @media(max-width:900px){
+          .sidebar{display:none}
+          .nav-links{display:none}
+          .main{padding:20px 16px;height:calc(100vh - var(--nav-h));height:calc(100dvh - var(--nav-h))}
+          .layout{height:auto}
+          .hamburger-btn{display:flex}
+          .btn-filtros-mobile{display:flex}
+          .mobile-top-bar{display:flex}
+          .search-bar{display:none}
+          .navbar{padding:0 20px}
+        }
+
+        @media(max-width:600px) {
+          .platos-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+        }
+
+        @media(max-width:480px){
+          .platos-grid{grid-template-columns:1fr;gap:16px}
+          .navbar{padding:0 12px}
+          .nav-brand-name{font-size:18px;letter-spacing:1px}
+          .mobile-nav-panel, .mobile-sidebar-panel, .carrito-panel {
+            width: 100vw;
+            max-width: 100vw;
+          }
+          .main{padding:16px 12px}
+          .mobile-top-bar{gap:6px} /* Junta más la barra de búsqueda y el botón en móviles */
+          .mobile-search-wrapper{padding:8px 10px}
+        }
       `}</style>
+
+      {/* ── MENÚ MÓVIL OVERLAY ── */}
+      {mobileNavOpen && (
+        <>
+          <div className="mobile-nav-overlay open" onClick={() => setMobileNavOpen(false)} />
+          <div className="mobile-nav-panel">
+            <div className="mobile-nav-header">
+              <div className="mobile-nav-brand"><IconRest /> Gastro</div>
+              <div className="mobile-nav-close" onClick={() => setMobileNavOpen(false)}><IconClose /></div>
+            </div>
+            <div className="mobile-nav-user">
+              <div className="mobile-nav-avatar">
+                {avatarSrc
+                  ? <img src={avatarSrc} alt="avatar" onError={e => e.target.style.display = 'none'} />
+                  : initials}
+              </div>
+              <div className="mobile-nav-user-info">
+                <div className="mobile-nav-uname">{user?.name || 'Usuario'} {user?.surname || ''}</div>
+                <div className="mobile-nav-uemail">{user?.email || ''}</div>
+              </div>
+            </div>
+            <div className="mobile-nav-links">
+              {NAV_ITEMS.map(item => (
+                <div key={item.key}
+                  className={`mobile-nav-link ${activeNav === item.key ? 'active' : ''}`}
+                  onClick={() => { setActiveNav(item.key); navigate(item.path); setMobileNavOpen(false) }}>
+                  {item.icon} {item.label}
+                </div>
+              ))}
+            </div>
+            <div className="mobile-nav-footer">
+              <div className="mobile-nav-logout" onClick={() => { setMobileNavOpen(false); logout() }}>
+                <IconLogout /> Cerrar sesión
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── SIDEBAR FILTROS MÓVIL ── */}
+      {mobileSidebarOpen && (
+        <>
+          <div className="mobile-sidebar-overlay open" onClick={() => setMobileSidebarOpen(false)} />
+          <div className="mobile-sidebar-panel">
+            <div className="mobile-sidebar-header">
+              <div className="mobile-sidebar-title">Filtros</div>
+              <div className="mobile-nav-close" onClick={() => setMobileSidebarOpen(false)}><IconClose /></div>
+            </div>
+            <div className="mobile-sidebar-body">
+              <SidebarContent />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* NAVBAR */}
       <nav className="navbar">
-        <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
-          <div className="nav-brand-icon"><IconRest /></div>
-          <span className="nav-brand-name">Gastro</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="hamburger-btn" onClick={() => setMobileNavOpen(p => !p)}>
+            {mobileNavOpen ? <IconClose /> : <IconHamburger />}
+          </div>
+          <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
+            <div className="nav-brand-icon"><IconRest /></div>
+            <span className="nav-brand-name">Gastro</span>
+          </div>
         </div>
         <div className="nav-links">
           {NAV_ITEMS.map(item => (
@@ -413,87 +580,33 @@ export default function ClienteMenu() {
 
       <div className="page">
         <div className="layout">
-
-          {/* SIDEBAR */}
+          {/* SIDEBAR DESKTOP */}
           <aside className="sidebar">
-            {/* Restaurantes */}
-            <div>
-              <div className="sidebar-section-title">Restaurantes</div>
-              {loading
-                ? [1, 2].map(i => <div key={i} className="skel" style={{ height: 36, marginBottom: 6 }} />)
-                : restaurantes.map(r => (
-                  <div key={r._id}
-                    className={`rest-item ${restSelec === r._id ? 'active' : ''}`}
-                    onClick={() => {
-
-                      setRestSelec(r._id)
-                      setCatSelec(null)
-
-                      api.get(`/menu/platos/disponibilidad?restaurante=${r._id}`)
-                        .then(res => {
-
-                          const mapa = {}
-                          const mapaMax = {}
-
-                          const datos = res.data?.data || []
-
-                          datos.forEach(d => {
-                            mapa[d.platoId] = d.tieneStock
-                            mapaMax[d.platoId] = d.maximoDisponible
-                          })
-
-                          setDisponibilidad(mapa)
-                          setMaximos(mapaMax)
-
-                        })
-                        .catch(() => { })
-                    }}>
-                    <div className="rest-dot" />
-                    {r.nombre}
-                  </div>
-                ))
-              }
-            </div>
-
-            {/* Reseñas del restaurante */}
-            {restSelec && resenas.length > 0 && (
-              <div>
-                <div className="sidebar-section-title">Reseñas ⭐ {promedioRes}/5</div>
-                {resenas.slice(0, 3).map(r => (
-                  <div key={r._id} style={{ padding: '8px 10px', marginBottom: 6, background: 'rgba(255,255,255,.03)', borderRadius: 8, border: '1px solid rgba(255,255,255,.06)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
-                      <span style={{ fontSize: 11, color: 'var(--text-mid)' }}>{r.nombreUsuario || 'Cliente'}</span>
-                      <span style={{ fontSize: 11, color: '#c9a84c' }}>{'★'.repeat(r.estrellas)}{'☆'.repeat(5 - r.estrellas)}</span>
-                    </div>
-                    {r.comentario && <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>"{r.comentario.substring(0, 60)}{r.comentario.length > 60 ? '…' : ''}"</div>}
-                  </div>
-                ))}
-                {resenas.length > 3 && <div style={{ fontSize: 11, color: 'var(--text-muted)', padding: '0 10px' }}>+{resenas.length - 3} reseñas más</div>}
-              </div>
-            )}
-
-            {/* Categorías */}
-            <div>
-              <div className="sidebar-section-title">Categorías</div>
-              <div className={`cat-todos ${!catSelec ? 'active' : ''}`} onClick={() => setCatSelec(null)}>
-                Todos los platos
-              </div>
-              {loading
-                ? [1, 2, 3].map(i => <div key={i} className="skel" style={{ height: 30, marginBottom: 4 }} />)
-                : catsFiltradas.map(c => (
-                  <div key={c._id}
-                    className={`cat-item ${catSelec === c._id ? 'active' : ''}`}
-                    onClick={() => setCatSelec(c._id)}>
-                    <IconTag /> {c.nombre}
-                  </div>
-                ))
-              }
-            </div>
+            <SidebarContent />
           </aside>
 
           {/* MAIN */}
           <main className="main">
-            {/* Buscador */}
+            {/* BARRA SUPERIOR MÓVIL CORRECTAMENTE RESPONSIVA */}
+            <div className="mobile-top-bar">
+              <div className="mobile-search-wrapper">
+                <span className="mobile-search-icon"><IconSearch /></span>
+                <input
+                  className="mobile-search-input"
+                  placeholder="Buscar platos..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+              </div>
+              <button className="btn-filtros-mobile" onClick={() => setMobileSidebarOpen(true)}>
+                <IconFilter /> Filtros
+                {(restSelec || catSelec) && (
+                  <span className="filtros-badge">{[restSelec, catSelec].filter(Boolean).length}</span>
+                )}
+              </button>
+            </div>
+
+            {/* Buscador DESKTOP */}
             <div className="search-bar">
               <span className="search-icon"><IconSearch /></span>
               <input
@@ -546,16 +659,12 @@ export default function ClienteMenu() {
                   const hayStock = tieneStock(p)
 
                   return (
-                    <div
-                      key={p._id}
-                      className={`plato-card${hayStock ? '' : ' sin-stock'}`}
-                    >
+                    <div key={p._id} className={`plato-card${hayStock ? '' : ' sin-stock'}`}>
                       <div className="plato-img">
                         {p.imagen ? <img src={p.imagen} alt={p.nombre} /> : '🍽️'}
                         {catNombre && (
                           <div className="plato-cat"><IconTag />{catNombre}</div>
                         )}
-                        {/* Overlay de sin stock sobre la imagen */}
                         {!hayStock && (
                           <div className="sin-stock-overlay">
                             <span className="sin-stock-badge">Sin stock</span>
@@ -573,17 +682,14 @@ export default function ClienteMenu() {
                           <div className="plato-precio">Q {Number(p.precio).toFixed(2)}</div>
                           <div className="plato-acciones">
                             {!hayStock ? (
-                              /* Sin stock: solo mostrar texto, sin botones */
                               <span className="no-disponible">No disponible</span>
                             ) : cant > 0 ? (
-                              /* Con stock y ya en carrito: controles de cantidad */
                               <>
                                 <button className="btn-cantidad" onClick={() => quitarDelCarrito(p._id)}><IconMinus /></button>
                                 <div className="cant-badge">{cant}</div>
                                 <button className="btn-cantidad" onClick={() => agregarAlCarrito(p)}><IconPlus /></button>
                               </>
                             ) : (
-                              /* Con stock y no en carrito: botón agregar */
                               <button className="btn-agregar" onClick={() => agregarAlCarrito(p)}>
                                 <IconPlus /> Agregar
                               </button>
@@ -608,7 +714,6 @@ export default function ClienteMenu() {
               <div className="carrito-title">Tu pedido</div>
               <button className="carrito-close" onClick={() => setCarritoOpen(false)}><IconClose /></button>
             </div>
-
             <div className="carrito-body">
               {carrito.length === 0 ? (
                 <div className="carrito-empty">
@@ -631,7 +736,6 @@ export default function ClienteMenu() {
                 </div>
               ))}
             </div>
-
             <div className="carrito-footer">
               <div className="carrito-total">
                 <span className="carrito-total-label">Total ({itemsCarrito} items)</span>

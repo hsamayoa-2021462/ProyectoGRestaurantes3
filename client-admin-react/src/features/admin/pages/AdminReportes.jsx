@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../auth/store/authStore'
 import api, { authApi } from '../../../shared/api/api'
 
+/* ─── ICONS ─── */
 const IconMenu = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7" /></svg>
 const IconOrders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
 const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
@@ -16,6 +17,7 @@ const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="
 const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
 const IconRefresh = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>
 const IconTrend = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>
+const IconHamburger = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
 
 const NAV_ITEMS = [
   { key: 'dashboard', label: 'Dashboard', icon: <IconDash />, path: '/admin' },
@@ -65,30 +67,20 @@ function BarChart({ data, valueKey, labelKey, color = '#c9a84c', height = 200, p
           const y = padT + height - barH
           return (
             <g key={i}>
-              {/* Fondo barra */}
-              <rect x={x} y={padT} width={barW} height={height}
-                fill="transparent" rx={6} />
-              {/* Barra valor */}
-              <rect x={x} y={y} width={barW} height={barH}
-                fill={color} opacity={0.85} rx={6} />
-              {/* Etiqueta fecha */}
-              <text x={x + barW / 2} y={svgH - 6} textAnchor="middle"
-                fill="rgba(240,234,216,.5)" fontSize="10" fontFamily="'Outfit',sans-serif">
+              <rect x={x} y={padT} width={barW} height={height} fill="transparent" rx={6} />
+              <rect x={x} y={y} width={barW} height={barH} fill={color} opacity={0.85} rx={6} />
+              <text x={x + barW / 2} y={svgH - 6} textAnchor="middle" fill="rgba(240,234,216,.5)" fontSize="10" fontFamily="'Outfit',sans-serif">
                 {String(d[labelKey] || '').substring(0, 5)}
               </text>
-              {/* Valor encima de la barra */}
               {val > 0 && (
-                <text x={x + barW / 2} y={y - 6} textAnchor="middle"
-                  fill={color} fontSize="11" fontWeight="600" fontFamily="'Outfit',sans-serif">
+                <text x={x + barW / 2} y={y - 6} textAnchor="middle" fill={color} fontSize="11" fontWeight="600" fontFamily="'Outfit',sans-serif">
                   {prefix}{val > 999 ? `${(val / 1000).toFixed(1)}k` : val}
                 </text>
               )}
             </g>
           )
         })}
-        {/* Línea base */}
-        <line x1={padL} y1={padT + height} x2={totalW - padR} y2={padT + height}
-          stroke="rgba(255,255,255,.12)" strokeWidth="1" />
+        <line x1={padL} y1={padT + height} x2={totalW - padR} y2={padT + height} stroke="rgba(255,255,255,.12)" strokeWidth="1" />
       </svg>
     </div>
   )
@@ -118,7 +110,7 @@ function Toast({ msg, type, onDone }) {
 }
 
 export default function AdminReportes() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false) // Iniciado en false para móviles
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
@@ -126,9 +118,13 @@ export default function AdminReportes() {
   const getActiveKey = () => NAV_ITEMS.find(i => i.path === location.pathname)?.key || 'reportes'
   const [activeNav, setActiveNav] = useState(getActiveKey())
   useEffect(() => { setActiveNav(getActiveKey()) }, [location.pathname])
-  const handleNavClick = (path, key) => { setActiveNav(key); navigate(path) }
+  
+  const handleNavClick = (path, key) => { 
+    setActiveNav(key); 
+    navigate(path);
+    if (window.innerWidth <= 992) setSidebarOpen(false) // Cierra el sidebar en móviles al clickear
+  }
 
-  // ── Avatar refrescado desde ms-auth ──
   const [avatarSrc, setAvatarSrc] = useState(user?.profilePicture || null)
   useEffect(() => {
     const refreshFoto = async () => {
@@ -165,19 +161,12 @@ export default function AdminReportes() {
       ])
       setPedidos(pedRes.data?.data || [])
       setReservaciones(resRes.data?.data || [])
-      console.log('Reservaciones:', resRes.data?.data?.slice(0,2))
       setRestaurantes(restRes.data?.data || [])
       setClientes(cliRes.data?.users || [])
       setMesas(mesRes.data?.data || [])
     } catch { showToast('Error al cargar los reportes', 'error') }
     finally { setLoading(false) }
   }
-
-  useEffect(() => {
-    if (loadedRef.current) return
-    loadedRef.current = true
-    load()
-  }, [])
 
   useEffect(() => {
     if (loadedRef.current) return
@@ -236,7 +225,6 @@ export default function AdminReportes() {
   })()
 
   const reservPorDia = (() => {
-    const pad = n => String(n).padStart(2, '0')
     const dias = {}
     for (let i = 13; i >= 0; i--) {
       const d = new Date(); d.setDate(d.getDate() - i)
@@ -271,13 +259,25 @@ export default function AdminReportes() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{--black:#07080a;--deep:#0d0f12;--glass-bg:rgba(255,255,255,.045);--glass-bd:rgba(255,255,255,.09);--gold:#c9a84c;--gold-lt:#e8c96a;--gold-dim:rgba(201,168,76,.08);--text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;--success:#4caf82;--error:#e05a5a;--info:#5b9bd5;--radius-card:20px;--radius-inp:11px;--ease-out-expo:cubic-bezier(0.16,1,0.3,1);--sidebar-w:240px;}
-        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
-        .layout{display:flex;min-height:100vh}
-        .sidebar{width:var(--sidebar-w);background:var(--deep);border-right:1px solid var(--glass-bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:width .3s var(--ease-out-expo);overflow:hidden}
-        .sidebar.col{width:64px}
+        :root{
+          --black:#07080a;--deep:#0d0f12;
+          --glass-bg:rgba(255,255,255,.045);--glass-bd:rgba(255,255,255,.09);
+          --gold:#c9a84c;--gold-lt:#e8c96a;--gold-dim:rgba(201,168,76,.08);
+          --text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;
+          --success:#4caf82;--error:#e05a5a;--info:#5b9bd5;
+          --radius-card:20px;--radius-inp:11px;
+          --ease-out-expo:cubic-bezier(0.16,1,0.3,1);--sidebar-w:240px;
+        }
+        html{overflow-x:hidden;width:100%}
+        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;width:100%;overflow-x:hidden}
+        .layout{display:flex;min-height:100vh;position:relative;width:100%;max-width:100vw;overflow-x:hidden}
+        
+        /* SIDEBAR */
+        .sidebar{width:var(--sidebar-w);background:var(--deep);border-right:1px solid var(--glass-bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:110;transition:transform .4s var(--ease-out-expo), width .4s var(--ease-out-expo);overflow:hidden}
+        .sidebar.open{transform:translateX(0) !important}
+        
         .sb-brand{padding:24px 20px 20px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;gap:12px;flex-shrink:0;min-height:80px;position:relative}
         .sb-brand::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
         .sb-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold)}
@@ -286,14 +286,14 @@ export default function AdminReportes() {
         .sb-role{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);opacity:.7;display:block;margin-top:3px}
         .sb-nav{flex:1;padding:16px 10px;overflow-y:auto;overflow-x:hidden}
         .nav-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:0 10px;margin:16px 0 8px;white-space:nowrap;transition:opacity .2s}
-        .sidebar.col .nav-lbl{opacity:0}
+        
         .ni{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13.5px;transition:all .2s;position:relative;white-space:nowrap;margin-bottom:2px}
         .ni:hover{background:var(--glass-bg);color:var(--text)}
         .ni.active{background:var(--gold-dim);color:var(--gold-lt);border:1px solid rgba(201,168,76,.15)}
         .ni.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;border-radius:2px;background:var(--gold)}
         .ni-icon{flex-shrink:0;display:flex}
         .ni-text{overflow:hidden;transition:opacity .2s,width .3s}
-        .sidebar.col .ni-text{opacity:0;width:0}
+        
         .sb-footer{padding:16px 10px;border-top:1px solid var(--glass-bd)}
         .sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .2s,background .2s}
         .sb-user:hover{border-color:rgba(201,168,76,.35);background:var(--gold-dim)}
@@ -302,76 +302,192 @@ export default function AdminReportes() {
         .sb-uinfo{overflow:hidden}
         .sb-uname{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .sb-urole{font-size:10px;color:var(--gold);letter-spacing:.5px;text-transform:uppercase}
-        .sidebar.col .sb-uinfo{display:none}
         .sb-out{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;width:100%;transition:all .2s;white-space:nowrap}
         .sb-out:hover{background:rgba(224,90,90,.08);color:var(--error)}
-        .sidebar.col .sb-out span{display:none}
-        .sb-toggle{position:absolute;top:50%;right:-12px;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--deep);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s;z-index:101}
-        .sb-toggle:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
-        .sb-toggle svg{transition:transform .3s}
-        .sidebar.col .sb-toggle svg{transform:rotate(180deg)}
-        .main{flex:1;margin-left:var(--sidebar-w);transition:margin-left .3s var(--ease-out-expo);min-height:100vh;display:flex;flex-direction:column}
-        .main.col{margin-left:64px}
-        .topbar{height:64px;background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:50}
-        .topbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:.5px}
-        .topbar-sub{font-size:11px;color:var(--text-muted)}
-        .topbar-r{display:flex;align-items:center;gap:10px}
+        
+        /* BACKDROP */
+        .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:105;display:none}
+
+        /* MAIN CONTAINER */
+        .main{flex:1;margin-left:var(--sidebar-w);transition:margin-left .4s var(--ease-out-expo);min-height:100vh;display:flex;flex-direction:column;min-width:0;max-width:100%}
+        
+        /* TOPBAR */
+        .topbar{height:64px;background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50;gap:12px}
+        .topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1;overflow:hidden}
+        .topbar-hamburger{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:none;align-items:center;justify-content:center;color:var(--text-mid);cursor:pointer;transition:all .2s;flex-shrink:0}
+        .topbar-hamburger:hover{color:var(--gold-lt);border-color:rgba(201,168,76,.3)}
+        .topbar-meta{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+        .topbar-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .topbar-sub{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        
+        .topbar-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
         .topbar-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .2s}
         .topbar-btn:hover{color:var(--gold)}
         .refresh-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);color:var(--text-muted);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;transition:all .2s}
         .refresh-btn:hover{color:var(--gold-lt);border-color:rgba(201,168,76,.3)}
-        .content{padding:32px;flex:1}
-        .tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:12px;padding:4px;width:fit-content}
-        .tab-btn{padding:8px 20px;border-radius:9px;border:none;background:none;color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
-        .tab-btn:hover{color:var(--text)}
+        
+        /* CONTENT & TABS */
+        .content{padding:24px;flex:1;min-width:0;max-width:100%;overflow-x:hidden}
+        .tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:14px;padding:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+        .tab-btn{padding:10px 18px;border-radius:10px;border:none;background:none;color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+        .tab-btn:hover{color:var(--text);background:var(--glass-bg)}
         .tab-btn.active{background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);color:var(--gold-lt)}
+        
+        /* GRIDS DESKTOP (Métricas arriba, Resúmenes separados abajo) */
         .sg4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
         .sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
         .sg2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
-        .sc{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:20px;position:relative;overflow:hidden;transition:border-color .25s,transform .2s}
+        
+        /* TARJETAS ESTADÍSTICAS PROTEGIDAS (STAT CARDS) */
+        .sc{
+          background:var(--glass-bg);
+          border:1px solid var(--glass-bd);
+          border-radius:var(--radius-card);
+          padding:20px;
+          position:relative;
+          overflow:hidden;
+          transition:border-color .25s, transform .2s;
+          min-width:0;
+          display:flex !important;
+          flex-direction:column !important;
+          justify-content:space-between !important;
+        }
         .sc::before{content:'';position:absolute;top:0;left:0;width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
         .sc::after{content:'';position:absolute;top:0;left:0;width:1px;height:60px;background:linear-gradient(180deg,var(--gold),transparent)}
         .sc:hover{border-color:rgba(201,168,76,.2);transform:translateY(-2px)}
-        .sc-icon{font-size:20px;margin-bottom:8px}
-        .sc-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1;margin-bottom:3px}
-        .sc-lbl{font-size:11px;color:var(--text-muted)}
-        .sc-delta{font-size:11px;margin-top:4px;display:flex;align-items:center;gap:4px;color:var(--text-muted)}
-        .card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden;margin-bottom:20px}
+        .sc-icon{font-size:20px;margin-bottom:8px;order:1}
+        .sc-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1;margin-bottom:3px;order:3;color:var(--gold-lt)}
+        .sc-lbl{font-size:11px;color:var(--text-muted);order:2;margin-bottom:4px}
+        .sc-delta{font-size:11px;margin-top:4px;display:flex;align-items:center;gap:4px;color:var(--text-muted);order:4}
+        
+        /* TARJETAS GRANDES / RESÚMENES (CARDS INTERNAS) */
+        .card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden;margin-bottom:20px;min-width:0}
         .card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--glass-bd)}
         .card-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;letter-spacing:.3px}
         .card-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
         .card-body{padding:20px 24px}
+        
+        /* LISTAS Y PROGRESOS */
         .metric-list{display:flex;flex-direction:column;gap:0}
-        .metric-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+        .metric-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04)}
         .metric-row:last-child{border-bottom:none}
         .metric-label{font-size:13px;color:var(--text-muted)}
-        .metric-value{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold-lt)}
+        .metric-value{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold-lt);white-space:nowrap;flex-shrink:0}
+        
         .dona-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-        .dona-legend{display:flex;flex-direction:column;gap:8px;flex:1}
+        .dona-legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
         .legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)}
         .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-        .legend-val{margin-left:auto;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text)}
+        .legend-item span:not(.legend-val){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+        .legend-val{margin-left:auto;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text);flex-shrink:0;white-space:nowrap}
+        
         .prog-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
         .prog-row:last-child{margin-bottom:0}
-        .prog-top{display:flex;justify-content:space-between;font-size:12px}
-        .prog-label{color:var(--text-muted)}
-        .prog-val{color:var(--text)}
+        .prog-top{display:flex;justify-content:space-between;gap:8px;font-size:12px}
+        .prog-label{color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+        .prog-val{color:var(--text);flex-shrink:0;white-space:nowrap}
         .prog-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
         .prog-fill{height:100%;border-radius:3px;transition:width .4s ease}
+        
         .loading-overlay{display:flex;align-items:center;justify-content:center;padding:80px;flex-direction:column;gap:16px;color:var(--text-muted)}
         .spinner{width:32px;height:32px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+        
         .toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:12px;font-size:13px;font-family:'Outfit',sans-serif;z-index:999;animation:slideUp .3s ease both;border:1px solid}
         .toast-success{background:rgba(76,175,130,.15);border-color:rgba(76,175,130,.3);color:var(--success)}
         .toast-error{background:rgba(224,90,90,.15);border-color:rgba(224,90,90,.3);color:var(--error)}
         @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:1200px){.sg4{grid-template-columns:repeat(2,1fr)}.sg3{grid-template-columns:1fr 1fr}}
-        @media(max-width:900px){.content{padding:20px}.sg2{grid-template-columns:1fr}.sg3{grid-template-columns:1fr}}
+        
+        /* ─── BREAKPOINTS MEDIA QUERIES (CORREGIDOS) ─── */
+        @media(max-width:1200px){
+          .sg4{grid-template-columns:repeat(2,1fr)}
+        }
+
+        @media(max-width:992px){
+          .sidebar{transform:translateX(-100%)}
+          .sidebar.open{width:var(--sidebar-w);transform:translateX(0) !important}
+          .sidebar-backdrop{display:block}
+          .main{margin-left:0}
+          .topbar-hamburger{display:flex}
+        }
+
+        @media(max-width:880px){
+          .sg3{grid-template-columns:repeat(2,1fr)}
+          .sg3 > .sc:last-child { grid-column: span 2; }
+        }
+
+        @media(max-width:768px){
+          .content{padding:16px}
+          .topbar{padding:0 16px}
+          .refresh-btn span {display:none} 
+          .refresh-btn{padding:8px 10px}
+          .topbar-sub{display:none}
+          .topbar-title{font-size:17px}
+
+          /* SOLO LAS TARJETAS MÉTRICAS SE REORGANIZAN EN 2 COLUMNAS */
+          .sg4, .sg3 {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+          }
+
+          /* EL GRÁFICO / RESUMEN FINANCIERO SE QUEDA FIJO EN 2 COLUMNAS PARALELAS */
+          .sg2 {
+            grid-template-columns: 1fr 1fr !important; /* Congelado en 2 columnas separadas */
+            gap: 12px !important;
+          }
+
+          /* Expansión matemática solo para métricas sueltas de pestañas de 3 ítems */
+          .sg3 > .sc:last-child { 
+            grid-column: span 2 !important; 
+          }
+
+          /* Ajustes de control para las métricas superiores */
+          .sc {
+            padding: 16px 14px !important;
+            min-height: 110px !important;
+          }
+          .sc-icon { margin-bottom: 2px; font-size: 18px; }
+          .sc-val { font-size: 22px !important; margin-top: auto; }
+          .sc-lbl { font-size: 11px !important; margin-bottom: 2px; }
+        }
+
+        @media(max-width:576px){
+          .topbar{padding:0 12px;gap:8px}
+          .topbar-r{gap:6px}
+          .topbar-btn{width:34px;height:34px}
+          .card-header{padding:14px 16px;gap:8px}
+          .card-body{padding:16px}
+          .card-title{font-size:15px}
+          .card-sub{font-size:10.5px}
+          
+          /* Mantener proporciones estables en las cajitas superiores */
+          .sc{padding:14px 12px !important; min-height: 105px !important;}
+          .sc-icon{font-size:16px}
+          .sc-val{font-size:20px !important;}
+          .sc-lbl{font-size:10.5px !important;}
+          .sc-delta{font-size:10px}
+          
+          .tabs{padding:5px;gap:3px}
+          .tab-btn{padding:8px 14px;font-size:12px}
+          .metric-label,.metric-value{font-size:12.5px}
+          .dona-wrap{flex-direction:column;align-items:flex-start;gap:16px}
+          .toast{left:16px;right:16px;bottom:16px;text-align:center}
+        }
+
+        @media(max-width:400px){
+          .sb-name{font-size:16px}
+          .topbar-title{font-size:15px}
+          .sg4, .sg3, .sg2{gap:10px !important}
+          .sc{ min-height: 100px !important; padding: 12px 10px !important; }
+          .sc-val{font-size:18px !important}
+        }
       `}</style>
 
       <div className="layout">
-        <aside className={`sidebar ${sidebarOpen ? '' : 'col'}`}>
-          <button className="sb-toggle" onClick={() => setSidebarOpen(p => !p)}><IconChevron /></button>
+        {/* Backdrop activable para cerrar el menú lateral tocando fuera */}
+        {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
+
+        <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sb-brand">
             <div className="sb-icon"><IconRest /></div>
             <div className="sb-text">
@@ -406,15 +522,20 @@ export default function AdminReportes() {
           </div>
         </aside>
 
-        <main className={`main ${sidebarOpen ? '' : 'col'}`}>
+        <main className="main">
           <header className="topbar">
-            <div>
-              <div className="topbar-title">Reportes en tiempo real</div>
-              <div className="topbar-sub">Calculado desde los datos actuales del sistema</div>
+            <div className="topbar-left">
+              <button className="topbar-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                <IconHamburger />
+              </button>
+              <div className="topbar-meta">
+                <div className="topbar-title">Reportes en tiempo real</div>
+                <div className="topbar-sub">Calculado desde los datos actuales del sistema</div>
+              </div>
             </div>
             <div className="topbar-r">
               <button className="refresh-btn" onClick={handleRefresh} disabled={loading}>
-                <IconRefresh /> {loading ? 'Cargando...' : 'Actualizar'}
+                <IconRefresh /> <span>{loading ? 'Cargando...' : 'Actualizar'}</span>
               </button>
               <button className="topbar-btn"><IconBell /></button>
             </div>

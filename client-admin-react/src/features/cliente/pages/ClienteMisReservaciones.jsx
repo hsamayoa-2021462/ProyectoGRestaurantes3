@@ -12,7 +12,6 @@ const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="no
 const IconUser = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
 const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
 const IconRest = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20" /><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2" /></svg>
-const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
 const IconStar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
 const IconClose = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
 const IconCalendar = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
@@ -39,15 +38,7 @@ const ESTADO_STYLES = {
 function Toast({ msg, type, onDone }) {
     useEffect(() => { const t = setTimeout(onDone, 3000); return () => clearTimeout(t) }, [])
     return (
-        <div style={{
-            position: 'fixed', bottom: 28, right: 28, padding: '12px 20px',
-            borderRadius: 12, fontSize: 13, zIndex: 999,
-            background: type === 'success' ? 'rgba(76,175,130,.15)' : 'rgba(224,90,90,.15)',
-            border: `1px solid ${type === 'success' ? 'rgba(76,175,130,.3)' : 'rgba(224,90,90,.3)'}`,
-            color: type === 'success' ? '#7dd9ae' : '#e08080',
-        }}>
-            {msg}
-        </div>
+        <div className={`toast toast-${type}`}>{msg}</div>
     )
 }
 
@@ -69,6 +60,7 @@ export default function ClienteMisReservaciones() {
     }, [])
 
     const [menuOpen, setMenuOpen] = useState(false)
+    const [navOpen, setNavOpen] = useState(false)
     const [reservaciones, setReservaciones] = useState([])
     const [loading, setLoading] = useState(false)
     const [filtro, setFiltro] = useState('TODOS')
@@ -77,14 +69,14 @@ export default function ClienteMisReservaciones() {
     const [ocultas, setOcultas] = useState(() => {
         try { return JSON.parse(localStorage.getItem('reservaciones_ocultas') || '[]') } catch { return [] }
     })
-    // Persistir ocultas en localStorage
+    const [toast, setToast] = useState(null)
+    const loadedRef = useRef(false)
+
     const ocultarReservacion = (id) => {
         const nuevas = [...ocultas, id]
         setOcultas(nuevas)
-        try { localStorage.setItem('reservaciones_ocultas', JSON.stringify(nuevas)) } catch { }
+        try { localStorage.setItem('reservaciones_ocurnas', JSON.stringify(nuevas)) } catch { }
     }
-    const [toast, setToast] = useState(null)
-    const loadedRef = useRef(false)
 
     const showToast = (msg, type = 'success') => setToast({ msg, type })
     const initials = (user?.name?.[0] || 'U').toUpperCase()
@@ -119,10 +111,14 @@ export default function ClienteMisReservaciones() {
         } finally { setCancelando(false) }
     }
 
+    const formatFecha = (fechaStr) => {
+        if (!fechaStr) return '—';
+        return fechaStr.split('T')[0];
+    }
+
     const filtradas = reservaciones.filter(r => {
         const nombre = r.estado?.nombre || r.estado || ''
-        const matchFiltro = filtro === 'TODOS' || nombre === filtro
-        return matchFiltro && !ocultas.includes(r._id)
+        return (filtro === 'TODOS' || nombre === filtro) && !ocultas.includes(r._id)
     })
 
     const proximas = reservaciones.filter(r => {
@@ -146,71 +142,104 @@ export default function ClienteMisReservaciones() {
           --gold:#c9a84c;--gold-lt:#e8c96a;--gold-dim:rgba(201,168,76,.08);
           --text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;
           --success:#4caf82;--error:#e05a5a;
-          --radius-card:20px;--nav-h:64px;
+          --radius-card:20px;--ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+          --nav-h:64px;
         }
         body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+        /* ── NAVBAR ── */
         .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100}
         .navbar::after{content:'';position:absolute;bottom:-1px;left:0;width:200px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
         .nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
         .nav-brand-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;color:var(--gold)}
-        .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase}
+        .nav-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--text)}
         .nav-links{display:flex;align-items:center;gap:4px}
         .nav-link{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;white-space:nowrap;background:none;border:none;font-family:'Outfit',sans-serif}
         .nav-link:hover{background:var(--glass-bg);color:var(--text)}
         .nav-link.active{background:var(--gold-dim);color:var(--gold-lt);border:1px solid rgba(201,168,76,.15)}
         .nav-right{display:flex;align-items:center;gap:10px}
         .nav-avatar-wrap{position:relative}
-        .nav-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold-lt);cursor:pointer;overflow:hidden}
+        .nav-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold-lt);cursor:pointer;overflow:hidden;transition:border-color .2s}
+        .nav-avatar:hover{border-color:rgba(201,168,76,.5)}
         .nav-avatar img{width:100%;height:100%;object-fit:cover}
-        .nav-dropdown{position:absolute;top:calc(100%+8px);right:0;background:var(--deep);border:1px solid var(--glass-bd);border-radius:14px;padding:8px;min-width:180px;z-index:200;animation:fadeIn .15s ease}
+        .nav-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--deep);border:1px solid var(--glass-bd);border-radius:14px;padding:8px;min-width:180px;z-index:200;animation:fadeIn .15s ease}
         @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
         .nd-user{padding:10px 12px;border-bottom:1px solid var(--glass-bd);margin-bottom:6px}
-        .nd-name{font-size:13px;font-weight:500}
+        .nd-name{font-size:13px;font-weight:500;color:var(--text)}
         .nd-email{font-size:11px;color:var(--text-muted)}
         .nd-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s}
         .nd-item:hover{background:var(--glass-bg);color:var(--text)}
         .nd-item.danger:hover{background:rgba(224,90,90,.08);color:var(--error)}
-        .nav-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .2s}
-        .nav-btn:hover{color:var(--gold)}
+
+        /* ── HAMBURGUESA ── */
+        .btn-hamb{display:none;background:none;border:none;color:var(--gold);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:8px;line-height:1;transition:background .2s}
+        .btn-hamb:hover{background:var(--gold-dim)}
+
+        /* ── DRAWER NAV MÓVIL ── */
+        .nav-drawer-ov{display:none;position:fixed;inset:0;z-index:150;background:rgba(7,8,10,.7);backdrop-filter:blur(6px)}
+        .nav-drawer-ov.open{display:block}
+        .nav-drawer{position:fixed;top:var(--nav-h);left:-260px;width:240px;height:calc(100vh - var(--nav-h));background:var(--deep);border-right:1px solid var(--glass-bd);z-index:160;display:flex;flex-direction:column;padding:16px 12px;gap:4px;transition:left .3s var(--ease-out-expo);overflow-y:auto}
+        .nav-drawer.open{left:0}
+        .drawer-link{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;border:1px solid transparent}
+        .drawer-link:hover{background:var(--glass-bg);color:var(--text)}
+        .drawer-link.active{background:var(--gold-dim);color:var(--gold-lt);border-color:rgba(201,168,76,.2)}
+        .drawer-sep{height:1px;background:var(--glass-bd);margin:8px 4px}
+
+        /* ── PAGE ── */
         .page{padding-top:var(--nav-h);min-height:100vh}
         .content{max-width:960px;margin:0 auto;padding:40px 24px}
         .page-header{margin-bottom:28px}
         .page-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500}
         .page-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+        /* ── STATS ── */
         .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
-        .sc{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:20px;position:relative;overflow:hidden}
+        .sc{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:20px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
         .sc::before{content:'';position:absolute;top:0;left:0;width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+        .sc::after{content:'';position:absolute;top:0;left:0;width:1px;height:60px;background:linear-gradient(180deg,var(--gold),transparent)}
+        .sc:hover{border-color:rgba(201,168,76,.2);transform:translateY(-2px)}
         .sc-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1;margin-bottom:3px}
         .sc-icon{font-size:20px;margin-bottom:8px}
         .sc-lbl{font-size:11px;color:var(--text-muted)}
+
+        /* ── CARD / FILTROS ── */
         .card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden}
         .card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--glass-bd);gap:12px;flex-wrap:wrap}
         .card-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500}
         .card-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
         .filtros{display:flex;gap:6px;flex-wrap:wrap}
-        .fbtn{padding:6px 14px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);color:var(--text-muted);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;transition:all .2s}
+        .fbtn{padding:6px 14px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);color:var(--text-muted);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;transition:all .2s;white-space:nowrap}
         .fbtn:hover{color:var(--text)}
         .fbtn.active{background:var(--gold-dim);border-color:rgba(201,168,76,.3);color:var(--gold-lt)}
         .refresh-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;background:var(--glass-bg);border:1px solid var(--glass-bd);color:var(--text-muted);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;transition:all .2s}
-        .refresh-btn:hover{color:var(--gold-lt)}
+        .refresh-btn:hover{color:var(--gold-lt);border-color:rgba(201,168,76,.3)}
+
+        /* ── LISTA ── */
         .res-row{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s}
         .res-row:last-child{border-bottom:none}
         .res-row:hover{background:rgba(255,255,255,.02)}
         .res-icon{width:44px;height:44px;border-radius:12px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-        .res-info{flex:1}
-        .res-rest{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
-        .res-meta{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-        .res-meta span{display:flex;align-items:center;gap:4px}
-        .badge-estado{display:inline-flex;padding:4px 12px;border-radius:20px;font-size:11px;border:1px solid;white-space:nowrap}
+        .res-info{flex:1;min-width:0}
+        .res-rest{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .res-meta{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap}
+        .res-meta span{display:flex;align-items:center;gap:4px;white-space:nowrap}
+        .res-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+        .badge-estado{display:inline-flex;padding:4px 12px;border-radius:20px;font-size:11px;border:1px solid;white-space:nowrap;justify-content:center}
+
+        /* ── EMPTY ── */
         .empty{text-align:center;padding:64px 24px;color:var(--text-muted)}
         .empty-icon{font-size:48px;margin-bottom:16px;opacity:.3}
         .empty-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text-mid);margin-bottom:8px}
         .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:12px;background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.35);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;transition:all .2s}
         .btn-primary:hover{border-color:rgba(201,168,76,.6);transform:translateY(-1px)}
+
+        /* ── SKELETON ── */
         .skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:skel 1.5s infinite;border-radius:8px}
         @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+        /* ── PANEL DETALLE ── */
         .panel-ov{position:fixed;inset:0;background:rgba(7,8,10,.82);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-start;justify-content:flex-end}
-        .panel{width:100%;max-width:420px;height:100vh;background:var(--deep);border-left:1px solid var(--glass-bd);overflow-y:auto;display:flex;flex-direction:column;animation:slideIn .3s cubic-bezier(0.16,1,0.3,1)}
+        .panel{width:100%;max-width:420px;height:100vh;background:var(--deep);border-left:1px solid var(--glass-bd);overflow-y:auto;display:flex;flex-direction:column;animation:slideIn .3s var(--ease-out-expo)}
         @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
         .panel-head{padding:22px 24px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--deep);z-index:1}
         .panel-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500}
@@ -226,15 +255,103 @@ export default function ClienteMisReservaciones() {
         .btn-cancelar{width:100%;padding:12px;border-radius:12px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.25);color:var(--error);cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;transition:all .2s;margin-top:4px}
         .btn-cancelar:hover{background:rgba(224,90,90,.15)}
         .btn-cancelar:disabled{opacity:.4;cursor:not-allowed}
-        @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.nav-links{display:none}.content{padding:24px 16px}}
+
+        /* ── TOAST ── */
+        .toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:12px;font-size:13px;font-family:'Outfit',sans-serif;z-index:999;animation:slideUp .3s ease;border:1px solid}
+        .toast-success{background:rgba(76,175,130,.15);border-color:rgba(76,175,130,.3);color:var(--success)}
+        .toast-error{background:rgba(224,90,90,.15);border-color:rgba(224,90,90,.3);color:var(--error)}
+        @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:900px){
+          .stats{grid-template-columns:1fr 1fr}
+          .nav-links{display:none}
+          .btn-hamb{display:block}
+          .content{padding:24px 16px}
+        }
+        @media(max-width:600px) {
+          .stats{grid-template-columns:1fr}
+          .res-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+          }
+          .res-info {
+            width: 100%;
+          }
+          .res-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+          }
+          .res-meta span:nth-child(even) {
+            display: none; /* Esconder los puntos separadores en móvil */
+          }
+          .res-actions {
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255,255,255,.03);
+            padding-top: 10px;
+            margin-top: 4px;
+          }
+          .badge-estado {
+            padding: 6px 14px;
+            font-size: 12px;
+          }
+          .res-actions button {
+            padding: 6px 14px !important;
+            font-size: 12px !important;
+          }
+        }
       `}</style>
 
-            {/* NAVBAR */}
+            {/* ── DRAWER OVERLAY (móvil) ── */}
+            <div
+                className={`nav-drawer-ov ${navOpen ? 'open' : ''}`}
+                onClick={() => setNavOpen(false)}
+            />
+
+            {/* ── DRAWER (móvil) ── */}
+            <div className={`nav-drawer ${navOpen ? 'open' : ''}`}>
+                {NAV_ITEMS.map(item => (
+                    <div
+                        key={item.key}
+                        className={`drawer-link ${activeNav === item.key ? 'active' : ''}`}
+                        onClick={() => { setNavOpen(false); setActiveNav(item.key); navigate(item.path) }}
+                    >
+                        {item.icon}{item.label}
+                    </div>
+                ))}
+                <div className="drawer-sep" />
+                <div className="drawer-link" onClick={() => { setNavOpen(false); navigate('/cliente/perfil') }}>
+                    <IconUser /> Mi perfil
+                </div>
+                <div
+                    className="drawer-link"
+                    style={{ color: 'var(--error)' }}
+                    onClick={() => { setNavOpen(false); logout() }}
+                >
+                    <IconLogout /> Cerrar sesión
+                </div>
+            </div>
+
+            {/* ── NAVBAR ── */}
             <nav className="navbar">
                 <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
+                    <button
+                        className="btn-hamb"
+                        onClick={e => { e.stopPropagation(); setNavOpen(p => !p) }}
+                        aria-label="Abrir menú"
+                    >
+                        {navOpen ? '✕' : '☰'}
+                    </button>
                     <div className="nav-brand-icon"><IconRest /></div>
                     <span className="nav-brand-name">Gastro</span>
                 </div>
+
                 <div className="nav-links">
                     {NAV_ITEMS.map(item => (
                         <div key={item.key} className={`nav-link ${activeNav === item.key ? 'active' : ''}`}
@@ -243,6 +360,7 @@ export default function ClienteMisReservaciones() {
                         </div>
                     ))}
                 </div>
+
                 <div className="nav-right">
                     <NotificacionesPanel isAdmin={false} />
                     <div className="nav-avatar-wrap">
@@ -252,8 +370,8 @@ export default function ClienteMisReservaciones() {
                         {menuOpen && (
                             <div className="nav-dropdown">
                                 <div className="nd-user">
-                                    <div className="nd-name">{user?.name}</div>
-                                    <div className="nd-email">{user?.email}</div>
+                                    <div className="nd-name">{user?.name || 'Usuario'}</div>
+                                    <div className="nd-email">{user?.email || ''}</div>
                                 </div>
                                 <div className="nd-item" onClick={() => { setMenuOpen(false); navigate('/cliente/perfil') }}><IconUser /> Mi perfil</div>
                                 <div className="nd-item danger" onClick={() => { setMenuOpen(false); logout() }}><IconLogout /> Cerrar sesión</div>
@@ -263,6 +381,7 @@ export default function ClienteMisReservaciones() {
                 </div>
             </nav>
 
+            {/* ── PAGE ── */}
             <div className="page">
                 <div className="content">
 
@@ -348,19 +467,21 @@ export default function ClienteMisReservaciones() {
                                     const puedeCancelar = ['PENDIENTE', 'CONFIRMADA'].includes(estadoNombre)
                                     return (
                                         <div key={r._id} className="res-row" onClick={() => setDetalle(r)}>
-                                            <div className="res-icon">📅</div>
-                                            <div className="res-info">
-                                                <div className="res-rest">{r.restaurante?.nombre || 'Restaurante'}</div>
-                                                <div className="res-meta">
-                                                    <span><IconCalendar /> {r.fecha || '—'}</span>
-                                                    <span>·</span>
-                                                    <span><IconClock /> {r.hora || '—'}</span>
-                                                    <span>·</span>
-                                                    <span>👥 {r.numPersonas} persona(s)</span>
-                                                    {r.mesa && <><span>·</span><span>Mesa #{r.mesa?.numeroMesa}</span></>}
+                                            <div style={{ display: 'flex', gap: 16, width: '100%', alignItems: 'center' }}>
+                                                <div className="res-icon">📅</div>
+                                                <div className="res-info">
+                                                    <div className="res-rest">{r.restaurante?.nombre || 'Restaurante'}</div>
+                                                    <div className="res-meta">
+                                                        <span><IconCalendar /> {formatFecha(r.fecha)}</span>
+                                                        <span>·</span>
+                                                        <span><IconClock /> {r.hora || '—'}</span>
+                                                        <span>·</span>
+                                                        <span>👥 {r.numPersonas} persona(s)</span>
+                                                        {r.mesa && <><span>·</span><span>Mesa #{r.mesa?.numeroMesa}</span></>}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+                                            <div className="res-actions">
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                                     <span className="badge-estado" style={{ background: st.bg, borderColor: st.bd, color: st.tx }}>
                                                         {st.label}
@@ -390,7 +511,7 @@ export default function ClienteMisReservaciones() {
                     </div>
 
                     {/* Botón nueva reservación */}
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center', marginTop: 24 }}>
                         <button className="btn-primary" onClick={() => navigate('/cliente/reservar')}>
                             <IconTable /> Nueva reservación
                         </button>
@@ -398,7 +519,7 @@ export default function ClienteMisReservaciones() {
                 </div>
             </div>
 
-            {/* PANEL DETALLE */}
+            {/* ── PANEL DETALLE ── */}
             {detalle && (
                 <div className="panel-ov" onClick={e => e.target === e.currentTarget && setDetalle(null)}>
                     <div className="panel">
@@ -416,7 +537,7 @@ export default function ClienteMisReservaciones() {
                             <div>
                                 <div className="dsec-title">Información</div>
                                 <div className="drow"><span className="dk">Restaurante</span><span className="dv">{detalle.restaurante?.nombre || '—'}</span></div>
-                                <div className="drow"><span className="dk"><IconCalendar /> Fecha</span><span className="dv gold">{detalle.fecha || '—'}</span></div>
+                                <div className="drow"><span className="dk"><IconCalendar /> Fecha</span><span className="dv gold">{formatFecha(detalle.fecha)}</span></div>
                                 <div className="drow"><span className="dk"><IconClock /> Hora</span><span className="dv gold">{detalle.hora || '—'}</span></div>
                                 <div className="drow"><span className="dk">Personas</span><span className="dv">{detalle.numPersonas}</span></div>
                                 <div className="drow">

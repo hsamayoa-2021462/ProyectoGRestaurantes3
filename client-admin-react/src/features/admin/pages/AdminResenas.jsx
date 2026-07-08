@@ -45,7 +45,7 @@ export default function AdminResenas() {
     const [activeNav, setActiveNav] = useState(getActiveKey())
     useEffect(() => { setActiveNav(getActiveKey()) }, [location.pathname])
 
-    const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [sidebarOpen, setSidebarOpen] = useState(false)
     const [avatarSrc, setAvatarSrc] = useState(user?.profilePicture || null)
     const [menuOpen, setMenuOpen] = useState(false)
 
@@ -101,10 +101,11 @@ export default function AdminResenas() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         :root{--black:#07080a;--deep:#0d0f12;--surface:#12151a;--glass-bg:rgba(255,255,255,.045);--glass-bd:rgba(255,255,255,.09);--gold:#c9a84c;--gold-lt:#e8c96a;--gold-dim:rgba(201,168,76,.08);--text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;--success:#4caf82;--error:#e05a5a;--sb-w:220px;--radius-card:20px;}
-        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
-        .layout{display:flex;min-height:100vh}
-        .sidebar{width:var(--sb-w);flex-shrink:0;background:var(--deep);border-right:1px solid var(--glass-bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;transition:transform .3s}
-        .sidebar.closed{transform:translateX(-100%)}
+        html{overflow-x:hidden;width:100%}
+        body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;width:100%;overflow-x:hidden}
+        .layout{display:flex;min-height:100vh;width:100%;max-width:100vw;overflow-x:hidden;position:relative}
+        .sidebar{width:var(--sb-w);flex-shrink:0;background:var(--deep);border-right:1px solid var(--glass-bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:110;transition:transform .3s}
+        .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:105;display:none}
         .sb-logo{padding:24px 20px 16px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;gap:10px}
         .sb-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0}
         .sb-logo-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase}
@@ -121,13 +122,13 @@ export default function AdminResenas() {
         .sb-role{font-size:10px;color:var(--text-muted)}
         .sb-out{width:100%;margin-top:6px;padding:8px;border-radius:10px;background:none;border:1px solid rgba(224,90,90,.2);color:var(--error);cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s}
         .sb-out:hover{background:rgba(224,90,90,.08)}
-        .main{flex:1;margin-left:var(--sb-w);display:flex;flex-direction:column;min-height:100vh;transition:margin .3s}
-        .main.full{margin-left:0}
-        .topbar{padding:20px 32px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;background:var(--deep);position:sticky;top:0;z-index:40}
-        .topbar-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500}
-        .topbar-sub{font-size:12px;color:var(--text-muted)}
-        .topbar-right{display:flex;align-items:center;gap:10px}
-        .menu-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;display:flex;padding:4px}
+        .main{flex:1;margin-left:var(--sb-w);display:flex;flex-direction:column;min-height:100vh;min-width:0;max-width:100%;transition:margin .3s}
+        .topbar{padding:20px 32px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;background:var(--deep);position:sticky;top:0;z-index:40;gap:12px}
+        .topbar-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .topbar-sub{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+        .menu-btn{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:10px;color:var(--text-mid);cursor:pointer;display:none;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;transition:all .2s}
+        .menu-btn:hover{color:var(--gold-lt);border-color:rgba(201,168,76,.3)}
         .av-wrap{position:relative}
         .av-btn{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold-lt);cursor:pointer;overflow:hidden}
         .av-btn img{width:100%;height:100%;object-fit:cover}
@@ -139,9 +140,9 @@ export default function AdminResenas() {
         .av-drop-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s}
         .av-drop-item:hover{background:var(--glass-bg);color:var(--text)}
         .av-drop-item.danger:hover{background:rgba(224,90,90,.08);color:var(--error)}
-        .content{padding:28px 32px;display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start}
+        .content{padding:28px 32px;display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start;min-width:0;max-width:100%;overflow-x:hidden}
         /* RESTAURANTES LIST */
-        .rest-list{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden;position:sticky;top:100px}
+        .rest-list{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden;position:sticky;top:100px;min-width:0}
         .rest-list-header{padding:16px 20px;border-bottom:1px solid var(--glass-bd)}
         .rest-list-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500}
         .rest-item{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s}
@@ -150,13 +151,13 @@ export default function AdminResenas() {
         .rest-item.active{background:var(--gold-dim)}
         .rest-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;opacity:.5}
         .rest-item.active .rest-dot{opacity:1}
-        .rest-nombre{font-size:13px;color:var(--text-mid);flex:1}
+        .rest-nombre{font-size:13px;color:var(--text-mid);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
         .rest-item.active .rest-nombre{color:var(--gold-lt)}
         /* RESENAS PANEL */
-        .resenas-panel{display:flex;flex-direction:column;gap:20px}
-        .panel-header{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:24px}
-        .panel-rest-nombre{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;margin-bottom:12px}
-        .promedio-row{display:flex;align-items:center;gap:16px}
+        .resenas-panel{display:flex;flex-direction:column;gap:20px;min-width:0}
+        .panel-header{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:24px;min-width:0}
+        .panel-rest-nombre{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;margin-bottom:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .promedio-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
         .promedio-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:500;color:var(--gold-lt);line-height:1}
         .promedio-info{display:flex;flex-direction:column;gap:4px}
         .promedio-stars{display:flex;gap:4px}
@@ -169,20 +170,48 @@ export default function AdminResenas() {
         .dist-bar-fill{height:100%;background:var(--gold);border-radius:3px;transition:width .4s ease}
         .dist-count{font-size:11px;color:var(--text-muted);width:20px}
         /* Cards reseñas */
-        .resena-card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:20px;display:flex;flex-direction:column;gap:10px}
-        .resena-header{display:flex;justify-content:space-between;align-items:flex-start}
-        .resena-user{font-size:13px;font-weight:500;color:var(--text)}
+        .resena-card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+        .resena-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+        .resena-user{font-size:13px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis}
         .resena-fecha{font-size:11px;color:var(--text-muted);margin-top:2px}
         .resena-comentario{font-size:13px;color:var(--text-mid);line-height:1.6;font-style:italic}
         .empty{text-align:center;padding:48px;color:var(--text-muted)}
         .empty-icon{font-size:40px;margin-bottom:12px;opacity:.3}
         .skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:skel 1.5s infinite;border-radius:8px}
         @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+        @media(max-width:992px){
+          .sidebar{transform:translateX(-100%)}
+          .sidebar.open{transform:translateX(0) !important}
+          .sidebar-backdrop{display:block}
+          .main{margin-left:0}
+          .menu-btn{display:flex}
+        }
         @media(max-width:900px){.content{grid-template-columns:1fr}.rest-list{position:static}}
+        @media(max-width:768px){
+          .topbar{padding:16px 20px}
+          .content{padding:20px}
+          .topbar-title{font-size:19px}
+        }
+        @media(max-width:576px){
+          .topbar{padding:14px 16px}
+          .topbar-sub{display:none}
+          .topbar-title{font-size:17px}
+          .content{padding:16px;gap:16px}
+          .panel-header{padding:16px}
+          .panel-rest-nombre{font-size:19px}
+          .promedio-num{font-size:36px}
+          .resena-card{padding:16px}
+          .rest-list-header{padding:14px 16px}
+          .rest-item{padding:12px 16px}
+        }
       `}</style>
 
+            <div className="layout">
+            {/* Backdrop para cerrar el sidebar en móviles */}
+            {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
+
             {/* SIDEBAR */}
-            <aside className={`sidebar ${sidebarOpen ? '' : 'closed'}`}>
+            <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
                 <div className="sb-logo">
                     <div className="sb-logo-icon"><IconRest /></div>
                     <span className="sb-logo-name">Gastro</span>
@@ -190,7 +219,7 @@ export default function AdminResenas() {
                 <nav className="sb-nav">
                     {NAV.map(item => (
                         <div key={item.key} className={`sb-item ${activeNav === item.key ? 'active' : ''}`}
-                            onClick={() => { setActiveNav(item.key); navigate(item.path) }}>
+                            onClick={() => { setActiveNav(item.key); navigate(item.path); if (window.innerWidth <= 992) setSidebarOpen(false) }}>
                             {item.icon}{item.label}
                         </div>
                     ))}
@@ -207,13 +236,13 @@ export default function AdminResenas() {
             </aside>
 
             {/* MAIN */}
-            <div className={`main ${sidebarOpen ? '' : 'full'}`}>
+            <div className="main">
                 <div className="topbar">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0, overflow: 'hidden' }}>
                         <button className="menu-btn" onClick={() => setSidebarOpen(p => !p)}>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
                         </button>
-                        <div>
+                        <div style={{ minWidth: 0, overflow: 'hidden' }}>
                             <div className="topbar-title">Reseñas</div>
                             <div className="topbar-sub">Opiniones de clientes por restaurante</div>
                         </div>
@@ -310,7 +339,7 @@ export default function AdminResenas() {
                         ) : resenas.map(r => (
                             <div key={r._id} className="resena-card">
                                 <div className="resena-header">
-                                    <div>
+                                    <div style={{ minWidth: 0, overflow: 'hidden' }}>
                                         <div className="resena-user">{r.nombreUsuario || 'Cliente'}</div>
                                         <div className="resena-fecha">
                                             {new Date(r.createdAt).toLocaleDateString('es-GT', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -325,6 +354,7 @@ export default function AdminResenas() {
                         ))}
                     </div>
                 </div>
+            </div>
             </div>
 
             {menuOpen && <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setMenuOpen(false)} />}

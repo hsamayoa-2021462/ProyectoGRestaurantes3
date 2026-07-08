@@ -2,7 +2,8 @@
 /* Reutiliza variables de auth.css y agrega estilos para paneles */
 
 /* Layouts */
-.admin-layout, .client-layout {
+.admin-layout,
+.client-layout {
   display: flex;
   min-height: 100vh;
   background: var(--black);
@@ -61,7 +62,8 @@
   stroke-width: 1.5;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover,
+.nav-item.active {
   background: var(--glass-bg);
   color: var(--gold);
   border-left: 2px solid var(--gold);
@@ -71,7 +73,7 @@
   flex: 1;
   margin-left: 280px;
   padding: 24px 32px;
-  background: radial-gradient(circle at 10% 20%, rgba(18,21,26,0.8), var(--deep));
+  background: radial-gradient(circle at 10% 20%, rgba(18, 21, 26, 0.8), var(--deep));
   min-height: 100vh;
 }
 
@@ -117,7 +119,8 @@
   color: var(--text);
 }
 
-.data-table th, .data-table td {
+.data-table th,
+.data-table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid var(--glass-bd);
@@ -139,7 +142,9 @@
   margin: 0 4px;
 }
 
-.btn-icon:hover { color: var(--gold); }
+.btn-icon:hover {
+  color: var(--gold);
+}
 
 /* Cliente Layout */
 .client-layout {
@@ -171,7 +176,8 @@
   transition: color 0.2s;
 }
 
-.client-nav-links a:hover, .client-nav-links a.active {
+.client-nav-links a:hover,
+.client-nav-links a.active {
   color: var(--gold);
 }
 
@@ -183,14 +189,16 @@
 }
 
 /* Grid productos */
-.menu-grid, .tables-grid {
+.menu-grid,
+.tables-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   margin-top: 24px;
 }
 
-.menu-item-card, .table-card {
+.menu-item-card,
+.table-card {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   border: 1px solid var(--glass-bd);
@@ -199,7 +207,10 @@
   transition: transform 0.2s;
 }
 
-.menu-item-card:hover { transform: translateY(-4px); border-color: var(--gold-dim); }
+.menu-item-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-dim);
+}
 
 /* Carrito */
 .cart-drawer {
@@ -220,8 +231,547 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .admin-sidebar { width: 80px; padding: 20px 10px; }
-  .sidebar-brand span, .nav-item span { display: none; }
-  .main-content { margin-left: 80px; }
-  .cart-drawer { width: 100%; }
+  .admin-sidebar {
+    width: 80px;
+    padding: 20px 10px;
+  }
+
+  .sidebar-brand span,
+  .nav-item span {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 80px;
+  }
+
+  .cart-drawer {
+    width: 100%;
+  }
 }
+
+/* =============================================
+   GASTRO — Responsive Styles
+   ============================================= */
+
+/* ─── BASE MOBILE (< 768px) ──────────────────── */
+
+/* Layout raíz */
+.admin-layout,
+.client-layout {
+  flex-direction: column;
+}
+
+/* Sidebar oculto en móvil — reemplazado por navbar inferior */
+.admin-sidebar {
+  position: fixed;
+  bottom: 0;
+  top: auto;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 64px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  gap: 0;
+  border-right: none;
+  border-top: 1px solid var(--glass-bd);
+  z-index: 50;
+}
+
+/* Ocultar brand en móvil (barra inferior no tiene espacio) */
+.admin-sidebar .sidebar-brand {
+  display: none;
+}
+
+/* Nav horizontal en barra inferior */
+.sidebar-nav {
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  gap: 0;
+}
+
+.nav-item {
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 10px;
+  align-items: center;
+  border-left: none;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  border-left: none;
+  border-bottom: 2px solid var(--gold);
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Contenido principal sin margin lateral, con padding inferior para la barra */
+.main-content {
+  margin-left: 0;
+  padding: 16px;
+  padding-bottom: 80px;
+  /* espacio para la navbar inferior */
+}
+
+/* Topbar compacta */
+.admin-topbar {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.page-title {
+  font-size: 22px;
+}
+
+/* Cards sin padding excesivo */
+.admin-card {
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* Tabla con scroll horizontal */
+.admin-card:has(.data-table) {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  min-width: 520px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px 8px;
+  font-size: 13px;
+}
+
+/* Cliente layout */
+.client-navbar {
+  padding: 10px 16px;
+}
+
+/* Links de nav colapsados — mostrar solo íconos o hamburger */
+.client-nav-links {
+  gap: 16px;
+}
+
+.client-nav-links a {
+  font-size: 13px;
+}
+
+.client-content {
+  padding: 16px;
+}
+
+/* Grid de menú: 1 columna en móvil */
+.menu-grid,
+.tables-grid {
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Drawer del carrito ocupa toda la pantalla */
+.cart-drawer {
+  width: 100%;
+  padding: 20px 16px;
+}
+
+/* ─── TABLET (768px – 1023px) ────────────────── */
+
+@media (min-width: 768px) {
+
+  /* Layout vuelve a ser horizontal */
+  .admin-layout {
+    flex-direction: row;
+  }
+
+  /* Sidebar lateral compacta */
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    right: auto;
+    width: 72px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 24px 10px;
+    gap: 24px;
+    border-right: 1px solid var(--glass-bd);
+    border-top: none;
+  }
+
+  /* Brand: solo ícono en tablet */
+  .admin-sidebar .sidebar-brand {
+    display: flex;
+    justify-content: center;
+  }
+
+  .admin-sidebar .sidebar-brand span {
+    display: none;
+  }
+
+  /* Nav vertical, solo íconos */
+  .sidebar-nav {
+    flex-direction: column;
+    justify-content: flex-start;
+    width: auto;
+    gap: 4px;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 8px;
+    font-size: 10px;
+    align-items: center;
+    border-left: none;
+    border-bottom: none;
+  }
+
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    border-left: 2px solid var(--gold);
+    border-bottom: none;
+  }
+
+  /* Contenido con margen para sidebar compacta */
+  .main-content {
+    margin-left: 72px;
+    padding: 20px 24px;
+    padding-bottom: 24px;
+  }
+
+  .admin-topbar {
+    padding: 14px 24px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .admin-card {
+    padding: 20px;
+  }
+
+  /* Tabla normal en tablet */
+  .admin-card:has(.data-table) {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    min-width: 0;
+  }
+
+  /* Grid menú: 2 columnas */
+  .menu-grid,
+  .tables-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  /* Carrito: panel lateral parcial */
+  .cart-drawer {
+    width: 340px;
+  }
+
+  .client-content {
+    padding: 24px;
+  }
+
+  .client-navbar {
+    padding: 12px 24px;
+  }
+}
+
+/* ─── DESKTOP (≥ 1024px) ─────────────────────── */
+
+@media (min-width: 1024px) {
+
+  /* Sidebar completa con texto */
+  .admin-sidebar {
+    width: 280px;
+    padding: 32px 20px;
+    gap: 32px;
+  }
+
+  .admin-sidebar .sidebar-brand span {
+    display: inline;
+  }
+
+  .nav-item {
+    flex-direction: row;
+    gap: 12px;
+    padding: 12px 18px;
+    font-size: 14px;
+    align-items: center;
+  }
+
+  .nav-item span {
+    display: inline;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    border-left: 2px solid var(--gold);
+  }
+
+  /* Contenido con margen completo */
+  .main-content {
+    margin-left: 280px;
+    padding: 24px 32px;
+  }
+
+  .admin-topbar {
+    padding: 16px 32px;
+    margin-bottom: 28px;
+  }
+
+  .page-title {
+    font-size: 28px;
+  }
+
+  .admin-card {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  /* Grid menú: auto-fill desde 280px */
+  .menu-grid,
+  .tables-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .cart-drawer {
+    width: 380px;
+  }
+
+  .client-content {
+    padding: 32px;
+  }
+
+  .client-navbar {
+    padding: 12px 32px;
+  }
+}
+
+/* ─── LARGE DESKTOP (≥ 1440px) ──────────────── */
+
+@media (min-width: 1440px) {
+
+  .menu-grid,
+  .tables-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .client-content {
+    padding: 40px 48px;
+  }
+}
+
+/* ─── UTILIDADES RESPONSIVE ──────────────────── */
+
+/* Ocultar elementos según breakpoint */
+.hide-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: unset;
+  }
+
+  .hide-tablet {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hide-tablet {
+    display: unset;
+  }
+}
+
+/* Overflow seguro en imágenes */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Texto no desborda en celdas o cards */
+.admin-card,
+.menu-item-card,
+.table-card {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ==========================================================================
+CONTROL DE MENÚ HAMBURGUESA ADMIN
+   ========================================================================== */
+
+/* Botón Hamburguesa (Oculto por defecto en PC/Tablet) */
+.hamburger-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.hamburger-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+/* Botón para cerrar el menú dentro del Sidebar (Oculto por defecto en PC) */
+.sidebar-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-mid);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  margin-left: auto;
+}
+
+.sidebar-close-btn:hover {
+  color: var(--gold);
+}
+
+/* Fondo oscuro difuminado detrás del menú abierto en móvil */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 95;
+}
+
+/* Modificaciones específicas para comportamiento móvil */
+@media (max-width: 767px) {
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    background: rgba(18, 21, 26, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--glass-bd);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    z-index: 100;
+    
+    /* Estado inicial: oculto a la izquierda */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  /* Clase activa que inyectará React para abrir la hamburguesa */
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Forzar visibilidad de elementos internos en la barra desplegable */
+  .admin-sidebar .sidebar-brand {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--gold);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--glass-bd);
+  }
+
+  .admin-sidebar .sidebar-brand span,
+  .admin-sidebar .nav-item span {
+    display: inline !important;
+  }
+
+  .sidebar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .nav-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 18px !important;
+    font-size: 14px !important;
+    border-left: none;
+    border-bottom: none;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background: var(--glass-bg);
+    color: var(--gold);
+    border-left: 2px solid var(--gold) !important;
+    border-bottom: none !important;
+  }
+
+  /* Mostrar botones interactivos en móvil */
+  .sidebar-close-btn,
+  .hamburger-btn {
+    display: flex;
+  }
+}
+
+/* Asegurar que en pantallas grandes se anulen los estados de móvil */
+@media (min-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(0) !important;
+  }
+  
+  .sidebar-close-btn,
+  .sidebar-overlay,
+  .hamburger-btn {
+    display: none !important;
+  }
+  
+
+  }
+  

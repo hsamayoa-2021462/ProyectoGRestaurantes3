@@ -13,6 +13,7 @@ const IconDash = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="non
 const IconUsers = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
 const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
 const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
+const IconClose = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
 
 const NAV_ITEMS = [
     { key: 'dashboard', label: 'Dashboard', icon: <IconDash />, path: '/admin' },
@@ -24,7 +25,7 @@ const NAV_ITEMS = [
     { key: 'reportes', label: 'Reportes', icon: <IconReport />, path: '/admin/reportes' },
 ]
 
-export default function AdminSidebar({ collapsed, onToggle }) {
+export default function AdminSidebar({ collapsed, onToggle, mobileOpen, setMobileOpen }) {
     const { user, logout, setUser } = useAuthStore()
     const navigate = useNavigate()
     const location = useLocation()
@@ -33,10 +34,8 @@ export default function AdminSidebar({ collapsed, onToggle }) {
     const [activeNav, setActiveNav] = useState(getActiveKey())
     useEffect(() => { setActiveNav(getActiveKey()) }, [location.pathname])
 
-    // Foto fresca desde el store — se actualiza cuando el perfil cambia
     const [avatarSrc, setAvatarSrc] = useState(user?.profilePicture || null)
 
-    // Refresca el perfil desde ms-auth para tener la foto actualizada
     useEffect(() => {
         const fetchFoto = async () => {
             try {
@@ -45,16 +44,14 @@ export default function AdminSidebar({ collapsed, onToggle }) {
                 const url = data?.profilePicture
                 if (url) {
                     setAvatarSrc(url)
-                    // Actualizar el store para que persista
                     if (setUser && user) setUser({ ...user, profilePicture: url })
                 }
             } catch {
-                // Si falla, usa la foto del store
                 setAvatarSrc(user?.profilePicture || null)
             }
         }
         fetchFoto()
-    }, [location.pathname]) // Refresca cada vez que se navega
+    }, [location.pathname])
 
     const initials = (user?.name || 'A')[0].toUpperCase()
     const fullName = `${user?.name || ''} ${user?.surname || ''}`.trim() || 'Administrador'
@@ -62,55 +59,84 @@ export default function AdminSidebar({ collapsed, onToggle }) {
     const handleNav = (path, key) => {
         setActiveNav(key)
         navigate(path)
+        // Cierra el menú al hacer clic en móvil
+        if (setMobileOpen) setMobileOpen(false)
     }
 
     return (
         <>
             <style>{`
-        .adm-sb{width:240px;background:#0d0f12;border-right:1px solid rgba(255,255,255,.09);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:width .3s cubic-bezier(0.16,1,0.3,1);overflow:hidden}
-        .adm-sb.col{width:64px}
-        .sb-brand{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.09);display:flex;align-items:center;gap:12px;flex-shrink:0;min-height:80px;position:relative}
-        .sb-brand::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:1px;background:linear-gradient(90deg,#c9a84c,transparent)}
-        .sb-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#c9a84c}
-        .sb-txt{overflow:hidden;white-space:nowrap}
-        .sb-txt-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#f0ead8;display:block;line-height:1}
-        .sb-txt-role{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a84c;opacity:.7;display:block;margin-top:3px}
-        .adm-sb.col .sb-txt{opacity:0;width:0}
-        .sb-nav{flex:1;padding:16px 10px;overflow-y:auto;overflow-x:hidden}
-        .sb-nav-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5a554d;padding:0 10px;margin:16px 0 8px;white-space:nowrap;transition:opacity .2s}
-        .adm-sb.col .sb-nav-lbl{opacity:0}
-        .sb-ni{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer;color:#9a9385;font-size:13.5px;transition:all .2s;position:relative;white-space:nowrap;margin-bottom:2px}
-        .sb-ni:hover{background:rgba(255,255,255,.045);color:#f0ead8}
-        .sb-ni.active{background:rgba(201,168,76,.08);color:#e8c96a;border:1px solid rgba(201,168,76,.15)}
-        .sb-ni.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;border-radius:2px;background:#c9a84c}
-        .sb-ni-icon{flex-shrink:0;display:flex}
-        .sb-ni-txt{overflow:hidden;transition:opacity .2s,width .3s}
-        .adm-sb.col .sb-ni-txt{opacity:0;width:0}
-        .sb-footer{padding:16px 10px;border-top:1px solid rgba(255,255,255,.09)}
+                /* ─── BASE COMPURADORA / GENERAL ─── */
+                .adm-sb { width: 240px; background: #0d0f12; border-right: 1px solid rgba(255,255,255,.09); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: width .3s cubic-bezier(0.16,1,0.3,1), transform .3s ease; overflow: hidden; }
+                .adm-sb.col { width: 64px; }
+                .sb-brand { padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,.09); display: flex; align-items: center; gap: 12px; flex-shrink: 0; min-height: 80px; position: relative; }
+                .sb-brand::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 80px; height: 1px; background: linear-gradient(90deg,#c9a84c,transparent); }
+                .sb-logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05)); border: 1px solid rgba(201,168,76,.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #c9a84c; }
+                .sb-txt { overflow: hidden; white-space: nowrap; }
+                .sb-txt-name { font-family: 'Cormorant Garamond',serif; font-size: 18px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #f0ead8; display: block; line-height: 1; }
+                .sb-txt-role { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: #c9a84c; opacity: .7; display: block; margin-top: 3px; }
+                .adm-sb.col .sb-txt { opacity: 0; width: 0; }
+                .sb-nav { flex: 1; padding: 16px 10px; overflow-y: auto; overflow-x: hidden; }
+                .sb-nav-lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #5a554d; padding: 0 10px; margin: 16px 0 8px; white-space: nowrap; transition: opacity .2s; }
+                .adm-sb.col .sb-nav-lbl { opacity: 0; }
+                .sb-ni { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; cursor: pointer; color: #9a9385; font-size: 13.5px; transition: all .2s; position: relative; white-space: nowrap; margin-bottom: 2px; }
+                .sb-ni:hover { background: rgba(255,255,255,.045); color: #f0ead8; }
+                .sb-ni.active { background: rgba(201,168,76,.08); color: #e8c96a; border: 1px solid rgba(201,168,76,.15); }
+                .sb-ni.active::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 2px; border-radius: 2px; background: #c9a84c; }
+                .sb-ni-icon { flex-shrink: 0; display: flex; }
+                .sb-ni-txt { overflow: hidden; transition: opacity .2s, width .3s; }
+                .adm-sb.col .sb-ni-txt { opacity: 0; width: 0; }
+                .sb-footer { padding: 16px 10px; border-top: 1px solid rgba(255,255,255,.09); }
+                .sb-ucard { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.09); margin-bottom: 8px; overflow: hidden; cursor: pointer; transition: border-color .2s,background .2s; }
+                .sb-ucard:hover { border-color: rgba(201,168,76,.4); background: rgba(201,168,76,.08); }
+                .sb-av { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1)); border: 2px solid rgba(201,168,76,.3); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: #e8c96a; flex-shrink: 0; font-family: 'Cormorant Garamond',serif; overflow: hidden; transition: border-color .2s; }
+                .sb-av img { width: 100%; height: 100%; object-fit: cover; }
+                .sb-ucard:hover .sb-av { border-color: rgba(201,168,76,.6); }
+                .sb-uinfo { overflow: hidden; flex: 1; }
+                .sb-uname { font-size: 13px; font-weight: 500; color: #f0ead8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .sb-urole { font-size: 10px; color: #c9a84c; letter-spacing: .5px; text-transform: uppercase; }
+                .sb-uperfil { font-size: 10px; color: #9a9385; margin-top: 1px; }
+                .adm-sb.col .sb-uinfo { display: none; }
+                .sb-logout { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; background: none; border: none; color: #5a554d; cursor: pointer; font-family: 'Outfit',sans-serif; font-size: 13px; width: 100%; transition: all .2s; white-space: nowrap; }
+                .sb-logout:hover { background: rgba(224,90,90,.08); color: #e05a5a; }
+                .adm-sb.col .sb-logout span { display: none; }
+                .sb-toggle { position: absolute; top: 50%; right: -12px; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 50%; background: #0d0f12; border: 1px solid rgba(255,255,255,.09); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #5a554d; transition: all .2s; z-index: 101; }
+                .sb-toggle:hover { color: #c9a84c; border-color: rgba(201,168,76,.3); }
+                .sb-toggle svg { transition: transform .3s; }
+                .adm-sb.col .sb-toggle svg { transform: rotate(180deg); }
 
-        /* USER CARD — clickeable para ir al perfil */
-        .sb-ucard{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .2s,background .2s}
-        .sb-ucard:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.08)}
-        .sb-av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:2px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#e8c96a;flex-shrink:0;font-family:'Cormorant Garamond',serif;overflow:hidden;transition:border-color .2s}
-        .sb-av img{width:100%;height:100%;object-fit:cover}
-        .sb-ucard:hover .sb-av{border-color:rgba(201,168,76,.6)}
-        .sb-uinfo{overflow:hidden;flex:1}
-        .sb-uname{font-size:13px;font-weight:500;color:#f0ead8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .sb-urole{font-size:10px;color:#c9a84c;letter-spacing:.5px;text-transform:uppercase}
-        .sb-uperfil{font-size:10px;color:#9a9385;margin-top:1px}
-        .adm-sb.col .sb-uinfo{display:none}
+                /* Botón cerrar móvil (oculto en PC) */
+                .sb-mob-close { display: none; background: none; border: none; color: #9a9385; cursor: pointer; padding: 4px; align-items: center; justify-content: center; margin-left: auto; border-radius: 6px; }
+                .sb-mob-close:hover { color: #e05a5a; background: rgba(224,90,90,.08); }
 
-        .sb-logout{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;background:none;border:none;color:#5a554d;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;width:100%;transition:all .2s;white-space:nowrap}
-        .sb-logout:hover{background:rgba(224,90,90,.08);color:#e05a5a}
-        .adm-sb.col .sb-logout span{display:none}
+                /* Overlay móvil (oculto en PC) */
+                .sb-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 99; }
 
-        .sb-toggle{position:absolute;top:50%;right:-12px;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:#0d0f12;border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#5a554d;transition:all .2s;z-index:101}
-        .sb-toggle:hover{color:#c9a84c;border-color:rgba(201,168,76,.3)}
-        .sb-toggle svg{transition:transform .3s}
-        .adm-sb.col .sb-toggle svg{transform:rotate(180deg)}
-      `}</style>
+                /* ─── COMPORTAMIENTO MÓVIL (< 768px) ─── */
+                @media (max-width: 767px) {
+                    .adm-sb { position: fixed; top: 0; left: 0; bottom: 0; width: 260px !important; transform: translateX(-100%); z-index: 100; background: #0d0f12; box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
+                    .adm-sb.m-open { transform: translateX(0); }
+                    .sb-toggle { display: none !important; }
+                    .sb-mob-close { display: flex; }
+                    .sb-txt { opacity: 1 !important; width: auto !important; }
+                    .sb-nav-lbl { opacity: 1 !important; }
+                    .sb-ni-txt { opacity: 1 !important; width: auto !important; }
+                    .sb-uinfo { display: block !important; }
+                    .sb-logout span { display: inline !important; }
+                }
 
-            <aside className={`adm-sb ${collapsed ? 'col' : ''}`}>
+                /* ─── COMPORTAMIENTO TABLET/PC (≥ 768px) ─── */
+                @media (min-width: 768px) {
+                    .adm-sb { transform: translateX(0) !important; }
+                    .sb-overlay { display: none !important; }
+                }
+            `}</style>
+
+            {/* Renderizado de Fondo Oscuro Difuminado si está abierto en móvil */}
+            {mobileOpen && <div className="sb-overlay" onClick={() => setMobileOpen(false)} />}
+
+            <aside className={`adm-sb ${collapsed ? 'col' : ''} ${mobileOpen ? 'm-open' : ''}`}>
+                {/* Botón colapsar (Solo visible en PC) */}
                 <button className="sb-toggle" onClick={onToggle}><IconChevron /></button>
 
                 {/* BRAND */}
@@ -120,6 +146,10 @@ export default function AdminSidebar({ collapsed, onToggle }) {
                         <span className="sb-txt-name">Gastro</span>
                         <span className="sb-txt-role">Admin Panel</span>
                     </div>
+                    {/* Botón cerrar (Solo visible en Móvil) */}
+                    <button className="sb-mob-close" onClick={() => setMobileOpen(false)}>
+                        <IconClose />
+                    </button>
                 </div>
 
                 {/* NAV */}
@@ -135,9 +165,9 @@ export default function AdminSidebar({ collapsed, onToggle }) {
                     ))}
                 </nav>
 
-                {/* FOOTER — USER CARD con foto real */}
+                {/* FOOTER */}
                 <div className="sb-footer">
-                    <div className="sb-ucard" onClick={() => navigate('/admin/perfil')}
+                    <div className="sb-ucard" onClick={() => { navigate('/admin/perfil'); if(setMobileOpen) setMobileOpen(false); }}
                         title="Ver mi perfil">
                         <div className="sb-av">
                             {avatarSrc

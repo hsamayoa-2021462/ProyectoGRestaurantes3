@@ -5,44 +5,47 @@ import api, { authApi } from '../../../shared/api/api'
 import NotificacionesPanel from '../../../shared/components/NotificacionesPanel'
 
 /* ─── ICONS ─── */
-const IconHome    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-const IconMenu    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7"/></svg>
-const IconOrders  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-const IconTable   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-const IconUser    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-const IconLogout  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-const IconRest    = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20"/><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2"/></svg>
-const IconBell    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-const IconClock   = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-const IconPin     = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-const IconStar    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-const IconPhone   = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+const IconHome = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+const IconMenu = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2l-3 6h-2l-1.5-3L13 8V2M13 22v-7h8v7" /></svg>
+const IconOrders = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>
+const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+const IconUser = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
+const IconRest = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20" /><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2" /></svg>
+const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
+const IconChevron = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
+const IconClock = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+const IconPin = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
+const IconStar = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+const IconPhone = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
+/* ─── ICON HAMBURGUESA ─── */
+const IconHamburger = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+const IconClose = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
 
 const NAV_ITEMS = [
-  { key: 'inicio',            label: 'Inicio',      icon: <IconHome />,   path: '/cliente/inicio' },
-  { key: 'menu',              label: 'Menú',         icon: <IconMenu />,   path: '/cliente/menu' },
-  { key: 'mis-pedidos',       label: 'Pedidos',     icon: <IconOrders />, path: '/cliente/mis-pedidos' },
-  { key: 'reservar',          label: 'Reservar',     icon: <IconTable />,  path: '/cliente/reservar' },
-  { key: 'mis-reservaciones', label: 'Reservas',    icon: <IconTable />,  path: '/cliente/mis-reservaciones' },
-  { key: 'resenas',           label: 'Reseñas',      icon: <IconStar />,   path: '/cliente/resenas' },
-  { key: 'perfil',            label: 'Perfil',       icon: <IconUser />,   path: '/cliente/perfil' },
+  { key: 'inicio', label: 'Inicio', icon: <IconHome />, path: '/cliente/inicio' },
+  { key: 'menu', label: 'Menú', icon: <IconMenu />, path: '/cliente/menu' },
+  { key: 'mis-pedidos', label: 'Pedidos', icon: <IconOrders />, path: '/cliente/mis-pedidos' },
+  { key: 'reservar', label: 'Reservar', icon: <IconTable />, path: '/cliente/reservar' },
+  { key: 'mis-reservaciones', label: 'Reservas', icon: <IconTable />, path: '/cliente/mis-reservaciones' },
+  { key: 'resenas', label: 'Reseñas', icon: <IconStar />, path: '/cliente/resenas' },
+  { key: 'perfil', label: 'Perfil', icon: <IconUser />, path: '/cliente/perfil' },
 ]
 
 const ESTADO_STYLE = {
-  PENDIENTE:  { bg: 'rgba(201,168,76,.12)', bd: 'rgba(201,168,76,.35)', tx: '#e8c96a', label: 'Pendiente' },
-  CONFIRMADO: { bg: 'rgba(91,155,213,.1)',  bd: 'rgba(91,155,213,.3)',  tx: '#90c0e8', label: 'Confirmado' },
-  PREPARANDO: { bg: 'rgba(201,120,40,.1)',  bd: 'rgba(201,120,40,.3)',  tx: '#e8a060', label: 'Preparando' },
-  EN_CAMINO:  { bg: 'rgba(100,160,220,.1)', bd: 'rgba(100,160,220,.3)', tx: '#78b8e8', label: 'En camino' },
-  ENTREGADO:  { bg: 'rgba(76,175,130,.1)',  bd: 'rgba(76,175,130,.3)',  tx: '#7dd9ae', label: 'Entregado' },
-  CANCELADO:  { bg: 'rgba(224,90,90,.1)',   bd: 'rgba(224,90,90,.3)',   tx: '#e08080', label: 'Cancelado' },
+  PENDIENTE: { bg: 'rgba(201,168,76,.12)', bd: 'rgba(201,168,76,.35)', tx: '#e8c96a', label: 'Pendiente' },
+  CONFIRMADO: { bg: 'rgba(91,155,213,.1)', bd: 'rgba(91,155,213,.3)', tx: '#90c0e8', label: 'Confirmado' },
+  PREPARANDO: { bg: 'rgba(201,120,40,.1)', bd: 'rgba(201,120,40,.3)', tx: '#e8a060', label: 'Preparando' },
+  EN_CAMINO: { bg: 'rgba(100,160,220,.1)', bd: 'rgba(100,160,220,.3)', tx: '#78b8e8', label: 'En camino' },
+  ENTREGADO: { bg: 'rgba(76,175,130,.1)', bd: 'rgba(76,175,130,.3)', tx: '#7dd9ae', label: 'Entregado' },
+  CANCELADO: { bg: 'rgba(224,90,90,.1)', bd: 'rgba(224,90,90,.3)', tx: '#e08080', label: 'Cancelado' },
 }
 
 const ACCESOS = [
-  { icon: '🍽️', label: 'Ver el menú',     sub: 'Explora nuestros platos',    path: '/cliente/menu',        color: 'rgba(201,168,76,.15)' },
-  { icon: '🧾', label: 'Hacer un pedido', sub: 'Pide a domicilio o para llevar', path: '/cliente/menu',     color: 'rgba(91,155,213,.12)' },
-  { icon: '📅', label: 'Reservar mesa',   sub: 'Reserva con anticipación',    path: '/cliente/reservar',    color: 'rgba(76,175,130,.12)' },
-  { icon: '📋', label: 'Mis pedidos',     sub: 'Historial y seguimiento',     path: '/cliente/mis-pedidos', color: 'rgba(200,100,180,.12)' },
+  { icon: '🍽️', label: 'Ver el menú', sub: 'Explora nuestros platos', path: '/cliente/menu', color: 'rgba(201,168,76,.15)' },
+  { icon: '🧾', label: 'Hacer un pedido', sub: 'Pide a domicilio o para llevar', path: '/cliente/menu', color: 'rgba(91,155,213,.12)' },
+  { icon: '📅', label: 'Reservar mesa', sub: 'Reserva con anticipación', path: '/cliente/reservar', color: 'rgba(76,175,130,.12)' },
+  { icon: '📋', label: 'Mis pedidos', sub: 'Historial y seguimiento', path: '/cliente/mis-pedidos', color: 'rgba(200,100,180,.12)' },
 ]
 
 export default function ClienteInicio() {
@@ -67,11 +70,13 @@ export default function ClienteInicio() {
     fetch()
   }, [])
 
-  const [menuOpen, setMenuOpen]         = useState(false)
-  const [pedidos, setPedidos]           = useState([])
+  const [menuOpen, setMenuOpen] = useState(false)
+  // ── Estado menú hamburguesa móvil ──
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [pedidos, setPedidos] = useState([])
   const [restaurantes, setRestaurantes] = useState([])
-  const [loading, setLoading]           = useState(true)
-  const loadedRef                       = useRef(false)
+  const [loading, setLoading] = useState(true)
+  const loadedRef = useRef(false)
 
   const load = async () => {
     setLoading(true)
@@ -115,6 +120,9 @@ export default function ClienteInicio() {
   const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches'
   const initials = (user?.name?.[0] || 'U').toUpperCase()
 
+  // ── Cerrar menú móvil al cambiar ruta ──
+  useEffect(() => { setMobileNavOpen(false) }, [location.pathname])
+
   return (
     <>
       <style>{`
@@ -157,6 +165,32 @@ export default function ClienteInicio() {
         .nd-item.danger:hover{background:rgba(224,90,90,.08);color:var(--error)}
         .nav-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .2s}
         .nav-btn:hover{color:var(--gold)}
+
+        /* ── BOTÓN HAMBURGUESA (solo móvil) ── */
+        .hamburger-btn{display:none;width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);align-items:center;justify-content:center;color:var(--text-mid);cursor:pointer;transition:all .2s;flex-shrink:0}
+        .hamburger-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3)}
+
+        /* ── MENÚ MÓVIL OVERLAY ── */
+        .mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(7,8,10,.85);backdrop-filter:blur(10px);z-index:150;animation:fadeIn .2s ease}
+        .mobile-nav-overlay.open{display:block}
+        .mobile-nav-panel{position:fixed;top:0;left:0;width:280px;height:100vh;background:var(--deep);border-right:1px solid var(--glass-bd);z-index:160;display:flex;flex-direction:column;animation:slideInLeft .25s var(--ease-out-expo)}
+        @keyframes slideInLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+        .mobile-nav-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--glass-bd)}
+        .mobile-nav-brand{display:flex;align-items:center;gap:8px;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--gold)}
+        .mobile-nav-close{width:32px;height:32px;border-radius:8px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .2s}
+        .mobile-nav-close:hover{color:var(--error)}
+        .mobile-nav-user{padding:16px 20px;border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;gap:12px}
+        .mobile-nav-avatar{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--gold-lt);overflow:hidden;flex-shrink:0}
+        .mobile-nav-avatar img{width:100%;height:100%;object-fit:cover}
+        .mobile-nav-user-info .mobile-nav-uname{font-size:13px;font-weight:500;color:var(--text)}
+        .mobile-nav-user-info .mobile-nav-uemail{font-size:11px;color:var(--text-muted);margin-top:2px}
+        .mobile-nav-links{flex:1;overflow-y:auto;padding:12px}
+        .mobile-nav-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;cursor:pointer;color:var(--text-mid);font-size:14px;transition:all .2s;margin-bottom:4px;border:1px solid transparent}
+        .mobile-nav-link:hover{background:var(--glass-bg);color:var(--text)}
+        .mobile-nav-link.active{background:var(--gold-dim);color:var(--gold-lt);border-color:rgba(201,168,76,.2)}
+        .mobile-nav-footer{padding:16px 20px;border-top:1px solid var(--glass-bd)}
+        .mobile-nav-logout{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--error);font-size:13px;transition:all .2s;border:1px solid rgba(224,90,90,.15)}
+        .mobile-nav-logout:hover{background:rgba(224,90,90,.08)}
 
         /* PAGE */
         .page{padding-top:var(--nav-h);min-height:100vh}
@@ -237,14 +271,88 @@ export default function ClienteInicio() {
         @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
         @media(max-width:1000px){.accesos-grid{grid-template-columns:repeat(2,1fr)}.bottom-grid{grid-template-columns:1fr}}
-        @media(max-width:700px){.nav-links{display:none}.content{padding:24px 16px}.hero{padding:24px}.hero-right{display:none}.hero-nombre{font-size:26px}}
+        @media(max-width:700px){
+          .nav-links{display:none}
+          .content{padding:24px 16px}
+          .hero{padding:24px}
+          .hero-right{display:none}
+          .hero-nombre{font-size:26px}
+          /* Mostrar botón hamburguesa en móvil */
+          .hamburger-btn{display:flex}
+        }
       `}</style>
+
+      {/* ── MENÚ MÓVIL OVERLAY ── */}
+      {mobileNavOpen && (
+        <>
+          {/* Overlay oscuro — clic cierra el menú */}
+          <div
+            className="mobile-nav-overlay open"
+            onClick={() => setMobileNavOpen(false)}
+          />
+          {/* Panel lateral */}
+          <div className="mobile-nav-panel">
+            {/* Cabecera del panel */}
+            <div className="mobile-nav-header">
+              <div className="mobile-nav-brand">
+                <IconRest /> Gastro
+              </div>
+              <div className="mobile-nav-close" onClick={() => setMobileNavOpen(false)}>
+                <IconClose />
+              </div>
+            </div>
+
+            {/* Info del usuario */}
+            <div className="mobile-nav-user">
+              <div className="mobile-nav-avatar">
+                {avatarSrc
+                  ? <img src={avatarSrc} alt="avatar" onError={e => e.target.style.display = 'none'} />
+                  : initials}
+              </div>
+              <div className="mobile-nav-user-info">
+                <div className="mobile-nav-uname">{user?.name || 'Usuario'} {user?.surname || ''}</div>
+                <div className="mobile-nav-uemail">{user?.email || ''}</div>
+              </div>
+            </div>
+
+            {/* Links de navegación */}
+            <div className="mobile-nav-links">
+              {NAV_ITEMS.map(item => (
+                <div
+                  key={item.key}
+                  className={`mobile-nav-link ${activeNav === item.key ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveNav(item.key)
+                    navigate(item.path)
+                    setMobileNavOpen(false)
+                  }}
+                >
+                  {item.icon} {item.label}
+                </div>
+              ))}
+            </div>
+
+            {/* Cerrar sesión */}
+            <div className="mobile-nav-footer">
+              <div className="mobile-nav-logout" onClick={() => { setMobileNavOpen(false); logout() }}>
+                <IconLogout /> Cerrar sesión
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* NAVBAR */}
       <nav className="navbar">
-        <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
-          <div className="nav-brand-icon"><IconRest /></div>
-          <span className="nav-brand-name">Gastro</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Botón hamburguesa — solo visible en móvil */}
+          <div className="hamburger-btn" onClick={() => setMobileNavOpen(p => !p)}>
+            {mobileNavOpen ? <IconClose /> : <IconHamburger />}
+          </div>
+          <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
+            <div className="nav-brand-icon"><IconRest /></div>
+            <span className="nav-brand-name">Gastro</span>
+          </div>
         </div>
         <div className="nav-links">
           {NAV_ITEMS.map(item => (

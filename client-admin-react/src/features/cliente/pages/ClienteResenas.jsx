@@ -12,8 +12,7 @@ const IconTable = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="no
 const IconUser = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
 const IconLogout = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>
 const IconRest = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20" /><path d="M20.84 2.18a1 1 0 00-1.41.19L15 7.5V2M15 2v9.5l2.5 2.5 3-3V2" /></svg>
-const IconBell = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" /></svg>
-const IconStar = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+const IconStar = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
 const IconTrash = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2" /></svg>
 
 const NAV_ITEMS = [
@@ -84,13 +83,14 @@ export default function ClienteResenas() {
     }, [])
 
     const [menuOpen, setMenuOpen] = useState(false)
+    const [navOpen, setNavOpen] = useState(false)
+
     const [restaurantes, setRestaurantes] = useState([])
     const [misResenas, setMisResenas] = useState([])
     const [loading, setLoading] = useState(true)
     const [toast, setToast] = useState(null)
     const loadedRef = useRef(false)
 
-    // Form nueva reseña
     const [restSelec, setRestSelec] = useState('')
     const [estrellas, setEstrellas] = useState(0)
     const [comentario, setComentario] = useState('')
@@ -121,7 +121,6 @@ export default function ClienteResenas() {
     const handleEnviar = async () => {
         if (!restSelec) return showToast('Selecciona un restaurante', 'error')
         if (!estrellas) return showToast('Selecciona una calificación', 'error')
-
         setGuardando(true)
         try {
             await api.post('/resenas', {
@@ -150,10 +149,9 @@ export default function ClienteResenas() {
         } catch { showToast('Error al eliminar', 'error') }
     }
 
-    // Restaurantes que ya tienen reseña
-    const restConResena = new Set(misResenas.map(r => {
-        return typeof r.restaurante === 'object' ? r.restaurante?._id : r.restaurante
-    }))
+    const restConResena = new Set(misResenas.map(r =>
+        typeof r.restaurante === 'object' ? r.restaurante?._id : r.restaurante
+    ))
 
     return (
         <>
@@ -167,8 +165,11 @@ export default function ClienteResenas() {
           --text:#f0ead8;--text-mid:#9a9385;--text-muted:#5a554d;
           --success:#4caf82;--error:#e05a5a;
           --radius-card:20px;--nav-h:64px;
+          --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
         }
         body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+        /* ── NAVBAR ── */
         .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--deep);border-bottom:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100}
         .navbar::after{content:'';position:absolute;bottom:-1px;left:0;width:200px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
         .nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -182,7 +183,7 @@ export default function ClienteResenas() {
         .nav-avatar-wrap{position:relative}
         .nav-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold-lt);cursor:pointer;overflow:hidden}
         .nav-avatar img{width:100%;height:100%;object-fit:cover}
-        .nav-dropdown{position:absolute;top:calc(100%+8px);right:0;background:var(--deep);border:1px solid var(--glass-bd);border-radius:14px;padding:8px;min-width:180px;z-index:200;animation:fadeIn .15s ease}
+        .nav-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--deep);border:1px solid var(--glass-bd);border-radius:14px;padding:8px;min-width:180px;z-index:200;animation:fadeIn .15s ease}
         @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
         .nd-user{padding:10px 12px;border-bottom:1px solid var(--glass-bd);margin-bottom:6px}
         .nd-name{font-size:13px;font-weight:500}
@@ -190,16 +191,35 @@ export default function ClienteResenas() {
         .nd-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s}
         .nd-item:hover{background:var(--glass-bg);color:var(--text)}
         .nd-item.danger:hover{background:rgba(224,90,90,.08);color:var(--error)}
-        .nav-btn{width:36px;height:36px;border-radius:10px;background:var(--glass-bg);border:1px solid var(--glass-bd);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer}
+
+        /* ── HAMBURGUESA ── */
+        .btn-hamb{display:none;background:none;border:none;color:var(--gold);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:8px;line-height:1;transition:background .2s}
+        .btn-hamb:hover{background:var(--gold-dim)}
+
+        /* ── DRAWER NAV MÓVIL ── */
+        .nav-drawer-ov{display:none;position:fixed;inset:0;z-index:150;background:rgba(7,8,10,.7);backdrop-filter:blur(6px)}
+        .nav-drawer-ov.open{display:block}
+        .nav-drawer{position:fixed;top:var(--nav-h);left:-260px;width:240px;height:calc(100vh - var(--nav-h));background:var(--deep);border-right:1px solid var(--glass-bd);z-index:160;display:flex;flex-direction:column;padding:16px 12px;gap:4px;transition:left .3s var(--ease-out-expo);overflow-y:auto}
+        .nav-drawer.open{left:0}
+        .drawer-link{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--text-mid);font-size:13px;transition:all .2s;border:1px solid transparent}
+        .drawer-link:hover{background:var(--glass-bg);color:var(--text)}
+        .drawer-link.active{background:var(--gold-dim);color:var(--gold-lt);border-color:rgba(201,168,76,.2)}
+        .drawer-sep{height:1px;background:var(--glass-bd);margin:8px 4px}
+
+        /* ── PAGE ── */
         .page{padding-top:var(--nav-h);min-height:100vh}
         .content{max-width:860px;margin:0 auto;padding:40px 24px;display:flex;flex-direction:column;gap:24px}
         .page-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500}
         .page-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+        /* ── CARDS ── */
         .card{background:var(--glass-bg);border:1px solid var(--glass-bd);border-radius:var(--radius-card);overflow:hidden}
         .card-header{padding:20px 24px;border-bottom:1px solid var(--glass-bd)}
         .card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500}
         .card-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
         .card-body{padding:24px;display:flex;flex-direction:column;gap:16px}
+
+        /* ── FORM ── */
         .form-group{display:flex;flex-direction:column;gap:6px}
         .form-label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
         .form-select{background:rgba(255,255,255,.04);border:1px solid var(--glass-bd);border-radius:11px;padding:10px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13.5px;outline:none;transition:border-color .2s;width:100%}
@@ -211,39 +231,135 @@ export default function ClienteResenas() {
         .btn-enviar{padding:12px 28px;border-radius:12px;background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.35);color:var(--gold-lt);cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;transition:all .2s;align-self:flex-start}
         .btn-enviar:hover{border-color:rgba(201,168,76,.6);transform:translateY(-1px)}
         .btn-enviar:disabled{opacity:.4;cursor:not-allowed;transform:none}
-        .resena-card{background:rgba(255,255,255,.03);border:1px solid var(--glass-bd);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;position:relative}
-        .resena-header{display:flex;align-items:center;justify-content:space-between;gap:10px}
-        .resena-rest{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text)}
-        .resena-fecha{font-size:11px;color:var(--text-muted)}
-        .resena-comentario{font-size:13px;color:var(--text-mid);line-height:1.6}
-        .btn-delete{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;background:rgba(224,90,90,.08);border:1px solid rgba(224,90,90,.2);display:flex;align-items:center;justify-content:center;color:var(--error);cursor:pointer;transition:all .2s}
+
+        /* ── RESEÑA CARD (Modificado para orden, proximidad y ubicación del botón) ── */
+        .resena-card{
+          background:rgba(255,255,255,.03);
+          border:1px solid var(--glass-bd);
+          border-radius:16px;
+          padding:16px 48px 16px 16px; /* Deja espacio a la derecha para que el botón no tape texto */
+          display:flex;
+          flex-direction:column;
+          gap:4px; /* Elementos más juntos y ordenados */
+          position:relative;
+        }
+        .resena-header-row {
+          display:flex;
+          align-items: baseline;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .resena-rest{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text);line-height:1.2}
+        .resena-fecha{font-size:11px;color:var(--text-muted);line-height:1}
+        .resena-comentario{font-size:13px;color:var(--text-mid);line-height:1.4;margin-top:4px}
+        
+        /* Botón de eliminar fijado exactamente en la esquina superior derecha */
+        .btn-delete{
+          position:absolute;
+          top:12px;
+          right:12px;
+          width:28px;
+          height:28px;
+          border-radius:7px;
+          background:rgba(224,90,90,.08);
+          border:1px solid rgba(224,90,90,.2);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          color:var(--error);
+          cursor:pointer;
+          transition:all .2s;
+        }
         .btn-delete:hover{background:rgba(224,90,90,.16)}
+
+        /* ── EMPTY ── */
         .empty{text-align:center;padding:48px 24px;color:var(--text-muted)}
         .empty-icon{font-size:40px;margin-bottom:12px;opacity:.3}
+
+        /* ── SKELETON ── */
         .skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:skel 1.5s infinite;border-radius:8px}
         @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
-        @media(max-width:900px){.nav-links{display:none}.content{padding:24px 16px}}
+
+        /* ── RESPONSIVE COMPLETO ── */
+        @media(max-width:900px){
+          .nav-links{display:none}
+          .btn-hamb{display:block}
+          .content{padding:24px 16px}
+          .navbar{padding:0 16px}
+        }
+        @media(max-width:480px){
+          .card-header{padding:16px}
+          .card-body{padding:16px}
+          .resena-header-row {
+            flex-direction: column;
+            gap: 4px;
+          }
+          .btn-enviar {
+            width: 100%;
+            text-align: center;
+          }
+        }
       `}</style>
 
-            {/* NAVBAR */}
+            {/* ── DRAWER OVERLAY (móvil) ── */}
+            <div
+                className={`nav-drawer-ov ${navOpen ? 'open' : ''}`}
+                onClick={() => setNavOpen(false)}
+            />
+
+            {/* ── DRAWER (móvil) ── */}
+            <div className={`nav-drawer ${navOpen ? 'open' : ''}`}>
+                {NAV_ITEMS.map(item => (
+                    <div
+                        key={item.key}
+                        className={`drawer-link ${activeNav === item.key ? 'active' : ''}`}
+                        onClick={() => { setNavOpen(false); setActiveNav(item.key); navigate(item.path) }}
+                    >
+                        {item.icon}{item.label}
+                    </div>
+                ))}
+                <div className="drawer-sep" />
+                <div className="drawer-link" onClick={() => { setNavOpen(false); navigate('/cliente/perfil') }}>
+                    <IconUser /> Mi perfil
+                </div>
+                <div className="drawer-link" style={{ color: 'var(--error)' }} onClick={() => { setNavOpen(false); logout() }}>
+                    <IconLogout /> Cerrar sesión
+                </div>
+            </div>
+
+            {/* ── NAVBAR ── */}
             <nav className="navbar">
                 <div className="nav-brand" onClick={() => navigate('/cliente/inicio')}>
+                    <button
+                        className="btn-hamb"
+                        onClick={e => { e.stopPropagation(); setNavOpen(p => !p) }}
+                        aria-label="Abrir menú"
+                    >
+                        {navOpen ? '✕' : '☰'}
+                    </button>
                     <div className="nav-brand-icon"><IconRest /></div>
                     <span className="nav-brand-name">Gastro</span>
                 </div>
+
                 <div className="nav-links">
                     {NAV_ITEMS.map(item => (
-                        <div key={item.key} className={`nav-link ${activeNav === item.key ? 'active' : ''}`}
-                            onClick={() => { setActiveNav(item.key); navigate(item.path) }}>
+                        <div
+                            key={item.key}
+                            className={`nav-link ${activeNav === item.key ? 'active' : ''}`}
+                            onClick={() => { setActiveNav(item.key); navigate(item.path) }}
+                        >
                             {item.icon}{item.label}
                         </div>
                     ))}
                 </div>
+
                 <div className="nav-right">
                     <NotificacionesPanel isAdmin={false} />
                     <div className="nav-avatar-wrap">
                         <div className="nav-avatar" onClick={() => setMenuOpen(p => !p)}>
-                            {avatarSrc ? <img src={avatarSrc} alt="av" onError={e => e.target.style.display = 'none'} /> : initials}
+                            {avatarSrc
+                                ? <img src={avatarSrc} alt="av" onError={e => e.target.style.display = 'none'} />
+                                : initials}
                         </div>
                         {menuOpen && (
                             <div className="nav-dropdown">
@@ -259,6 +375,7 @@ export default function ClienteResenas() {
                 </div>
             </nav>
 
+            {/* ── PAGE ── */}
             <div className="page">
                 <div className="content">
 
@@ -320,7 +437,7 @@ export default function ClienteResenas() {
                             <div className="card-title">📋 Mis reseñas</div>
                             <div className="card-sub">{misResenas.length} reseñas enviadas</div>
                         </div>
-                        <div className="card-body">
+                        <div className="card-body" style={{ gap: '12px' }}>
                             {loading ? (
                                 [1, 2].map(i => (
                                     <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -337,14 +454,12 @@ export default function ClienteResenas() {
                             ) : (
                                 misResenas.map(r => (
                                     <div key={r._id} className="resena-card">
-                                        <div className="resena-header">
-                                            <div>
-                                                <div className="resena-rest">{r.restaurante?.nombre || 'Restaurante'}</div>
-                                                <div className="resena-fecha">
-                                                    {new Date(r.createdAt).toLocaleDateString('es-GT', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                                </div>
-                                            </div>
-                                            <StarDisplay value={r.estrellas} size={18} />
+                                        <div className="resena-header-row">
+                                            <div className="resena-rest">{r.restaurante?.nombre || 'Restaurante'}</div>
+                                            <StarDisplay value={r.estrellas} size={14} />
+                                        </div>
+                                        <div className="resena-fecha">
+                                            {new Date(r.createdAt).toLocaleDateString('es-GT', { year: 'numeric', month: 'long', day: 'numeric' })}
                                         </div>
                                         {r.comentario && (
                                             <div className="resena-comentario">"{r.comentario}"</div>
