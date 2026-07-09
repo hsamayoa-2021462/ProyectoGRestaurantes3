@@ -36,7 +36,12 @@ const useAuthStore = create((set, get) => ({
   },
 
   updateUser: (partial) => {
-    set((state) => ({ user: state.user ? { ...state.user, ...partial } : partial }));
+    set((state) => {
+      const updated = state.user ? { ...state.user, ...partial } : partial;
+      // Persistir en AsyncStorage
+      AsyncStorage.setItem('gastro_user', JSON.stringify(updated)).catch(() => {});
+      return { user: updated };
+    });
   },
 
   setHasHydrated: (value) => set({ _hasHydrated: value }),
