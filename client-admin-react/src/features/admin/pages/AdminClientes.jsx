@@ -47,13 +47,8 @@ function Toast({ msg, type, onDone }) {
 }
 
 export default function AdminClientes() {
-<<<<<<< HEAD
-    const [sidebarOpen, setSidebarOpen] = useState(true)
-    const { user, logout, setUser } = useAuthStore()
-=======
     const [mobileOpen, setMobileOpen] = useState(false)
     const { user, logout } = useAuthStore()
->>>>>>> a25b5b72d59fe4678a4f5d79da0e2c856b0c0184
     const navigate = useNavigate()
     const location = useLocation()
 
