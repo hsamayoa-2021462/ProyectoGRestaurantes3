@@ -1,27 +1,44 @@
-import { Resend } from 'resend';
 import { config } from '../configs/config.js';
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
-if (!resend) {
-  console.warn(
-    'RESEND_API_KEY not configured. Email functionality will not work.'
-  );
-}
-
-export const sendVerificationEmail = async (email, name, verificationToken) => {
-  if (!resend) {
-    throw new Error('Resend client not configured');
+const sendBrevoEmail = async ({ to, subject, html }) => {
+  if (!process.env.BREVO_API_KEY) {
+    throw new Error('BREVO_API_KEY not configured');
   }
 
+  const response = await fetch(BREVO_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'api-key': process.env.BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender: {
+        name: 'ProyectoGRestaurantes3',
+        email: process.env.BREVO_SENDER_EMAIL || 'onboarding@resend.dev',
+      },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Brevo API error (${response.status}): ${errorBody}`);
+  }
+
+  return response.json();
+};
+
+export const sendVerificationEmail = async (email, name, verificationToken) => {
   try {
     const frontendUrl = config.app.frontendUrl || 'http://localhost:3000';
     const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
-    await resend.emails.send({
-      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
+    await sendBrevoEmail({
       to: email,
       subject: 'Verify your email address',
       html: `
@@ -43,16 +60,11 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 };
 
 export const sendPasswordResetEmail = async (email, name, resetToken) => {
-  if (!resend) {
-    throw new Error('Resend client not configured');
-  }
-
   try {
     const frontendUrl = config.app.frontendUrl || 'http://localhost:3000';
     const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
 
-    await resend.emails.send({
-      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
+    await sendBrevoEmail({
       to: email,
       subject: 'Reset your password',
       html: `
@@ -75,13 +87,8 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
 };
 
 export const sendWelcomeEmail = async (email, name) => {
-  if (!resend) {
-    throw new Error('Resend client not configured');
-  }
-
   try {
-    await resend.emails.send({
-      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
+    await sendBrevoEmail({
       to: email,
       subject: 'Welcome to AuthDotnet!',
       html: `
@@ -99,13 +106,8 @@ export const sendWelcomeEmail = async (email, name) => {
 };
 
 export const sendPasswordChangedEmail = async (email, name) => {
-  if (!resend) {
-    throw new Error('Resend client not configured');
-  }
-
   try {
-    await resend.emails.send({
-      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
+    await sendBrevoEmail({
       to: email,
       subject: 'Password Changed Successfully',
       html: `
