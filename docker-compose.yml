@@ -1,0 +1,145 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: proyectorestaurante_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ProyectoGRestaurantes3
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d ProyectoGRestaurantes3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:7
+    container_name: proyectorestaurante_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ms-auth:
+    build:
+      context: ./ProyectoGRestaurantes3/ms-auth
+      dockerfile: Dockerfile
+    container_name: gastro_ms-auth
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ProyectoGRestaurantes3
+      DB_USERNAME: root
+      DB_PASSWORD: admin
+      DB_SQL_LOGGING: "false"
+      URI_MONGO: mongodb://mongo:27017/ProyectoGRestaurantes3
+      JWT_SECRET: MyVerySecretKeyForJWTTokenAuthenticationWith256Bits!
+      JWT_EXPIRES_IN: 1d
+      JWT_REFRESH_EXPIRES_IN: 7d
+      JWT_ISSUER: AuthService
+      JWT_AUDIENCE: AuthService
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_SECURE: "false"
+      SMTP_USERNAME: restaurantegestiongrupo@gmail.com
+      SMTP_PASSWORD: lrikrnfopynu zslq
+      EMAIL_FROM: restaurantegestiongrupo@gmail.com
+      EMAIL_FROM_NAME: ProyectoGRestaurantes3 App
+      CLOUDINARY_CLOUD_NAME: dbaro4qir
+      CLOUDINARY_API_KEY: 597813558383855
+      CLOUDINARY_API_SECRET: i6W6viPXcfI_FGxSU-PdcpmG5J0
+      CLOUDINARY_BASE_URL: https://res.cloudinary.com/dbaro4qir/image/upload/
+      CLOUDINARY_FOLDER: proyectoGRestaurantes3/profiles
+      CLOUDINARY_DEFAULT_AVATAR_FILENAME: default-avatar_ewzxwx.png
+      UPLOAD_PATH: ./uploads
+      FRONTEND_URL: http://localhost:5173
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
+      ADMIN_ALLOWED_ORIGINS: http://localhost:5173
+      VERIFICATION_EMAIL_EXPIRY_HOURS: 24
+      PASSWORD_RESET_EXPIRY_HOURS: 1
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  ms-restaurante:
+    build:
+      context: ./ProyectoGRestaurantes3/ms-restaurante
+      dockerfile: Dockerfile
+    container_name: gastro_ms-restaurante
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ProyectoGRestaurantes3
+      DB_USERNAME: root
+      DB_PASSWORD: admin
+      DB_SQL_LOGGING: "false"
+      URI_MONGO: mongodb://mongo:27017/ProyectoGRestaurantes3
+      JWT_SECRET: MyVerySecretKeyForJWTTokenAuthenticationWith256Bits!
+      JWT_EXPIRES_IN: 1d
+      JWT_REFRESH_EXPIRES_IN: 7d
+      JWT_ISSUER: AuthService
+      JWT_AUDIENCE: AuthService
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_SECURE: "false"
+      SMTP_USERNAME: restaurantegestiongrupo@gmail.com
+      SMTP_PASSWORD: lrikrnfopynu zslq
+      EMAIL_FROM: restaurantegestiongrupo@gmail.com
+      EMAIL_FROM_NAME: ProyectoGRestaurantes3 App
+      CLOUDINARY_CLOUD_NAME: dbaro4qir
+      CLOUDINARY_API_KEY: 597813558383855
+      CLOUDINARY_API_SECRET: i6W6viPXcfI_FGxSU-PdcpmG5J0
+      CLOUDINARY_BASE_URL: https://res.cloudinary.com/dbaro4qir/image/upload/
+      CLOUDINARY_FOLDER: proyectoGRestaurantes3/profiles
+      CLOUDINARY_DEFAULT_AVATAR_FILENAME: default-avatar_ewzxwx.png
+      UPLOAD_PATH: ./uploads
+      FRONTEND_URL: http://localhost:5173
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
+      ADMIN_ALLOWED_ORIGINS: http://localhost:5173
+      VERIFICATION_EMAIL_EXPIRY_HOURS: 24
+      PASSWORD_RESET_EXPIRY_HOURS: 1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+
+  client-admin:
+    build:
+      context: ./client-admin-react
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3006/api/v1
+        VITE_AUTH_URL: http://localhost:3005/api/v1
+    container_name: gastro_client-admin
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - ms-auth
+      - ms-restaurante
+
+volumes:
+  postgres_data:
+  mongo_data:
