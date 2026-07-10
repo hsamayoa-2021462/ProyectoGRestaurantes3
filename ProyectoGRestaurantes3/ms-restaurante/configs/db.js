@@ -15,6 +15,12 @@ export const sequelize = new Sequelize({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   logging: process.env.DB_SQL_LOGGING === 'true' ? console.log : false,
+  dialectOptions: process.env.NODE_ENV === 'production' ? {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  } : {},
   define: {
     freezeTableName: true,
     timestamps: true,
@@ -98,7 +104,7 @@ const connectMongoDB = async () => {
 export const dbConnection = async () => {
   try {
     await connectPostgres();
-    await connectMongoDB();
+    // await connectMongoDB();
     console.log('All database connections established successfully');
   } catch (error) {
     console.error('Database connection error:', error.message);
