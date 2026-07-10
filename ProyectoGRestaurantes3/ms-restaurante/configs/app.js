@@ -13,7 +13,6 @@ import { initSocket } from './socket.js';
 import { corsOptions } from './cors-configuration.js';
 import '../src/users/user.model.js';
 import '../src/roles/role.model.js';
-
 import { requestLimit } from '../middlewares/request-limit.js';
 import { helmetConfiguration } from './helmet-configuration.js';
 import { errorHandler, notFound } from '../middlewares/server-genericError-handler.js';

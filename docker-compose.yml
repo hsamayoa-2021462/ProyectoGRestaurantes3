@@ -18,7 +18,7 @@ services:
       retries: 5
 
   mongo:
-    image: mongo:7
+    image: mongo:4.4
     container_name: proyectorestaurante_mongo
     restart: always
     ports:
@@ -26,7 +26,7 @@ services:
     volumes:
       - mongo_data:/data/db
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
