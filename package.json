@@ -1,0 +1,14 @@
+{
+  "name": "gastro-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n auth,rest,admin -c blue,green,yellow \"pnpm:dev:auth\" \"pnpm:dev:restaurante\" \"pnpm:dev:admin\"",
+    "dev:auth": "pnpm --filter auth-node dev",
+    "dev:restaurante": "pnpm --filter ms-restaurante dev",
+    "dev:admin": "pnpm --filter client-admin-react dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

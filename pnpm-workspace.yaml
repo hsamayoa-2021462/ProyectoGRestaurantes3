@@ -1,0 +1,7 @@
+packages:
+  - 'ProyectoGRestaurantes3/ms-auth'
+  - 'ProyectoGRestaurantes3/ms-restaurante'
+  - 'client-admin-react'
+
+onlyBuiltDependencies:
+  - argon2
