@@ -1,48 +1,29 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { config } from '../configs/config.js';
 
-// Configurar el transportador de email (aligned with .NET SmtpSettings)
-const createTransporter = () => {
-  if (!config.smtp.username || !config.smtp.password) {
-    console.warn(
-      'SMTP credentials not configured. Email functionality will not work.'
-    );
-    return null;
-  }
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
-  return nodemailer.createTransport({
-    host: config.smtp.host,
-    port: config.smtp.port,
-    secure: config.smtp.enableSsl, // true para 465, false para 587
-    auth: {
-      user: config.smtp.username,
-      pass: config.smtp.password,
-    },
-    // Evitar que las peticiones HTTP queden colgadas si SMTP no responde
-    connectionTimeout: 10_000, // 10s
-    greetingTimeout: 10_000, // 10s
-    socketTimeout: 10_000, // 10s
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-};
-
-const transporter = createTransporter();
+if (!resend) {
+  console.warn(
+    'RESEND_API_KEY not configured. Email functionality will not work.'
+  );
+}
 
 export const sendVerificationEmail = async (email, name, verificationToken) => {
-  if (!transporter) {
-    throw new Error('SMTP transporter not configured');
+  if (!resend) {
+    throw new Error('Resend client not configured');
   }
 
   try {
     const frontendUrl = config.app.frontendUrl || 'http://localhost:3000';
     const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
-    const mailOptions = {
-      from: `${config.smtp.fromName} <${config.smtp.fromEmail}>`,
+    await resend.emails.send({
+      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
       to: email,
-      subject: 'Verify your email address', // Aligned with .NET
+      subject: 'Verify your email address',
       html: `
         <h2>Welcome ${name}!</h2>
         <p>Please verify your email address by clicking the link below:</p>
@@ -54,9 +35,7 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
         <p>This link will expire in 24 hours.</p>
         <p>If you didn't create an account, please ignore this email.</p>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   } catch (error) {
     console.error('Error sending verification email:', error);
     throw error;
@@ -64,18 +43,18 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 };
 
 export const sendPasswordResetEmail = async (email, name, resetToken) => {
-  if (!transporter) {
-    throw new Error('SMTP transporter not configured');
+  if (!resend) {
+    throw new Error('Resend client not configured');
   }
 
   try {
     const frontendUrl = config.app.frontendUrl || 'http://localhost:3000';
     const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
 
-    const mailOptions = {
-      from: `${config.smtp.fromName} <${config.smtp.fromEmail}>`,
+    await resend.emails.send({
+      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
       to: email,
-      subject: 'Reset your password', // Aligned with .NET
+      subject: 'Reset your password',
       html: `
         <h2>Password Reset Request</h2>
         <p>Hello ${name},</p>
@@ -88,9 +67,7 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
         <p>This link will expire in 1 hour.</p>
         <p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   } catch (error) {
     console.error('Error sending password reset email:', error);
     throw error;
@@ -98,15 +75,15 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
 };
 
 export const sendWelcomeEmail = async (email, name) => {
-  if (!transporter) {
-    throw new Error('SMTP transporter not configured');
+  if (!resend) {
+    throw new Error('Resend client not configured');
   }
 
   try {
-    const mailOptions = {
-      from: `${config.smtp.fromName} <${config.smtp.fromEmail}>`,
+    await resend.emails.send({
+      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
       to: email,
-      subject: 'Welcome to AuthDotnet!', // Aligned with .NET
+      subject: 'Welcome to AuthDotnet!',
       html: `
         <h2>Welcome to AuthDotnet, ${name}!</h2>
         <p>Your account has been successfully verified and activated.</p>
@@ -114,9 +91,7 @@ export const sendWelcomeEmail = async (email, name) => {
         <p>If you have any questions, feel free to contact our support team.</p>
         <p>Thank you for joining us!</p>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   } catch (error) {
     console.error('Error sending welcome email:', error);
     throw error;
@@ -124,15 +99,15 @@ export const sendWelcomeEmail = async (email, name) => {
 };
 
 export const sendPasswordChangedEmail = async (email, name) => {
-  if (!transporter) {
-    throw new Error('SMTP transporter not configured');
+  if (!resend) {
+    throw new Error('Resend client not configured');
   }
 
   try {
-    const mailOptions = {
-      from: `${config.smtp.fromName} <${config.smtp.fromEmail}>`,
+    await resend.emails.send({
+      from: `ProyectoGRestaurantes3 <onboarding@resend.dev>`,
       to: email,
-      subject: 'Password Changed Successfully', // More aligned with .NET style
+      subject: 'Password Changed Successfully',
       html: `
         <h2>Password Changed</h2>
         <p>Hello ${name},</p>
@@ -140,9 +115,7 @@ export const sendPasswordChangedEmail = async (email, name) => {
         <p>If you didn't make this change, please contact our support team immediately.</p>
         <p>This is an automated email, please do not reply to this message.</p>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
   } catch (error) {
     console.error('Error sending password changed email:', error);
     throw error;
