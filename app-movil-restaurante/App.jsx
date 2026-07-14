@@ -10,18 +10,15 @@ import { useAuthStore } from './src/shared/store/authStore.js';
 enableScreens();
 
 export default function App() {
-    const hydrate = useAuthStore((s) => s.hydrate);
+  const hydrate = useAuthStore((s) => s.hydrate);
+  useEffect(() => { hydrate(); }, []);
 
-    useEffect(() => {
-        hydrate();
-    }, []);
-
-    return (
-        <SafeAreaProvider>
-            <NavigationContainer>
-                <AppNavigator />
-            </NavigationContainer>
-            <StatusBar style="light" backgroundColor="#0a0c0f" />
-        </SafeAreaProvider>
-    );
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+      <StatusBar style="light" backgroundColor="#0a0c0f" />
+    </SafeAreaProvider>
+  );
 }
